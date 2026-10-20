@@ -1,6 +1,6 @@
 {
   "id": "mobile-app-design",
-  "latestVersion": "1.1.1",
+  "latestVersion": "1.2.18",
   "updatedAt": "2026-10-20",
   "freshnessCheckPolicy": "on_session_start_max_once_per_day",
   "designUrl": "https://mvisl.github.io/dsl2/DESIGN.md",
@@ -9,7 +9,9 @@
   "changelogPageUrl": "https://mvisl.github.io/dsl2/changelog.html",
   "figmaMcpRecommended": true,
   "sourceAccess": "authorized-registry-supplied-separately",
-  "publicationStatus": "prepared",
-  "lastPublishedVersion": "1.1.0",
-  "lastPublishedUrl": "https://mvisl.github.io/figma/"
+  "publicationStatus": "published",
+  "lastPublishedVersion": "1.2.18",
+  "lastPublishedAt": "2026-10-21",
+  "publishNotBefore": "2026-10-22",
+  "lastPublishedUrl": "https://mvisl.github.io/dsl2/"
 }
