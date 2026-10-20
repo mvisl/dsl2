@@ -1,0 +1,386 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design System · Facelifting 2</title>
+    <meta
+      name="description"
+      content="A reusable Design System design reference for AI-assisted prototypes."
+    />
+    <link rel="stylesheet" href="./styles.css" />
+    <link rel="stylesheet" href="./layout-fix.css?v=release-header-fix-20260720" />
+  </head>
+  <body>
+    <main class="page-shell">
+      <section class="hero" aria-labelledby="page-title">
+        <div class="scene" aria-hidden="true">
+          <div class="token-card token-card--colors">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div class="token-card token-card--type">
+            <b>Aa</b>
+            <span></span>
+            <span></span>
+          </div>
+        </div>
+
+        <section class="content-card">
+          <header class="topbar" aria-label="Page header">
+            <a class="brand" href="./index.html">
+              <span>Design System</span>
+            </a>
+            <span class="version">v1.1.1</span>
+          </header>
+
+          <div class="hero-copy">
+            <p class="eyebrow">Facelifting 2</p>
+            <h1 id="page-title">Design System</h1>
+            <p class="summary">
+              A compact design reference for AI prototypes: dark mobile surfaces,
+              orange accent, typography, spacing, component rules, source guidance,
+              and freshness checks in one file.
+            </p>
+          </div>
+
+          <div class="actions" aria-label="Primary actions">
+            <a
+              class="button button--primary"
+              href="./DESIGN.md"
+              download="DESIGN.md"
+              data-download-md
+            >
+              <span>Download DESIGN.md</span>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path
+                  d="M12 3v11m0 0 4-4m-4 4-4-4M5 19h14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </a>
+            <a class="button button--secondary" href="./changelog.html">What changed</a>
+          </div>
+
+          <dl class="meta-grid" aria-label="Design reference details">
+            <div>
+              <dt>Mode</dt>
+              <dd>Figma connected or offline fallback</dd>
+            </div>
+            <div>
+              <dt>Check</dt>
+              <dd>Freshness verified once per day</dd>
+            </div>
+            <div>
+              <dt>Scope</dt>
+              <dd>Mobile · DSL 2.0 · V9</dd>
+            </div>
+          </dl>
+        </section>
+      </section>
+
+      <section class="updates" id="updates" aria-labelledby="updates-title">
+        <div class="update-grid" aria-label="Recent release notes">
+          <div class="updates__header">
+            <p class="eyebrow">Release notes</p>
+            <h2 id="updates-title">What changed</h2>
+            <p>
+              Human-readable updates for designers and AI agents. Open the full
+              log page for a clearer release history.
+            </p>
+          </div>
+
+          <a class="update-card" href="./changelog.html#v1-1-1" data-update-modal="v1-1-1"><span class="update-card__version">1.1.1</span><h3>Source-to-usage component workflow</h3><p>Trace existing components through actual product contexts, then build the approved F2 system in Figma and the web.</p></a>
+
+          <a class="update-card" href="./changelog.html#v1-1-0" data-update-modal="v1-1-0"><span class="update-card__version">1.1.0</span><h3>Review workflow and developer workspace</h3><p>An F2-driven reference with traceable decisions, reusable screen recipes, and explicit verification gates.</p></a>
+<a class="update-card" href="./changelog.html#v1-0-8" data-update-modal="v1-0-8">
+            <span class="update-card__version">1.0.8</span>
+            <h3>UX Core became an agent rule</h3>
+            <p>
+              Added UX Core as a strong default for interface and flow decisions,
+              with explicit safeguards against manipulative dark patterns.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-7" data-update-modal="v1-0-7">
+            <span class="update-card__version">1.0.7</span>
+            <h3>More exact Figma working rules</h3>
+            <p>
+              Added stricter source, spacing, typography, icon, card, category,
+              and verification rules from the active Figma workflow.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-6" data-update-modal="v1-0-6">
+            <span class="update-card__version">1.0.6</span>
+            <h3>DSL rules became mandatory</h3>
+            <p>
+              Locked the rule that design references, review pages, and AI
+              outputs must use Design System tokens, styles, spacing, radii, and
+              components instead of invented values.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-5" data-update-modal="v1-0-5">
+            <span class="update-card__version">1.0.5</span>
+            <h3>Sharper AI-agent rules</h3>
+            <p>
+              Added stricter guidance for exact source transfer, no invented
+              values, token/style binding, and clear DRAFT labeling when a
+              source node is unavailable.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-4" data-update-modal="v1-0-4">
+            <span class="update-card__version">1.0.4</span>
+            <h3>Expanded Facelift 2 coverage</h3>
+            <p>
+              Documented the F2 direction for airier dark surfaces, orange
+              active states, glass plates, Tabbar, Top Navigation, badges, and
+              migration decisions.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-3" data-update-modal="v1-0-3">
+            <span class="update-card__version">1.0.3</span>
+            <h3>Added source links and fallbacks</h3>
+            <p>
+              Added Figma source references, connected-mode recommendations,
+              offline fallback tokens, and once-per-day freshness checks.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-2" data-update-modal="v1-0-2">
+            <span class="update-card__version">1.0.2</span>
+            <h3>Online package added</h3>
+            <p>
+              Added the downloadable package, canonical links, a lightweight
+              version manifest, and a first public landing page.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-1" data-update-modal="v1-0-1">
+            <span class="update-card__version">1.0.1</span>
+            <h3>Freshness checks</h3>
+            <p>
+              Taught agents to verify the canonical version once per day and
+              warn clearly when a local file is stale.
+            </p>
+          </a>
+
+          <a class="update-card" href="./changelog.html#v1-0-0" data-update-modal="v1-0-0">
+            <span class="update-card__version">1.0.0</span>
+            <h3>First usable draft</h3>
+            <p>
+              Collected the first compact rules for colors, typography,
+              components, Figma sources, and AI-agent usage.
+            </p>
+          </a>
+
+          <a class="update-card update-card--show-all" href="./changelog.html">
+            <span>Show all</span>
+          </a>
+        </div>
+      </section>
+    </main>
+
+    <div class="update-modal" hidden>
+      <div class="update-modal__scrim" data-close-update-modal></div>
+      <section
+        class="update-modal__panel"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="update-modal-title"
+        aria-describedby="update-modal-body"
+        tabindex="-1"
+      >
+        <button class="update-modal__close" type="button" aria-label="Close update details" data-close-update-modal>
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path
+              d="m6 6 12 12M18 6 6 18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+        </button>
+        <span class="update-modal__version"></span>
+        <div class="update-modal__content">
+          <h2 id="update-modal-title"></h2>
+          <p id="update-modal-body"></p>
+          <span class="update-modal__section-label">Included</span>
+          <ul class="update-modal__list"></ul>
+        </div>
+      </section>
+    </div>
+
+    <script src="./design-md-data.js?v=1.1.1"></script>
+    <script>
+      const updates = {
+        "v1-1-1": {"version": "1.1.1", "title": "Source-to-usage component workflow", "body": "Trace existing components through actual product contexts, then build the approved F2 system in Figma and the web.", "items": ["Follow existing DSL components into actual jurisdiction-specific usage before defining replacements.", "Inspect demo and real-account contexts; preserve meaningful differences without claiming unobserved coverage.", "Carry approved structure into DSL 2.0 and matching web implementations.", "Use 375 \u00d7 812 reference frames with responsive auto-layout, Fill container and Hug content.", "Check optional content and text overflow at narrower and wider host sizes."]},
+        "v1-1-0": {"version": "1.1.0", "title": "Review workflow and developer workspace", "body": "An F2-driven reference with traceable decisions, reusable screen recipes, and explicit verification gates.", "items": ["Separate observed, proposed, approved, implemented, and verified states.", "Review variants in small visual packets and continue independent work.", "Keep visual generation separate from jurisdiction and product behavior.", "Inspect components, resize screens, compare generations, and export matching recipes.", "Retain instrument-label meanings while adopting their approved shared neutral F1/F2 treatment."]},
+        "v1-0-8": {
+          version: "1.0.8",
+          title: "UX Core became an agent rule",
+          body: "This update makes cognitive UX heuristics part of the agent's normal interface and flow design process without replacing the Design System design system.",
+          items: [
+            "Use applicable UX Core heuristics as a strong default for roughly 80% of discretionary UX decisions.",
+            "Translate selected heuristics into concrete hierarchy, wording, grouping, feedback, disclosure, and interaction decisions.",
+            "Do not use framing, anchoring, loss aversion, authority, social proof, defaults, or urgency to create dark patterns."
+          ]
+        },
+        "v1-0-7": {
+          version: "1.0.7",
+          title: "More exact Figma working rules",
+          body: "This update brought the public agent reference closer to the active Design System Figma working rules.",
+          items: [
+            "Fix broken masters instead of patching visible instances and preserve text-style bindings.",
+            "Use exact spacing variables, source icon instances, and established card/category patterns.",
+            "Verify affected components visually and keep repeated structures reusable."
+          ]
+        },
+        "v1-0-6": {
+          version: "1.0.6",
+          title: "DSL rules became mandatory",
+          body: "This update makes the reference stricter: every visible artifact should use the Design System design system instead of plausible one-off values.",
+          items: [
+            "Use existing tokens, text styles, spacing, radii, effects, icons, and components first.",
+            "Translate requests like more air, larger text, or stronger rounding through the DSL scale.",
+            "Update DESIGN.md, changelog, manifest, and the site when substantial DSL or agent rules change."
+          ]
+        },
+        "v1-0-5": {
+          version: "1.0.5",
+          title: "Sharper AI-agent rules",
+          body: "This update tightens the working rules for AI agents using the Design System reference pack.",
+          items: [
+            "Transfer source values exactly instead of inventing plausible replacements.",
+            "Keep Figma text styles, color variables, spacing, radii, and component bindings intact.",
+            "Use DRAFT labels only when a real source node is technically unavailable."
+          ]
+        },
+        "v1-0-4": {
+          version: "1.0.4",
+          title: "Expanded Facelift 2 coverage",
+          body: "The reference now describes more of the Facelift 2 direction for mobile surfaces and navigation.",
+          items: [
+            "Airier dark UI with matte-glass plates where the product actually uses them.",
+            "One orange accent source for active states and emphasis.",
+            "Migration notes for Tabbar, Top Navigation, badges, and stage-based component decisions."
+          ]
+        },
+        "v1-0-3": {
+          version: "1.0.3",
+          title: "Added source links and fallbacks",
+          body: "This version makes the source-of-truth path clearer for people and AI tools.",
+          items: [
+            "Added Figma source references for connected workflows.",
+            "Documented offline fallback rules when Figma access is unavailable.",
+            "Added once-per-day freshness checks for long-running work."
+          ]
+        },
+        "v1-0-2": {
+          version: "1.0.2",
+          title: "Online package added",
+          body: "The DESIGN.md package became easier to share and download from a small landing page.",
+          items: [
+            "Added a downloadable DESIGN.md flow.",
+            "Added canonical links and a lightweight version manifest.",
+            "Separated the human-readable changelog from the technical markdown file."
+          ]
+        },
+        "v1-0-1": {
+          version: "1.0.1",
+          title: "Freshness checks",
+          body: "AI agents now have a clear rule for checking whether their local reference is still current.",
+          items: [
+            "Verify the canonical version once per day.",
+            "Warn clearly when the local file is stale.",
+            "Continue using the file only after the freshness status is known."
+          ]
+        },
+        "v1-0-0": {
+          version: "1.0.0",
+          title: "First usable draft",
+          body: "The first compact reference collected the essentials needed for AI-assisted mobile prototypes.",
+          items: [
+            "Core colors, typography, spacing, and component rules.",
+            "Links to the main Figma sources.",
+            "Initial guidance for connected and offline usage."
+          ]
+        }
+      };
+
+      const modal = document.querySelector(".update-modal");
+      const modalPanel = document.querySelector(".update-modal__panel");
+      const modalVersion = document.querySelector(".update-modal__version");
+      const modalTitle = document.querySelector("#update-modal-title");
+      const modalBody = document.querySelector("#update-modal-body");
+      const modalList = document.querySelector(".update-modal__list");
+      function openUpdateModal(id) {
+        const update = updates[id];
+        if (!modal || !update) return;
+        modalVersion.textContent = update.version;
+        modalTitle.textContent = update.title;
+        modalBody.textContent = update.body;
+        modalList.replaceChildren(
+          ...update.items.map((item) => {
+            const li = document.createElement("li");
+            li.textContent = item;
+            return li;
+          })
+        );
+        modal.hidden = false;
+        document.body.classList.add("modal-open");
+        requestAnimationFrame(() => {
+          modal.classList.add("is-open");
+          modalPanel?.focus();
+        });
+      }
+
+      function closeUpdateModal() {
+        if (!modal) return;
+        modal.classList.remove("is-open");
+        document.body.classList.remove("modal-open");
+        window.setTimeout(() => {
+          modal.hidden = true;
+        }, 180);
+      }
+
+      document.querySelectorAll("[data-update-modal]").forEach((card) => {
+        card.addEventListener("click", (event) => {
+          event.preventDefault();
+          openUpdateModal(card.getAttribute("data-update-modal"));
+        });
+      });
+
+      document.querySelectorAll("[data-close-update-modal]").forEach((control) => {
+        control.addEventListener("click", closeUpdateModal);
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && modal && !modal.hidden) {
+          closeUpdateModal();
+        }
+      });
+
+    </script>
+  <script>document.querySelectorAll('[data-download-md]').forEach(link => {
+          link.addEventListener('click', event => {
+            const data = window.DESIGN_SYSTEM_DATA;
+            if (!data) return;
+            event.preventDefault();
+            const url = URL.createObjectURL(new Blob([data.design], {type:'text/markdown;charset=utf-8'}));
+            const anchor = document.createElement('a'); anchor.href = url; anchor.download = 'DESIGN.md';
+            anchor.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+          }); });</script>
+</body>
+</html>
