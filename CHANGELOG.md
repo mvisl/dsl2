@@ -1,121 +1,13 @@
 # Changelog
 
-## 1.2.18 - 2026-10-20
+## 1.2.29 - 2026-10-21
 
-- Preserve donor content, styles and native icon relationships.
-- Transfer real text controls and proper instance swaps.
-- Compare the donor and migrated result in screen context.
-- Resolve actual consumer paints and destination overrides.
-- A matching default does not prove preserved nested content.
-- Keep local candidates separate from live-consumer promotion.
-
-## 1.2.17 - 2026-10-20
-
-- Use content-driven mobile component height and verify that the CTA remains inside the supported viewport.
-- Expose only actual native text properties; keep body and nested action labels independently editable where supported.
-- Preserve state-specific title defaults when a shared property would synchronize them.
-- Scope confirmed Large text-only 24/24 px edge padding and fixed-height label ellipsis to verified compositions.
-- Keep source studies, rendering, composition and portable-export capabilities distinct.
-- Keep working draft IDs, storage success, reload and recoverable failure behavior consistent.
-- Separate unresolved questions from confirmed reusable design principles.
-- Prepared privately; public publication remains gated.
-
-## 1.2.16 - 2026-10-20
-
-- Verify responsive media at actual inset host widths, preserving source composition and native media/mask relationships.
-- Separate candidate crop decisions, poster geometry and tested interactive behavior.
-- Preserve bundled font licenses in portable exports; fail closed and support retry when required assets are unavailable.
-- Verify portable output from committed sources and distinguish read-only inspection from supported composition.
-- Prepared privately; public remains1.1.1 with the next ordinary release no earlier than2026-10-21.
-
-## 1.2.15 - 2026-10-20
-
-- Measure every supported optional-control combination, including rendered all-hidden geometry; Hug metadata alone is insufficient.
-- Separate current entry context and dated legal fixtures from historical references and F2 composition proposals.
-- Compare generated asset mappings with actual native vector identity and final-screen visuals.
-- Distinguish genuine cross-file component-graph transfer from unpublished keys, HTML capture or SVG export.
-- Prepared privately; public remains1.1.1 and the next ordinary publication is no earlier than2026-10-21.
-
-## 1.2.14 - 2026-10-20
-
-- Preserve actual transferred component controls and verify their bindings.
-- Confirm provider-interface migration boundaries before reskinning.
-- Keep outline disclosure separate from recipe/history.
-
-# Version 1.2.13 — 2026-10-20
-
-- Resolve source variables in the actual destination mode; preserve aliases, styles and instance relationships.
-- Compare native and exported thin vector details; disable destructive SVG stroke simplification when evidence requires it, without redrawing.
-- Keep source fidelity repairs separate from broader approval and label inconsistent dated fixtures honestly.
-- Prepared privately; public remains1.1.1 and publication is gated until2026-10-21.
-
-# Version 1.2.12 — 2026-10-20
-
-- Keep developer questions and answers in one private web/MCP Inbox with stable context and history.
-- Prioritize incoming blockers, reopen follow-ups and preserve archived history.
-- Distinguish saved answer alerts from verified browser delivery and actual agent wakeup.
-- Keep repository, local proof and authenticated team deployment separate; prepared privately for the daily release.
-
-# Version 1.2.11 — 2026-10-20
-
-- Preserve paint-layer opacity, ordering and blend independently from variable color bindings.
-- Restore migration defects from inspected sources without mistaking restoration for F2 approval.
-- Prepared privately; the daily public publication gate remains unchanged.
-
-# Version 1.2.10 — 2026-10-20
-
-- Organize real component families into named categories, with atoms, molecules and organisms inside each.
-- Keep category/complexity separate from source and F2 approval status.
-- Map inherited interface blue accents to existing F2 orange by semantic role; preserve identity artwork and token scopes.
-- Compare current product structure with historical screens before migration.
-- Synchronize root and downloadable version metadata; prepared privately for the next daily publication.
-
-# Version 1.2.9 — 2026-10-20
-
-- Keep dropdowns visible but disabled when no choices are available.
-- Distinguish unavailable choices from an empty currently selected period.
-- Prepared privately for the next daily publication.
-
-# Version 1.2.8 — 2026-10-20
-
-- Confirm Large Button text-edge24px/icon-edge12px padding, including text-only24/24.
-- Apply the rule in the shared web renderer while keeping balanced slots and smaller-size scope explicit.
-- Preserve fixed height, available-width bounds and ending ellipsis.
-- Prepared privately for the next daily publication.
-
-# Version 1.2.7 — 2026-10-20
-
-- Separate semantic selection tints from glass fills and compare actual source aliases/modes.
-- Keep inferred blend percentages distinct from stored opacity and preserve source variables.
-- Verify badges, outlines and separators in the complete selected state.
-- Prepared privately for the next daily publication.
-
-# Version 1.2.6 — 2026-10-20
-
-- Make design reasoning transferable to unseen screens: confirmed principles versus explicit hypotheses.
-- Add a navigable prototype mode to the web workspace using the same screen registry and components.
-- Keep real navigation coverage separate from unimplemented destinations and financial functionality.
-- Prepared privately for the next daily publication.
-
-# Version 1.2.5 — 2026-10-20
-
-- Scope explicit owner source-priority exceptions to the affected screen.
-- Preserve context-specific instrument, sentiment and option bottom-section variants.
-- Do not add global navigation or Chart summary content to Info without source support.
-- Prepared privately for the next daily publication; public remains1.1.1.
-
-# Version 1.2.4 — 2026-10-20
-
-- Preserve all three button composition models and apply owner-confirmed available-width, single-line ellipsis behavior.
-- Keep row badges beside the title; support source-based gray right values and reusable growing counters.
-- Require real content-host widths and distinguish native/web resize verification.
-- Prepared privately for the next daily release; public remains1.1.1.
-
-# Version 1.2.3 — 2026-10-20
-
-- Require mobile-first composition, rather than desktop UI squeezed into 375 px.
-- Add full-screen mobile task, content and responsive acceptance gates for Markdown consumers and API/MCP assembly.
-- Prepared privately for the next daily publication; no same-day public release.
+- Select F1 explicitly using verified F1 sources; this F2 guide is not a complete offline F1 library.
+- Use enlarged lower corners only when one or two actions form the bottom edge.
+- Give help 24 px vertical bands; a 44 px control needs a 92 px flowing wrapper.
+- Show meaningful tree roles and disclose technical wrappers without losing the source graph.
+- Keep Constructor and Questions modes familiar, with a shared identity and distinct surfaces.
+- Let question targets be selected, changed or removed; keep future interactions separate from verified delivery.
 
 ## 1.2.2 - 2026-10-20
 

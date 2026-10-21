@@ -1,7 +1,7 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.18
-last_updated: 2026-10-20
+version: 1.2.29
+last_updated: 2026-10-21
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
 changelog_url: https://mvisl.github.io/dsl2/CHANGELOG.md
@@ -61,9 +61,9 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.18 draft for AI prototyping
+Version: 1.2.29 draft for AI prototyping
 
-Last updated: 2026-10-20
+Last updated: 2026-10-21
 
 Primary scope:
 
@@ -243,6 +243,12 @@ Do not delete or ignore legacy structures where they still exist in source files
 - `Stage=F1`
 - `Stage=F2`
 
+### Choosing a design stage
+
+A request may explicitly select `Stage=F1` (Facelifting 1), `Stage=F2`, or Legacy. Keep that stage consistent across the entire screen: use its verified component variants, resolved tokens, spacing and radius roles. Do not mix F2 rounding or orange treatment into F1 unless the actual F1 source uses it. Design stage is independent of mobile/web layout and jurisdiction.
+
+This guide primarily documents F2. F1 support is component-specific, not a complete offline F1 library. For an F1 request, use the authorized F1 source components and real screen references. If these are unavailable or a variant is missing, identify the gap and request that source; do not invent F1 by recoloring or reducing the radii of F2.
+
 Do not create fake Legacy variants just for symmetry. If Legacy and F1 are visually and structurally identical for a component, document that decision instead of duplicating the component.
 
 ## Non-Negotiable Rules
@@ -355,6 +361,16 @@ supported), preserving its paths, masks and source geometry. Do not trace,
 redraw, rasterize or thicken the missing detail by eye. Inspect the complete
 render at its real viewing size after the corrected export; this is a scoped
 fidelity repair, not a rule to reconstruct arbitrary chart behavior.
+
+### Isolate Repeated SVG References
+
+A correct sealed SVG can render incorrectly when a thumbnail and full canvas
+share duplicate mask, clip-path or gradient IDs. Keep the sealed source
+unchanged. Render each original vector in its own SVG document, such as an
+image/data URI, or namespace every per-render ID and all references on a runtime
+copy while preserving path and paint data. Verify the thumbnail and full view
+together, including multiple instances and portable output; one isolated
+preview is insufficient.
 
 ### Candidate Approval and Fixture Consistency
 
@@ -516,6 +532,14 @@ Use radius variables where available:
 
 Badges, selected tab pills, and rounded icon buttons should use full capsule logic when the source/reference indicates a pill.
 
+### Source-mode radius roles
+
+Preserve semantic radius bindings rather than applying one rounding value to every surface. The inspected source Components modes resolve modal corners as 8 / 8 / 16 px, modal lower corners as 8 / 8 / 32 px, modal banners as 4 / 4 / 8 px, and button and badge corners as 4 / 4 / 64 px across Current, Facelifting and Stage 2. Badge radius follows the button-corner alias. These are source-mode values, not proof that every migrated component already uses them.
+
+The Tokens collection has Current Design and Stage 2 modes only. Facelifting component aliases use Current Design token values; do not invent a third token mode. Verify each actual consumer binding and inherited mode. A variable name alone does not establish where a larger lower corner belongs, and raw legacy corners do not change automatically.
+
+Navigation dividers are source-specific optional properties. Preserve the actual target's visibility rather than enabling or hiding a divider globally.
+
 ## Layout
 
 Default mobile frame:
@@ -536,7 +560,7 @@ General screen composition:
 
 ## Component Architecture
 
-Organize components by product usage, not only by old file folders.
+Organize genuine component families by product usage: Actions, Inputs, Keyboards, Navigation, Data Display and Feedback. A legacy warehouse is a source inventory, not a finished family architecture or evidence of migrated coverage. Keep atoms, molecules and organisms discoverable without treating their organization as approval.
 
 ### Core / App Shell and Navigation
 
@@ -1143,6 +1167,21 @@ menu. The owner confirmed Date and Close all in the empty Active Trades state.
 Do not infer that every filter must be disabled merely because the currently
 selected period has no results: available choices determine availability.
 
+An empty current filtered result is not evidence that the control has no
+capabilities. Keep the period filter enabled while real choices remain; disable
+only actions without a genuine target or controls without available options.
+In the dated 2026-10-21 jurisdiction-specific real-account Closed observation, Week was empty but
+Week / Month / Quarter / Year / All time remained available, and All time
+revealed populated history. This does not establish behavior for every
+jurisdiction or account context.
+
+Keep adjacent trade contexts distinct. The inspected demo Pending context had
+populated cards with SL / TP / AI and Cancel, while Closed history exposed
+Details and Trade again. Do not transfer those actions or availability rules
+between contexts merely because their card structures look related. Inspect
+the actual options and targets before assigning an enabled or disabled state.
+
+
 ## Content-aware Button Edges
 
 Use actual spacing-variable bindings and inspect each size and skin. Icon-side
@@ -1244,6 +1283,14 @@ Developer-tool disclosure is presentation state. Expand real parent/child groups
 on demand and reveal the selected canvas item's ancestors. Disclosure must not
 change the screen recipe, create an Undo step or imply a product transition.
 
+## Edge-Attached Markers and Content Controls
+
+Preserve the finished consumer's measured geometry when it differs from its nominal master. A marker attached to the top or bottom edge can have asymmetric corners; do not turn it into a capsule merely because its size is compact. Use structural variants for the real edge appearance, and one genuine TEXT property for changing the displayed value. If the source has no content property, expose it only on a proper new owned component and document that it is a new API.
+
+A Hug-width value can grow together with its caption and native arrow. Measure that growth rather than silently truncating, inventing numeric formatting or claiming it fits every host. Content editing does not calculate a quote or establish validation rules. Keep source fixtures distinct from current market data.
+
+Static Top/Bottom snapshots and correct native arrows do not prove sticky behavior. Verify the clipping host, anchoring, scrolling, visibility thresholds and any return-to-price action separately. Native component fidelity, owner acceptance, runtime support and full-screen behavior are distinct gates.
+
 ## Native Layout Evidence Across Optional States
 
 Hug-content metadata alone does not prove the rendered height when optional
@@ -1319,8 +1366,9 @@ guide/release package to the authorized publication surface.
 Keep one private Developer Inbox shared by the web and MCP. A developer can ask
 from a screen or component, attach an image and return to the same request for
 an explanation and exact source links. Preserve its history and context across
-follow-ups. An answer marks the request solved; a follow-up requiring attention
-reopens it. Clearing a request from a list should archive it without destroying
+follow-ups. A saved answer marks the request answered; only the requester confirms it
+solved. A clarification or follow-up requiring attention reopens the same thread
+without discarding its answer history. Clearing a request from a list should archive it without destroying
 its history or removing it from necessary agent work.
 
 Prioritize incoming developer blockers before ordinary planned research, after
@@ -1340,6 +1388,26 @@ access are separate delivery stages. Public static guide hosting must not expose
 private questions, attachments or account/source evidence. Verify access, durable
 storage, recovery and real notification delivery before calling the team service
 ready.
+
+### Context-bound collaboration and working drafts
+
+- Use one message composer for explanatory text, ordinary links and screenshots, with a visible preview and recoverable upload state. Do not split one question into disconnected text and image submissions or send it automatically when context arrives.
+- Keep a question, owner answer and later clarification in the same thread. A saved answer is an answered state, not proof that the requester has resolved the issue. Let the requester confirm resolution; a clarification requiring attention reopens the same history rather than creating a duplicate request.
+- Bind a working draft to the screen, component or request where it began. Switching the selected object or thread must not silently retarget unsent text, attachments or source links. Preserve separate drafts, and make an intentional transfer or discard explicit. Restore content after network failures and revision conflicts without implying that an unsaved draft is durable.
+- Use familiar workspace landmarks: discoverable hierarchy on the left, the actual canvas in the center, and selection properties or contextual discussion on the right. Keep the selected object and its exact source link synchronized. Discussion should preserve canvas state and unsaved work; adapt the layout for smaller viewports without inventing a second screen recipe.
+- Distinguish an immutable source, a working copy, an unsaved edit and a successfully persisted version. A contextual question about one selected object is not authorization to change that source, save a new version or promote a candidate.
+- Present notification and automation states truthfully. An incoming request, a stored event, an open-tab poll, a running agent, a browser notification acknowledgement and a visible OS banner are separate observations. Request notification permission only through an explicit user gesture, preserve undelivered pending events after failure, and do not promise immediate AI execution or closed-tab delivery without verified support.
+- Validate the actual end-to-end task with isolated fixtures: context handoff without auto-submission, draft preservation across object and thread switches, an answer followed by clarification and author-confirmed resolution, and recovery from failed writes. Keep implementation evidence separate from a confirmed design principle or product-wide availability claim.
+
+### Action edges, support spacing and semantic workspaces
+
+- Enlarge lower modal corners only when one or two action buttons actually form the bottom edge of that surface. With no visible bottom action, retain the ordinary corner role. Resolve semantic top and lower-corner variables in the actual mode and clip the full-width action footer through the proper outer surface; do not enlarge every card or infer a modal role from appearance alone.
+- For the verified request-card composition, the current web policy uses ordinary 16 px top and lower corners with actions hidden, and 16 px top / 32 px lower corners when an action forms the bottom edge. This is a scoped composition policy, not a universal radius for all cards or a silent rewrite of the preserved source contract. Native and web implementation need independent consumer checks.
+- Give the confirmed support/help role 24 px top and bottom spacing around its actual content. A source with a 24 px content row is therefore 72 px high; a 44 px help button requires a 92 px wrapper. A previous 76 px native wrapper is not evidence that this newer spacing has been applied. Keep the help wrapper as the final flowing item after the request cards, and verify scrolling and fixed navigation separately.
+- Present a semantic layer tree with meaningful header, request cards, help and navigation roles. Put technical wrappers and complete native ancestry behind progressive disclosure without deleting, flattening or inventing source nodes. Selection, editing and exact source links must still resolve to the genuine underlying graph.
+- Preserve a familiar hierarchy / canvas / inspector workspace. The confirmed direction includes a floating bottom-right Constructor / Questions mode control, a dark construction surface and a light discussion surface under one shared identity. This is an interaction requirement; do not claim a mode, persistence or deployment exists before its actual implementation is verified.
+- A question can concern the current element or comment, the current screen, another represented or unrepresented screen, or a general topic. Make the target optional, removable and replaceable; do not force the current selection into every question or retarget an existing draft after a selection change. Preserve the exact source context when the author chooses to include it.
+- Contextual entry points such as a comment or right-click menu are confirmed possibilities for selecting a question target, not proof of a working context-menu feature. Distinguish confirmed future behavior from current implemented controls, persisted drafts and verified hosted delivery. Keep the question itself, its optional target and source-edit authority separate.
 
 ## Sources and Review Dates
 
@@ -1368,6 +1436,8 @@ before relying on a specific API, standard or platform version.
 - Preserve the reference composition at 375 px. When source media needs proportional cover, use a native clipped viewport and aspect-locked carrier with supported Fill/minimum-size constraints. Verify the narrower crop and wider crop visually; do not stretch artwork or add per-width scale scripts to conceal a fixed source group.
 - Preserve native IMAGE, VIDEO, masks, paint order and source crop relationships. A VIDEO layer and correct poster geometry do not prove playback or interactive prototype behavior.
 - Treat a proposed crop policy as a review question until approved. One responsive media state does not prove the other states in its family.
+- Verify identical font bytes and declared weights in the actual canvas and portable output. A shared family name alone is not evidence of the same font, weight, metrics or line breaks. Install a source-specific family through the actual rendering factory and ensure every consumer uses it rather than an ambient system or previously loaded font.
+- Inspect optical title-to-badge clearance with real content, descenders and supported languages while preserving source text-style bindings. Equal auto-layout gaps do not guarantee equal visible ink clearance. A proposed spacing adjustment remains a proposal until accepted in context; no universal gap follows from one example.
 - When portable HTML embeds fonts, carry the exact bundled license notice with the font bytes. Missing required license assets must cancel export, retain the current preview and allow retry after recovery.
 - Verify portable documents from a fresh committed checkout or archive, including loaded fonts, embedded artwork, license text and actual top/bottom rendering. A passing generator alone is insufficient.
 - Distinguish inspectable components from composable components in both web and API/MCP contracts. Reading a source-backed variant does not authorize insertion into arbitrary screen structures, new write actions or product approval.
@@ -1383,6 +1453,36 @@ before relying on a specific API, standard or platform version.
 - Keep a working draft's identity, persisted record and visible navigation state consistent. Mark a save successful only after storage accepts it. On failed writes, retain the current content and the last durable identity, show a recoverable failure and allow retry; do not silently switch to a new draft that cannot be restored after reload.
 - Test save, copy, reload and storage-unavailable recovery using isolated fixtures. Confirm that a copied draft has its own stored identity and that loading it restores the same content; a successful preview is not proof of persistence.
 - Keep unresolved design questions and proposed policies separate from confirmed reusable rules. Record the bounded evidence and remaining uncertainty; continue independent work without turning a pending answer into approval.
+
+## Content-sized financial summaries and joined controls
+
+- In a verified three-column mobile summary, let the ticker take the remaining Fill width while price and result columns Hug their actual content and align both lines to the right. Preserve the existing gaps, padding, text styles and genuine content properties; measured widths are evidence, not constants to copy into the layout.
+- Never truncate a financial value, change its value or shrink its font merely to force a fit. If the combined minimum content exceeds the host, report the unsupported combination and require a deliberate layout alternative or validation boundary. Do not silently clip numeric columns or claim that Hug metadata proves fit.
+- Verify default and representative longer values in real narrow, reference and wide consumers. Show extreme overflow diagnostics explicitly as failures; passing realistic examples does not establish arbitrary-length support. Keep native layout verification separate from implementation and web-fit acceptance.
+- For a genuinely joined segmented control, preserve the shared outer shape and existing divider gap. Square the owned inner backgrounds and let the parent clip only the outer corners when that matches the actual component structure. Reuse existing radius and spacing variables rather than drawing replacements or patching virtual instances.
+- Apply joined-control rules only to the identified group. Separate chart-filter buttons may intentionally retain their independent rounded shapes and gaps; a correction to one pair does not authorize a global restyle.
+
+## Rounded control spacing and outlined artwork
+
+- Rounded controls need sufficient outer horizontal breathing room within their actual row or card. Review the complete consumer at supported widths after changing the shape; use existing spacing variables and measured context rather than deriving a new padding value from the corner radius or copying a capsule into a cramped host.
+- For outlined icons, inspect the visible stroke extents, especially the top edge, in the final consumer. A valid nominal icon frame does not prove the outline is unclipped. Preserve the original artwork and genuine component relationships; correct the supported clipping, carrier or spacing relationship instead of redrawing or masking the stroke.
+- When a control should visually match a neighboring button surface, resolve both consumers' semantic surface roles, effective modes and paint layers. Match only the justified role in that context; do not recolor every control, card or shared master globally because one adjacent pair should agree.
+- A confirmed principle or submitted visual correction is not proof that the component has been implemented, visually accepted or propagated to every consumer. Record those gates separately without inferring an exact spacing value or a universal paint policy.
+
+### Contextual help in a scrolling request list
+
+- Place contextual help as the last item of a scrolling request list when that is the confirmed screen behavior; do not turn it into a sticky overlay.
+- Keep the help control and its vertical spacing together so both follow the final card during overflow.
+- Apply text-edge and icon-edge padding independently for a button with an icon on either side; a right icon does not justify an icon-sized left text inset.
+- Verify one item, multiple items and genuine overflow with fixed navigation, long content and supported viewport sizes.
+- Keep example cardinalities and illustrative request copy separate from verified product requirements. A single-card source does not prove a complete request list or its behavior.
+
+### Semantic padding and independent inner clearance
+
+- Bind actual auto-layout cell padding through the appropriate component or badge semantic padding group, with aliases to existing foundations. A text offset, a manually shifted child or a bare numeric inset is not a substitute for genuine component padding.
+- Treat outer horizontal padding and inner clearance between adjacent control content as independent requirements. Increasing the outside inset must not silently consume the inside space or crowd neighboring labels. Verify both clearances in the actual consumer, not only the stored outer-padding value.
+- Let properly padded cells Hug their supported content and let the surrounding auto-layout structure allocate the remaining space. Do not compensate for missing padding semantics with fixed-width hacks, positional shifts or forced text geometry.
+- When a measured rounded-control proposal needs a missing semantic padding alias, scope that alias to the justified component role and existing foundation. Preserve existing badge padding elsewhere. A measured proposal value is not a universal approved default, a production implementation claim or evidence of contrast acceptance.
 
 ## AI Agent Workflow
 
