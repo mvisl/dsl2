@@ -1,6 +1,16 @@
 # Changelog
 
-## 1.2.29 - 2026-10-21
+## 1.2.31 - 2026-10-22
+
+- Distinguish compact trade actions from a large full-width request-card footer when resolving corners.
+- Use genuine structural variants; hiding a child action is not a replacement for changing card anatomy.
+- Preserve earlier source families and saved compositions through explicit versioned migration.
+- Verify original provider artwork, font weights and ownership before adapting embedded interfaces.
+- Verify actual selection, persistence, current Preview and portable output separately from hosted release.
+
+## 1.2.29
+
+Match action edges, help spacing and workspace context to their actual roles.
 
 - Select F1 explicitly using verified F1 sources; this F2 guide is not a complete offline F1 library.
 - Use enlarged lower corners only when one or two actions form the bottom edge.
@@ -9,195 +19,195 @@
 - Keep Constructor and Questions modes familiar, with a shared identity and distinct surfaces.
 - Let question targets be selected, changed or removed; keep future interactions separate from verified delivery.
 
-## 1.2.2 - 2026-10-20
+## 1.2.28
 
-Prepared privately; public publication remains on the existing daily gate.
+Preserve one thread, a stable draft and truthful delivery states.
 
-- Recorded five independent deliverables: native Figma library, complete F2
-  screens, web workspace, shared API/MCP and a continuously maintained MD.
-- Required the web and MCP to use the same real component/recipe contracts and
-  preserve originals while saving independent working variants.
-- Distinguished local API/MCP verification from authenticated team deployment.
-- Defined the living MD as our evolving design understanding, with private
-  evidence separated from the sanitized public daily release.
+- Keep text, links and screenshots in one composer and one request thread.
+- An answer is not resolution: the author confirms solved; clarification reopens the same thread.
+- Bind each draft to its original context and preserve it across navigation or failed saves.
+- Use a familiar tree, canvas and inspector; keep contextual discussion beside the work.
+- Separate saved signals, AI execution and actual OS delivery; retain source versus unsaved-draft identity.
 
-## 1.2.1 - 2026-10-20
+## 1.2.27
 
-Prepared privately; public 1.1.1 remains published. Do not publish before
-2026-10-21 under the once-per-calendar-day gate.
+Place contextual help after the content it supports and verify real overflow.
 
-- Distinguished wide balanced-slot label centering, centered icon-label groups
-  and compact Hug buttons; Fill width alone does not choose composition.
-- Recorded rejection of the tight Large text-only 12/12 proposal without deleting
-  historical sources or approving exact spacing/all-size 24px.
-- Required image-based option selection, separate zoom and independent drafts
-  that become submitted answers only through explicit Submit.
-- Retained the Active empty toolbar in the inspected current product context
-  under the owner's conditional instruction; no blanket empty-toolbar policy
-  or claim that planned changes have already been applied.
+- Place contextual help as the last item of a scrolling request list when that is the confirmed screen behavior; do not turn it into a sticky overlay.
+- Keep the help control and its vertical spacing together so both follow the final card during overflow.
+- Apply text-edge and icon-edge padding independently for a button with an icon on either side; a right icon does not justify an icon-sized left text inset.
+- Verify one item, multiple items and genuine overflow with fixed navigation, long content and supported viewport sizes.
 
-## 1.2.0 - 2026-10-20
+## 1.2.26
 
-Prepared privately. Public 1.1.1 remains current; ordinary publication is deferred
-to 2026-10-21 or later under the once-per-calendar-day rule.
+Preserve actual font identity and review visible text relationships in context.
 
-- Defined screen-first editing, immutable originals, named variants, component
-  reuse from other screens and exact source provenance.
-- Required truthful editable-screen coverage, nested section/slot composition,
-  visible export/save/recovery and conflict handling.
-- Added visual controls and content-aware Button edge rules; 24px remains an
-  unconfirmed per-size proposal, not a blanket source measurement.
-- Clarified configurable global navigation and gradual feature relocation.
-- Removed ad-hoc glass-opacity recipes as a general token-binding exception.
-- Required real property mechanisms instead of implying Boolean-to-padding logic.
+- Use identical font bytes and declared weights in the actual canvas and portable output; a matching family name alone does not prove typography parity.
+- Install and use a source-specific font family through the actual rendering factory to avoid ambient-font substitution and line-break drift.
+- Check optical title-to-badge clearance with real content, descenders and supported languages while preserving source text-style bindings.
+- Treat equal auto-layout gaps and equal visible ink clearance as different evidence; do not turn a proposed gap into a universal spacing rule.
 
-## 1.1.1 - 2026-10-20
+## 1.2.25
 
-Published and verified at https://mvisl.github.io/dsl2/.
-Page render, real MD download, manifest and remote commit were checked.
+Preserve outer padding and inner clearance as separate layout responsibilities.
 
-- Clarified the component workflow: existing DSL → actual jurisdiction-specific/jurisdiction-specific usage,
-  including demo and real-account contexts → meaningful variants → DSL 2.0 and
-  matching web implementation. Uninspected contexts remain unverified.
-- Fixed new reference screen frames at 375 × 812 while preserving internal
-  auto-layout, Fill container and Hug content; check overflow across host widths.
-- Published neutral public naming: Design System. Facelifting 2, with canonical
-  guide and release links under the short /dsl2/ address.
+- Bind real control-cell padding through component or badge semantics and existing foundations, not text offsets or naked numbers.
+- Preserve independent inner clearance when increasing outer horizontal padding.
+- Use proper auto-layout cell padding and Hug content instead of shifts or fixed-width compensation.
+- Scope new rounded-control padding aliases without changing existing badge defaults or claiming universal approval.
 
-## 1.1.0 - 2026-10-20
+## 1.2.24
 
-Published 2026-10-20 at https://mvisl.github.io/figma/ with a neutral, source-redacted
-distribution. Live rendering, Markdown download and manifest were verified.
+Preserve clear edges and match surfaces by semantic role.
 
-- Added the ongoing designer collaboration protocol: small visual review packets,
-  per-option decisions, comments, deferred answers and independent progress.
-- Separated observation, proposal, approval, implementation and verification.
-- Defined an F2-driven outcome while preserving F0/F1 migration references and
-  keeping jurisdiction/product behavior independent from visual generation.
-- Added senior Figma architecture, platform/evidence guidance and explicit QA gates.
-- Defined the developer workspace: visual component inspector, explained related
-  alternatives, constrained screen composition, generation adapters, responsive
-  states and preview-matching code/recipe export.
-- Clarified stable landing-page geometry and public/private information boundaries.
-- Refreshed live-product coverage limits and recorded unavailable old canonical URLs.
-- Applied owner-confirmed F1/F2 instrument badge treatment: retain all meanings,
-  shared neutral paints, source typography, capsule shape and 2×8 spacing in F2;
-  preserve source/archive generations and verify effective mode/instance overrides.
+- Give rounded controls sufficient outer horizontal room in their actual consumer, using existing spacing variables.
+- Inspect outlined icon stroke extents and prevent clipping at the top edge without redrawing original artwork.
+- Match adjacent control surfaces by justified semantic role and effective mode, not a global paint replacement.
+- Keep confirmed principles, implementation and visual acceptance as separate gates.
 
-## 1.0.8 - 2026-07-16
+## 1.2.23
 
-Added:
+Use content-sized summaries and preserve genuinely joined controls.
 
-- UX Core as an active agent decision library for interface and flow design, with a strong 80% adherence expectation where its heuristics are applicable.
-- A required workflow for selecting relevant cognitive heuristics before design and translating them into concrete hierarchy, wording, grouping, feedback, disclosure, and interaction decisions.
-- Explicit safeguards against using framing, anchoring, loss aversion, authority, social proof, defaults, or urgency as dark patterns.
-- A rule to document intentional departures from clearly applicable UX Core heuristics.
-- A strict layer boundary: DSL components stay intact, while UX Core reviews how they are ordered, grouped, prioritized, and sequenced into screens and flows.
-- A prohibition on detaching or internally modifying DSL components to satisfy cognitive heuristics; missing patterns must be logged as DSL gaps.
+- Use content-sized, right-aligned price and result columns with the ticker filling remaining space.
+- Never truncate financial values or alter values and fonts to conceal overflow.
+- Reject unsupported combined minimum content; verify real consumers rather than trusting Hug metadata.
+- Keep joined controls rounded only at the outside, preserving their existing divider and native artwork.
+- Scope joined-control corrections to the actual group; keep separate chart filters unchanged.
 
-Clarified:
+## 1.2.22
 
-- UX Core governs agent UX decisions; it does not change DSL migration architecture, replace Design System tokens/components, or authorize reinterpretation of exact source geometry.
-- Rule priority remains explicit requirements and safety first, followed by confirmed product behavior, Design System DSL/source, applicable UX Core heuristics, and only then agent preference.
+Resolve actual component bindings and modes before adapting rounded surfaces.
 
-## 1.0.7 - 2026-07-10
+- Preserve semantic modal, lower-corner, banner, button and badge radius roles instead of applying one value everywhere.
+- Resolve actual consumer bindings and inherited modes; source values do not prove migrated coverage.
+- Distinguish component mode aliases from token modes without inventing a third token mode.
+- Organize genuine component families by product usage rather than treating a legacy warehouse as the finished architecture.
+- Keep navigation divider visibility source-specific and verify the target override.
 
-Added:
+## 1.2.21
 
-- More exact rules from the Design System Figma working guide: fix broken masters instead of patching instances, keep component/layer names clean, and avoid debug/version suffixes in visible names.
-- Card-specific rules for AI Ideas and Top Profit: exact 32 px icon instances, semantic value blocks, source header spacing, buy/sell arrows, and variable-bound padding.
-- Stronger spacing and text guidance: all non-zero gaps and paddings must use DSL variables, descriptive text uses secondary text color, and positive values use the DSL positive token.
-- Category label and icon rules for card metadata, including compact 16 px labels and existing Markets category assets.
-- Icon and asset safeguards: no ad-hoc PNGs, overlays, screenshots, or loose replacement layers inside components when a component, instance, glyph, or trusted source can be used.
-- Verification safeguards: after text, badge, row, card, or section edits, re-check text style bindings and do not detach `textStyleId` silently.
+Keep native geometry and content separate from unverified scroll behavior.
 
-Changed:
+- Preserve measured consumer edge-tab geometry and native arrow relationships.
+- Use genuine content TEXT properties and verify Hug growth.
+- Keep static edge appearance separate from sticky behavior and financial functionality.
 
-- Clarified that subtle diagonal logo-tint gradients must stay at or below 10% opacity unless the source is already lower.
-- Clarified small product-pattern details: section subtitles usually avoid trailing periods, card labels should preserve the rest of the card layout, and dividend cards should keep dividend context instead of repeating stock category labels.
+## 1.2.20
 
-## 1.0.6 - 2026-07-09
+An empty filtered result does not remove genuine choices or actions.
 
-Added:
+- Keep period filters enabled while real choices remain, even when the current result is empty.
+- Disable only controls without options or actions without a genuine target.
+- Inspect pending-order actions and closed-history actions separately in their actual account context.
+- Treat dated observations as scoped evidence, not universal jurisdiction or eligibility rules.
 
-- Explicit rule that design-system documentation, mini-sites, release pages, review boards, and examples must follow the same Design System DSL tokens, text styles, spacing, radii, icons, and component behavior as the product UI.
-- Rule that user requests such as a bigger title, more air, stronger rounding, softer glass, or a new card must first be resolved through existing DSL components, text styles, spacing, radius, color, and effect tokens.
-- Automatic publishing rule: when the DSL or AI-agent rules change materially, bump the version, update the manifest and changelog, refresh the downloadable `DESIGN.md` package, and publish the GitHub/site copy in the same session.
-- Required deviation logging for any artifact that cannot use an existing DSL token, style, or component.
+## 1.2.19
 
-Changed:
+Preserve source artwork when previews and canvases render together.
 
-- Clarified that the design reference is not just documentation: it is a source-of-truth artifact and must not visually contradict the design system it describes.
+- Isolate each SVG document or namespace every ID and reference per render.
+- Keep sealed source paths and paints unchanged.
+- Inspect thumbnails and full views together, including portable output.
 
-## 1.0.5 - 2026-07-08
+## 1.2.18
 
-Added:
+Keep donor content and consumer overrides intact during migration.
 
-- Stricter AI-agent rules for exact source transfer, token/style binding, and clear DRAFT labeling.
-- Clearer instruction that approximation is allowed only when the exact source node is technically unavailable.
+- Preserve donor content, styles and native icon relationships.
+- Transfer real text controls and proper instance swaps.
+- Compare the donor and migrated result in screen context.
+- Resolve actual consumer paints and destination overrides.
+- A matching default does not prove preserved nested content.
+- Keep local candidates separate from live-consumer promotion.
 
-Changed:
+## 1.2.17
 
-- Tightened the working method: do not invent colors, fonts, spacing, radius, shadows, icons, or geometry when the source already contains values.
-- Clarified that repeated source gaps must be recorded as open items instead of silently filled by plausible-looking values.
+Keep content editable, actions visible and drafts recoverable.
 
-## 1.0.4 - 2026-07-08
+- Use content-driven height and verify the CTA at real mobile widths.
+- Expose real body and label controls; preserve state-specific title defaults.
+- Scope text-only 24/24 px edges and ellipsis to verified Large buttons.
+- Separate inspection, composition and export capabilities.
+- Keep draft IDs and saved records consistent; preserve content on failure.
+- Separate pending questions from confirmed rules.
 
-Added:
+## 1.2.16
 
-- Expanded Facelift 2 coverage for dark surfaces, orange active states, matte-glass plates, rounded pills, Tabbar, Top Navigation, badges, and migration decisions.
+Verify actual responsive hosts, preserve native media and font licenses, and distinguish inspection from supported composition.
 
-Changed:
+- Verify media at actual inset host widths while preserving the reference composition.
+- Use native aspect constraints without distorting artwork; review proposed crop policies separately.
+- Preserve media and masks; poster geometry does not prove playback.
+- Carry bundled font licenses with portable exports and retain previews on export failure.
+- Verify standalone output from committed sources, including actual fonts, artwork and license text.
+- Keep inspect-only component capabilities separate from supported composition and write authority.
 
-- Clarified the split between token swaps, structural component variants, and disconnected duplicate components.
-- Clarified when to use variables instead of variants for simple show/hide or spacing logic.
+## 1.2.15
 
-## 1.0.3 - 2026-07-08
+Measure actual optional-state layouts, verify current context and artwork, and preserve the native component graph across files.
 
-Added:
+- Measure settled native layout for all supported Boolean combinations, including the empty case.
+- Treat Hug metadata, actual rendered geometry and intended product policy as separate evidence.
+- Record current entry context and dated legal fixtures before adapting historical screens.
+- Compare generated logo and icon mappings with actual native vectors and final-screen visuals.
+- Preserve component, property, style and variable relationships through genuine cross-file transfer.
+- An unpublished local key is not an importable library component; never publish drafts to bypass a gap.
+- Verify transferred control names, types, defaults and native bindings before reuse.
+- Confirm third-party interface ownership before reskinning; source fixtures do not establish current requirements.
+- Keep progressive disclosure independent from screen recipes, Undo and product transitions.
+- Resolve bound variables in the actual destination collection mode and alias context.
+- Compare native artwork and SVG exports; preserve thin contours without redrawing.
+- Keep source fidelity repairs distinct from owner approval and label inconsistent dated fixtures.
+- Keep questions, images, follow-ups and exact source links in one private web/MCP Inbox.
+- Reopen follow-ups, preserve archived history and prioritize incoming blockers.
+- Distinguish saved answer signals, browser delivery and actual agent execution.
+- Preserve each paint layer opacity, order and blend independently of its color variable.
+- Restore inspected source behavior without treating it as F2 approval.
+- Organize actual Actions, Inputs, Keyboards, Navigation, Data Display and Feedback families.
+- Show atoms, molecules and organisms without confusing organization with F2 approval.
+- Map inherited interface blue accents to existing F2 orange by semantic role, preserving identity artwork.
+- Check current product structure and context before adapting historical screens.
+- Disable a visible dropdown when no choices exist; never open an empty menu.
+- Do not disable a period filter solely because its current results are empty.
+- Use24px at a Large Button text edge and12px at an icon edge; text-only24/24.
+- Keep smaller sizes and native conditional-padding support separately verified.
+- Inspect semantic tint aliases and active modes before replacing selected surfaces with glass.
+- Treat blend-equivalent percentages as inference, not stored opacity.
+- Review outlines, badges and section separators with the selected surface.
+- Distinguish confirmed design principles from hypotheses when composing unseen screens.
+- Navigate the same registered screens and components used by the builder.
+- Expose unimplemented destinations and keep prototype navigation separate from financial functionality.
+- Apply owner-confirmed source-priority exceptions only to their named context.
+- Keep instrument summaries, sentiment and option-contract bottom sections distinct.
+- Use global navigation only where the target screen supports it; do not borrow Chart content into Info.
+- Keep all three button models, constrain labels to available width and use single-line ellipsis.
+- Keep metadata badges beside row titles and grow counters from circles into capsules.
+- Verify actual inset content hosts and distinguish web from native support.
+- Design mobile tasks, hierarchy and navigation; never squeeze desktop UI into a phone frame.
+- Review the actual full mobile screen, including content and supported responsive states.
+- Keep five deliverables explicit; one cannot substitute for another.
+- Use the same actual component and screen-recipe contracts in the web and MCP.
+- Create separate working variants while preserving source originals and approval boundaries.
+- Verify local API/MCP separately from authenticated team deployment.
+- Maintain our evolving design understanding in Markdown and publish only the sanitized guide on the daily cadence.
 
-- Figma source references for DSL 2.0, DSL 0.6, Facelift 2, and product screen research.
-- Connected-mode recommendation for agents with Figma MCP access.
-- Offline fallback tokens and rules for agents that only receive this file.
+## 1.1.1
 
-Changed:
+Trace existing components through actual product contexts, then build the approved F2 system in Figma and the web.
 
-- Moved the reference from a visual note into a practical AI prototyping guide.
+- Follow existing DSL components into actual jurisdiction-specific usage before defining replacements.
+- Inspect demo and real-account contexts; preserve meaningful differences without claiming unobserved coverage.
+- Carry approved structure into DSL 2.0 and matching web implementations.
+- Use 375 × 812 reference frames with responsive auto-layout, Fill container and Hug content.
+- Check optional content and text overflow at narrower and wider host sizes.
 
-## 1.0.2 - 2026-07-08
+## 1.1.0
 
-Added:
+An F2-driven reference with traceable decisions, reusable screen recipes, and explicit verification gates.
 
-- Canonical GitHub URLs for the first hosted repository.
-- `design-manifest.json` for lightweight version checks.
-- Mini-site files for a black/orange Facelift 2 download page.
-
-Changed:
-
-- Updated `DESIGN.md` freshness logic to prefer `manifest_url` when available.
-
-## 1.0.1 - 2026-07-08
-
-Added:
-
-- Freshness check instructions for AI agents.
-- Metadata block with version, update date, canonical URL placeholder, and freshness policy.
-- Guidance for GitHub/raw-file update workflows.
-- `README.md` with short usage instructions.
-- This changelog.
-- Once-per-day freshness policy for long-running work.
-
-Changed:
-
-- Clarified that an outdated or unverifiable file must be reported clearly before use.
-
-## 1.0.0 - 2026-07-08
-
-Added:
-
-- First working `DESIGN.md` for Design System mobile AI prototyping.
-- Visual direction for Design System DSL / V9 / DSL 2.0.
-- Connected Figma mode and offline fallback mode.
-- Core color, typography, spacing, radius, and layout guidance.
-- Component rules for Tabbar, Top Navigation, badges, cards, feed sections, and AI-agent workflow.
-- Maintenance rules for keeping the document alive alongside DSL 2.0 work.
+- Separate observed, proposed, approved, implemented, and verified states.
+- Review variants in small visual packets and continue independent work.
+- Keep visual generation separate from jurisdiction and product behavior.
+- Inspect components, resize screens, compare generations, and export matching recipes.
+- Retain instrument-label meanings while adopting their approved shared neutral F1/F2 treatment.

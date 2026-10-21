@@ -1,6 +1,6 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.29
+version: 1.2.31
 last_updated: 2026-10-21
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
@@ -11,7 +11,7 @@ freshness_check_policy: on_session_start_max_once_per_day
 figma_mcp_recommended: true
 ---
 
-# Design System. Facelifting 2
+# Design System · Facelifting 2
 
 Reusable design reference for AI-assisted mobile prototyping.
 
@@ -61,7 +61,7 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.29 draft for AI prototyping
+Version: 1.2.31 draft for AI prototyping
 
 Last updated: 2026-10-21
 
@@ -1401,13 +1401,26 @@ ready.
 
 ### Action edges, support spacing and semantic workspaces
 
-- Enlarge lower modal corners only when one or two action buttons actually form the bottom edge of that surface. With no visible bottom action, retain the ordinary corner role. Resolve semantic top and lower-corner variables in the actual mode and clip the full-width action footer through the proper outer surface; do not enlarge every card or infer a modal role from appearance alone.
-- For the verified request-card composition, the current web policy uses ordinary 16 px top and lower corners with actions hidden, and 16 px top / 32 px lower corners when an action forms the bottom edge. This is a scoped composition policy, not a universal radius for all cards or a silent rewrite of the preserved source contract. Native and web implementation need independent consumer checks.
+- Enlarge lower modal corners when one or two large actions form the full-width bottom footer of that surface. A compact action row is a separate component pattern, not automatic evidence for enlarged lower corners. With no visible bottom action, retain the ordinary corner role. Resolve semantic top and lower-corner variables in the actual mode and clip the full-width action footer through the proper outer surface; do not enlarge every card or infer a modal role from appearance alone.
+- For the verified request-card composition, use ordinary 16 px top and lower corners with no action area, and 16 px top / 32 px lower corners when the large action footer forms the bottom edge. This is a scoped composition policy, not a universal radius for all cards or a silent rewrite of the preserved source contract. Native and web implementation need independent consumer checks.
+- The owner-confirmed compact trade-card direction keeps the existing 24 px action height and equal 16 px top/lower corners. Extra breathing room above the instrument summary is a separate scoped spacing choice; it does not authorize enlarging every small-action card or shrinking its controls. Keep this pattern distinct from the request-card large action footer.
+- If removing an action changes the surrounding card anatomy and corners, represent that structural difference through a genuine supported variant. Hiding a child button is not equivalent to changing the card variant. Preserve the earlier source family and saved versions; never reinterpret an old Boolean as a new variant without an explicit migration.
 - Give the confirmed support/help role 24 px top and bottom spacing around its actual content. A source with a 24 px content row is therefore 72 px high; a 44 px help button requires a 92 px wrapper. A previous 76 px native wrapper is not evidence that this newer spacing has been applied. Keep the help wrapper as the final flowing item after the request cards, and verify scrolling and fixed navigation separately.
 - Present a semantic layer tree with meaningful header, request cards, help and navigation roles. Put technical wrappers and complete native ancestry behind progressive disclosure without deleting, flattening or inventing source nodes. Selection, editing and exact source links must still resolve to the genuine underlying graph.
 - Preserve a familiar hierarchy / canvas / inspector workspace. The confirmed direction includes a floating bottom-right Constructor / Questions mode control, a dark construction surface and a light discussion surface under one shared identity. This is an interaction requirement; do not claim a mode, persistence or deployment exists before its actual implementation is verified.
 - A question can concern the current element or comment, the current screen, another represented or unrepresented screen, or a general topic. Make the target optional, removable and replaceable; do not force the current selection into every question or retarget an existing draft after a selection change. Preserve the exact source context when the author chooses to include it.
 - Contextual entry points such as a comment or right-click menu are confirmed possibilities for selecting a question target, not proof of a working context-menu feature. Distinguish confirmed future behavior from current implemented controls, persisted drafts and verified hosted delivery. Keep the question itself, its optional target and source-edit authority separate.
+
+### Painted overlays, exact consumers and bounded startup loading
+
+- A background blur needs real painted content behind the overlay. If a clipped scrolling body starts below a header as a disjoint sibling, increasing blur cannot make that content pass underneath it. Build the supported overlay/viewport relationship and preserve the initial content position with the proper inset; verify actual scroll geometry and painted results.
+- Treat a header at rest and the same header over scrolled content as distinct appearance conditions. Reuse a genuine source glass pattern in its justified context, restore the supported resting appearance, and keep fixed navigation independent. Check both states in the actual app and portable output; computed blur alone does not prove a visible glass effect.
+- Keep Help and its protective top/bottom bands together as the last flowing item after the final card. Measure clearance against fixed navigation at the end of real overflow. A 32 px web spacing candidate around a 44 px control produces a 108 px wrapper; a separately supported 24 px native treatment produces 92 px. These are scoped composition values, not interchangeable implementations or a universal Help spacing default. Preserve the source contract and label an unpropagated native/web difference.
+- Preserve exact virtual instance provenance when mapping a selected element to its source. A master identifier alone can lose the actual consumer's path, nested overrides, style bindings or inherited variable modes. Keep complete identity and the exact source link, and validate effective appearance on that consumer rather than substituting a similarly named master.
+- Load independent assets, fonts and optional source adapters concurrently within a bounded request pool. Count response-body consumption inside the concurrency budget; launching every request at once or retaining long avoidable serial loops does not establish a responsive startup. Measure actual request counts, duplicates and visible readiness separately from a theoretical optimization.
+- Deduplicate only raw response bytes, status and headers within the authorized runtime load. Give each consumer an independent response/body and retain its own MIME, byte length, SHA and source-contract validation. A shared byte-cache hit must not turn a wrong consumer seal into success or reuse a previously validated component object as authority for another consumer.
+- Scope loading caches to the intended startup and authentication context; do not share private responses across sessions or retain a global/browser-persistent cache by accident. Keep a failed resource failed for that startup, isolate a damaged optional source from unrelated working sources, and let a fresh authorized load retry. Test tampered seals after a cache hit, failure isolation, bounded concurrency and fresh-load recovery without modifying source recipes.
+- A locally checked loader, a prepared archive, a deployed package and a visibly faster hosted session are separate delivery claims. Verify the final committed artifact and actual hosted behavior before reporting the optimization live; preserve exact source and consumer contracts throughout.
 
 ## Sources and Review Dates
 
