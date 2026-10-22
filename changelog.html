@@ -10,7 +10,15 @@
     />
     <link rel="stylesheet" href="./styles.css" />
     <link rel="stylesheet" href="./layout-fix.css?v=glass-606264-20-20" />
-  <style>.log-back span{white-space:nowrap}</style>
+  <style>
+.log-back span{white-space:nowrap}
+@media(max-width:640px){
+  .page-shell--log .log-hero,.page-shell--log .log-list{padding-left:var(--page-pad);padding-right:var(--page-pad)}
+  .page-shell--log .log-topbar{flex-wrap:wrap;row-gap:var(--space-12)}
+  .page-shell--log .log-back{width:auto;flex:none}
+  .page-shell--log .log-topbar .brand{flex-shrink:0}
+}
+</style>
 </head>
   <body>
     <main class="page-shell page-shell--log">
