@@ -1,6 +1,24 @@
 # Changelog
 
-## 1.2.31 - 2026-10-22
+## 1.2.34 - 2026-10-23
+
+- Use sourced primitives and typed aliases through semantic roles, components and blocks, with traceable scoped overrides and reset.
+- Resolve actual token values and destination modes; rebuild with the destination platform library.
+- Verify artwork at its real consumer size and check delivered export identity, transparency and completeness.
+- Share chart visual grammar without copying instrument data paths or inventing unavailable history.
+- Verify motion on the composed screen and keep illustrative timing separate from product formulas.
+- Keep local exceptions and rejected drafts scoped; later owner rejection supersedes earlier agent QA.
+- Use the existing4px title/helper token only in the confirmed Notifications row.
+- Keep matched empty-state content anchored through a shared token-driven footer slot across related tabs.
+- Review the assembled page and its entry context separately from component and asset correctness.
+- Show the originating screen and exact entry action; use a readable horizontal sequence for flow review.
+- Preserve sourced sections, dividers and sheet handles instead of reusing only an outer container.
+- Use modals for compact decisions; put page-sized content on a page or behind a concise summary with Learn more.
+- Owner rejection supersedes earlier agent composition acceptance; retain useful source measurements without promoting rejected layouts.
+
+## 1.2.31
+
+Use the right corner role, preserve genuine variants and verify the actual source context.
 
 - Distinguish compact trade actions from a large full-width request-card footer when resolving corners.
 - Use genuine structural variants; hiding a child action is not a replacement for changing card anatomy.

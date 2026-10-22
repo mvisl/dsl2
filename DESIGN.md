@@ -1,7 +1,7 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.31
-last_updated: 2026-10-21
+version: 1.2.34
+last_updated: 2026-10-22
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
 changelog_url: https://mvisl.github.io/dsl2/CHANGELOG.md
@@ -61,9 +61,9 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.31 draft for AI prototyping
+Version: 1.2.34 draft for AI prototyping
 
-Last updated: 2026-10-21
+Last updated: 2026-10-22
 
 Primary scope:
 
@@ -251,6 +251,37 @@ This guide primarily documents F2. F1 support is component-specific, not a compl
 
 Do not create fake Legacy variants just for symmetry. If Legacy and F1 are visually and structurally identical for a component, document that decision instead of duplicating the component.
 
+## Page composition and flow review
+
+Valid components are necessary, but do not by themselves make a valid page.
+Review the assembled page and its entry context separately from the correctness
+of its atoms, artwork, bindings and container geometry.
+
+- **Do:** show the originating application screen and the exact control used to
+  enter a flow. Present a review sequence horizontally when the steps need to be
+  compared. **Do not:** present only isolated internal screens in a long vertical
+  catalogue and imply that this proves the journey. **Why:** reviewers need to
+  understand how users arrive, act and return. **Scope:** flow handoff and review;
+  this is not a requirement to change the application's actual navigation.
+- **Do:** group content with the source system's sections or dividers and use the
+  genuine top drag handle when the sheet pattern includes one. **Do not:** reuse
+  only a modal's outer container and call the entire composition design-system
+  compliant. **Why:** hierarchy, grouping and interaction cues are part of the
+  pattern. **Scope:** verify each generation's actual source; do not add handles
+  to every dialog or invent shared modal geometry.
+  A measured radius belongs to its source family, role and resolved generation;
+  one component in the target library does not establish a universal modal radius.
+- **Do:** use a modal for a small amount of information and a quick decision. Put
+  page-sized information on a full page, or show a concise decision summary with
+  a clear Learn more route to the details. **Do not:** compress an entire page
+  into a modal merely because its container is available. **Why:** the amount of
+  information and the user's task determine the presentation. **Scope:** preserve
+  required product/legal content and a real route back; do not hide essentials.
+- **Do:** reclassify a composition as rejected when the owner rejects its design,
+  while retaining useful measured source facts. **Do not:** let an earlier agent
+  screenshot check, working controls or component tests override that rejection.
+  **Why:** checking details is not acceptance of page composition or the journey.
+
 ## Non-Negotiable Rules
 
 1. Do not invent values.
@@ -260,6 +291,42 @@ If the source has a font, size, color, radius, spacing, shadow, stroke, or layou
 2. Use DSL tokens, styles, and components.
 
 No arbitrary colors, fonts, spacing, radii, or effects when a DSL token/style exists.
+
+### Shared token hierarchy — owner requirement, 22 October 2026
+
+All design-controlled properties must come from a named, traceable token. This
+applies across Figma and the constructor: primitives → semantic roles → component
+tokens → composed blocks. Define raw values once at the primitive layer with
+their source and rationale. Higher layers retain typed aliases; copying the
+resolved number or color into a component is not inheritance.
+
+Changing the global brand primitive must reach its consumers. Changing a button
+token must affect only buttons that inherit it. A block or specific component may
+override an inherited role through another named token; expose the override,
+its source, affected scope and reset-to-inherited behavior. Matching numeric
+values alone do not establish a shared semantic role.
+
+Keep typography in bound text styles and variables, effects in bound styles or
+tokens, and repeated structures in components. Source-backed fractional artwork
+geometry and calculated layout/zoom results are not arbitrary UI constants:
+preserve their documented source or formula. Never round historical geometry to
+make it look systematic, or hide a guessed value behind a newly named variable.
+
+For the confirmed Notifications setting row, the gap between its title and
+helper description is 4 px through the existing spacing variable. This local
+row decision does not redefine every setting or text pair.
+
+Structural rules remain explicit. For example, larger lower card corners depend
+on terminal bottom actions; the rule selects radius tokens rather than embedding
+a number. Design generation (Legacy/F1/F2), theme, platform and jurisdiction are
+separate context dimensions; preserve their verified differences.
+
+One versioned contract must retain stable token identities, types, aliases,
+context/modes, source evidence and native mappings. CSS and Figma adapters should
+consume that contract. Detect concurrent changes against an accepted base and
+preserve conflicts instead of silently overwriting. Verify actual persisted bindings on both surfaces before claiming synchronized
+output.
+
 
 User requests must be translated through the DSL scale. If the user asks for a card, button, label, larger text, more air, stronger rounding, softer glass, or a different emphasis, first choose from existing DSL components, text styles, spacing variables, radius variables, color variables, and effect styles. Offer the closest system option and explain it in design-system terms. Do not type a new size, padding, radius, color, shadow, or font just because it looks plausible.
 
@@ -1254,6 +1321,16 @@ Keep the no-toolbar exploration as historical proposal evidence. A planned
 owner decision is not a claim of native implementation, promotion or full-screen
 acceptance; verify those stages separately.
 
+For related list tabs sharing one empty-state composition, keep the artwork and
+message anchored consistently when an optional lower toolbar changes. Preserve
+one logical footer slot across the matched states; an empty slot contains no
+controls or actions. Let the remaining content region center through auto-layout.
+Source its dimension from the actual toolbar role and retain the
+primitive → semantic → component alias chain in Figma and web. Verify a shared
+variable change on real consumers, restore the baseline, and check all matched
+states visually. Keep this layout policy separate from which toolbar actions
+belong to each product context.
+
 ## Migration Contracts and External Interface Boundaries
 
 A transferred component can look correct while losing its exposed controls.
@@ -1324,6 +1401,89 @@ especially for provider logos and similar icon slots. Reject a mapping that
 shows one provider's artwork under another provider's name. Restore the genuine
 native artwork and component relationship; do not redraw, overlay or rely on a
 filename-only check. Verify both the standalone asset and its final screen.
+
+## Cross-project Source Fidelity and Delivery
+
+Use the following decision pairs as the quick reference. Project chronology,
+rejected iterations and private source evidence belong in the decision ledger,
+not among current recommended defaults.
+
+| Topic | Do | Do not | Why / scope |
+| --- | --- | --- | --- |
+| Design values | Follow sourced primitive and typed semantic/component aliases | Copy resolved numbers or hide a guess behind a token name | A global or scoped change must propagate through actual inheritance |
+| Platform adaptation | Assemble with the destination platform DSL | Scale a whole mobile composition into desktop UI, or the reverse | Content can transfer while platform layout and controls differ |
+| Repeated defects | Fix the reusable master and verify its consumers | Shift or patch individual instances to conceal a shared defect | Local patches drift and fail other supported states |
+| Identity artwork | Use the genuine source mark and inspect it at consumer size | Substitute a ticker, invented monogram, automatic inversion or approximate trace | Brand identity and optical fit are separate from container bounds |
+| Delivery | Inspect actual export bytes and match each requested named asset | Treat a correct master or file count as proof of a complete export | Transparency, clipping, backgrounds and missing items can differ |
+| Charts | Share visual grammar, retain instrument-specific data and honest history | Copy a source price path or fabricate missing performance periods | Reuse concerns component structure and style, not interchangeable data |
+| Motion | Review the full rendered composition and its clock | Accept duration metadata or an isolated simulated widget as full proof | Parent timelines and inherited sampling can freeze real output |
+| Scope | Keep a local exception tied to its named context | Promote a local dimension, fixture or demo formula into a global rule | A correct project decision can be wrong in another role |
+| Acceptance | Follow the latest explicit owner decision and preserve rejected status | Call a rejected or stopped experiment approved because agent QA passed earlier | Verification and owner acceptance are distinct gates |
+
+A **confirmed rule** is recommended only within its recorded scope. A **local
+exception** carries its reason and source. A **proposal / needs review** remains
+an alternative, never the default. A **rejected / superseded** result records the
+reason and the replacement direction; do not reuse it as an accepted example.
+An **unresolved** item stays open rather than being filled with a plausible guess.
+
+
+Use the destination platform's own components, text styles, semantic roles and
+layout. A mobile reference supplies content and behavior; scaling the entire
+composition is not a desktop implementation. Resolve actual variable values and
+active modes before choosing an alias: a token name alone does not establish
+its value, color contrast or intended role.
+
+### Artwork and complete delivery
+
+Check instrument and issuer assets at their actual smallest consumer size,
+including optical centering, visible outline extents and surrounding air.
+A centered frame or padded SVG viewBox can conceal a shifted visible mark.
+Preserve owner corrections. Do not turn a local optical size adjustment into a
+global percentage or mechanically recolor every brand mark as UI artwork.
+
+Verify delivered SVG/PNG bytes separately from the native master: transparency,
+page/section backgrounds, clipping and original identity can differ in export.
+Match the requested named assets and presentation sets, not only a file count.
+Covers should explain the actual subject at the delivered aspect ratio and
+remain readable behind any logo overlay.
+
+Exact vector tracing includes visible seams, parallel edges, joints and gaps;
+a recognizable silhouette is insufficient. Later owner rejection supersedes an
+earlier agent QA claim. Keep rejected drafts distinct from approved components,
+and do not resume work the owner explicitly stopped without a new request.
+
+### Chart grammar and source data
+
+Reuse chart typography, strokes, bodies, wicks and masks while preserving each
+instrument's distinct data geometry. Do not reuse a price path merely because
+the visual component is shared. Align a current-price marker to its actual final
+close and do not append a future candle to the right. A portfolio curve can
+include contributions and reinvestment; it need not have the same silhouette as
+the asset price. Label examples and dated data; never invent unavailable return
+history or present a static prototype as live data.
+
+Keep chart fill color bound to its semantic role. A separate alpha mask can
+preserve the variable binding while controlling a fade; do not weaken the line,
+labels or whole chart to make only the fill translucent. Column-level periods
+can replace repetitive row badges in a homogeneous list, but metadata badges
+and promotional-card periods have distinct roles. Local data, labels, periods,
+fees, eligibility and method availability require their own product evidence.
+
+### Motion and local exceptions
+
+Verify the rendered timeline of the actual composed screen, including its
+parent duration, child tracks, transition onset, end state and hold. Timeline
+metadata or a separately simulated widget is insufficient evidence of motion.
+When a cadence includes animation, do not add animation duration to the cadence.
+Synchronize related changes on the same clock. Explicitly illustrative progress
+or counters must not become production formulas.
+
+Keep local component dimensions, artwork ratios, presentation coordinates and
+approved exceptions scoped to their source. A reversible project catalog cleanup
+must preserve dependencies and whole variant sets used by active compositions;
+it is not permission to delete unused library history. A source-specific inert
+control is not a general pattern for new interactions. Record unsupported style
+bindings, uncertain playback and unresolved owner choices as remaining debt.
 
 ## Genuine Cross-file Component Transfer
 
