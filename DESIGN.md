@@ -1,7 +1,7 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.34
-last_updated: 2026-10-22
+version: 1.2.39
+last_updated: 2026-10-23
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
 changelog_url: https://mvisl.github.io/dsl2/CHANGELOG.md
@@ -61,9 +61,9 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.34 draft for AI prototyping
+Version: 1.2.39 draft for AI prototyping
 
-Last updated: 2026-10-22
+Last updated: 2026-10-23
 
 Primary scope:
 
@@ -311,6 +311,17 @@ tokens, and repeated structures in components. Source-backed fractional artwork
 geometry and calculated layout/zoom results are not arbitrary UI constants:
 preserve their documented source or formula. Never round historical geometry to
 make it look systematic, or hide a guessed value behind a newly named variable.
+
+Viewing zoom must not change intrinsic component geometry. Measure text and layout
+in native coordinates before rounding or fitting; an ancestor canvas transform
+is a viewing operation, not a second component-size input. Verify both the
+full-size component and its reduced or enlarged preview against the same source.
+
+A preview should wait only for its own required source, native assets and component
+families. Keep record metadata and search usable while previews load. An unrelated
+source failure must not block a valid preview. Distinguish loading, empty and
+failed states; retry the failed preview locally while preserving saved records
+and working drafts. These implementation safeguards do not confer visual approval.
 
 For the confirmed Notifications setting row, the gap between its title and
 helper description is 4 px through the existing spacing variable. This local
@@ -800,7 +811,7 @@ Search and edge icons:
 
 ## Badge Rules
 
-Badges must be:
+Text badges must be:
 
 - Full pill/capsule.
 - Auto-layout.
@@ -854,10 +865,72 @@ Signal and recommendation labels share this visual treatment where the source
 does, but preserve their different meanings, signal glyphs and directional
 content. A plain label is not a substitute for a signal component.
 
+Resolve icon color from the actual component role and state, not from a word
+such as Buy or Sell. The inspected ordinary Signal arrows are secondary gray;
+Advice Buy/Sell arrows use positive/negative roles. Preserve that distinction.
+A shared icon can have many unrelated consumers: apply Signal-only overrides
+through component tokens, without recoloring the shared master. Keep the full
+component → semantic → primitive alias chain and preserve each native mode.
+An orange highlight is not automatically the same role as the brand accent;
+they may match in one mode and differ in another.
+
+Account entry summaries and active account details are separate contexts. Reuse
+native optional-row controls when their existing auto-layout reflows correctly
+and the surrounding surface anatomy remains unchanged. Preserve unobserved
+active-account states separately; hidden DOM fields are not visible-feature
+evidence. Do not create duplicate masters only to remove optional metrics.
+An absent amount in an account entry is not a zero balance. Preserve absence
+through a genuine visibility property; do not insert a zero or a manual spacer.
+Keep account-entry amounts, disclosure metrics and the aggregate total as separate
+content owners. Synthetic fixture values must remain internally consistent.
+
+For Boolean artwork, bind its effective visible paint. Do not change unrendered
+child paints just to make a token count look complete: this can cause native
+geometry reevaluation. Keep the original source and verify rendered artwork
+alongside component bindings, dimensions and text styles. A matching palette
+alone does not prove geometry or pixel equality.
+
 Check the effective resolved mode and source-instance overrides, not just the
 remote master: source F2 instances may override an older master. Primitive
 radius bindings do not automatically change when a generation mode changes.
 Retain source/archive generations while making the supported F2 target primary.
+
+## Context-Specific Client Status Identity
+
+- Retain the approved client-level color palette and symbol within its product context. Status identity is not a generic brand-accent paint role.
+- A client-level symbol is distinct from a text badge. Do not force an existing crown or diamond into a capsule or replace its native artwork with a generic icon.
+- Keep client level, account mode, instrument metadata and trading signals as separate semantic roles. Demo/real mode is not a client level.
+- Treat visual generation and jurisdiction as independent dimensions. An approved symbol can differ between product contexts even when a level name is shared.
+- Reuse existing native families and only their supported context/state combinations. A union of variant labels does not imply a complete cross-product or current product availability.
+- Legacy names and broker properties are not enough to establish current visual authority. If source artwork conflicts with a confirmed current rule, label it historical and keep it separate from the supported reference.
+- Preserve approved colors through scoped identity tokens; do not recolor all levels with one global orange alias. Confirm actual per-level mappings before adapting a different symbol.
+- Compact status text and large standalone symbols can use different source-backed shades. Keep those component roles independently adjustable, even when their level meaning matches.
+- If the original text has no style binding, record that fact. A new shared style based on measured source metrics is a source-backed candidate, not a recovered style or automatic F2 approval. Bind its typography to shared foundations and component aliases, and verify actual Hug geometry when those variables change.
+
+## Investment Row Data Roles
+
+Choose the product context before mapping row fields. Keep unit price, quantity,
+total position value, profit/loss, fund composition weight and credited cash as
+separate roles with explicit units. A legacy layer named Price, Period return
+or Weight does not establish what its displayed value means.
+
+In a portfolio position row, a prominent amount can mean total position value;
+retain average purchase price and current unit price separately, with quantity
+and profit/loss in their source-defined positions. Cash dividends already paid
+to the wallet remain separate from the market value of the held position.
+Estimated future distributions are not credited cash.
+
+A compact row can share its geometry across fund-weight and payout-history
+contexts. Map its reusable fields explicitly to the correct percentage, date,
+calculation or cash amount and preserve the contextual caption. Do not create
+new structural variants solely because these content meanings differ. Conversely,
+similar appearance does not justify replacing a position block with a quote row.
+
+Read generation modes and overrides from the actual consumer. A Current master
+can have a Facelifting consumer, while another nearby instance explicitly stays
+Current. Generation, jurisdiction, observed usage, approval and implementation
+are independent facts. A native resize-verified adaptation is not automatically
+a working-screen match, an editable public component API or web support.
 
 ## Card and Feed Rules
 

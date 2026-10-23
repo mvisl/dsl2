@@ -1,20 +1,65 @@
 # Changelog
 
-## 1.2.34 - 2026-10-23
+## 1.2.39 - 2026-10-23
 
-- Use sourced primitives and typed aliases through semantic roles, components and blocks, with traceable scoped overrides and reset.
-- Resolve actual token values and destination modes; rebuild with the destination platform library.
-- Verify artwork at its real consumer size and check delivered export identity, transparency and completeness.
-- Share chart visual grammar without copying instrument data paths or inventing unavailable history.
-- Verify motion on the composed screen and keep illustrative timing separate from product formulas.
-- Keep local exceptions and rejected drafts scoped; later owner rejection supersedes earlier agent QA.
-- Use the existing4px title/helper token only in the confirmed Notifications row.
-- Keep matched empty-state content anchored through a shared token-driven footer slot across related tabs.
-- Review the assembled page and its entry context separately from component and asset correctness.
-- Show the originating screen and exact entry action; use a readable horizontal sequence for flow review.
-- Preserve sourced sections, dividers and sheet handles instead of reusing only an outer container.
-- Use modals for compact decisions; put page-sized content on a page or behind a concise summary with Learn more.
-- Owner rejection supersedes earlier agent composition acceptance; retain useful source measurements without promoting rejected layouts.
+- Keep intrinsic component geometry unchanged under canvas and thumbnail zoom.
+- Load each preview from its required source and component families; isolate unrelated failures.
+- Keep loading, empty and failed states distinct, with local retry and retained working data.
+
+## 1.2.38
+
+Preserve source-backed compact label appearance through shared typography and independent component roles.
+
+- Keep compact status labels and large symbols independently adjustable when their source shades differ.
+- Distinguish a measured source-backed typography style from a recovered original style.
+- Bind shared typography through component aliases to existing foundations.
+- Verify actual automatic width and height after changing typography variables.
+- Preserve native linked glyphs and original source masters.
+
+## 1.2.37
+
+Retain approved level colors and symbols without flattening distinct product contexts.
+
+- Preserve approved status colors and glyphs within their product context.
+- Keep client level, account mode and instrument metadata distinct.
+- Treat visual generation and jurisdiction as separate dimensions.
+- Use only supported status and context combinations.
+- Do not treat a legacy component label as current visual authority.
+- Keep historical exceptions explicit; verify actual native artwork.
+
+## 1.2.36
+
+Map displayed values to their actual product context before reusing a row.
+
+- Keep unit price, quantity, total position value, profit/loss, fund weight and cash-credit roles distinct.
+- Map verified consumer fields by actual meaning and identity, not legacy names such as Price or Weight.
+- Reuse compact geometry through context mappings without creating content-only structural variants.
+- Keep paid cash and estimated future distributions separate from position market value.
+- Resolve generation at the actual consumer separately from jurisdiction and master defaults.
+- Distinguish native candidates from working-screen parity, editable API and web support.
+
+## 1.2.35
+
+Use scoped color aliases while preserving state, artwork and native modes.
+
+- Resolve Signal icon color by actual component role and state, not by Buy or Sell label text.
+- Preserve ordinary secondary arrows separately from Advice positive and negative arrows.
+- Apply component-only overrides through typed aliases without recoloring shared icon masters.
+- Keep highlight and brand roles distinct across native modes.
+- Bind effective Boolean artwork paints and verify any native geometry reevaluation.
+- Preserve source artwork and text styles; palette equality alone is not pixel equality.
+- Distinguish account entry summaries from active-account details; reuse genuine optional-row controls and retain unobserved states separately. Preserve absent entry amounts with native visibility; absence is not a zero balance.
+
+## 1.2.34
+
+Verify page composition, entry actions and the right presentation alongside traceable source components.
+
+- Use traceable token inheritance and scoped, resettable overrides.
+- Verify the full screen, entry action and readable flow.
+- Keep source sections, handles and layout roles intact.
+- Use pages for long content and modals for compact decisions.
+- Check actual artwork, motion and exported asset identity.
+- Keep local exceptions and rejected drafts out of general rules.
 
 ## 1.2.31
 
