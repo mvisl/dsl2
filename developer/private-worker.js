@@ -3,6 +3,7 @@
 const brokers=new Map(),claims=new Map();
 const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+const attachmentPath=path=>/^\/data\/attachments\/[a-f0-9]{32}\.(png|jpg|webp|gif)$/.test(path);
 const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
 function signInEntry(request){
@@ -57,22 +58,22 @@ self.addEventListener('message',event=>{
 });
 function forward(event,broker,type){event.respondWith(forwarded(event.request,broker,type))}
 function forwarded(request,broker,type){
- if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&writableJSON(new URL(request.url).pathname)))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+ if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&(writableJSON(new URL(request.url).pathname)||new URL(request.url).pathname==='/api/attachments')))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
  return (async()=>{
-  let body;
+  let body,contentType;
   if(request.method==='POST'){
-   if(request.headers.get('Content-Type')?.split(';')[0]!=='application/json')return apiFailure('JSON answer required',415);
+   contentType=request.headers.get('Content-Type')?.split(';')[0];const image=new URL(request.url).pathname==='/api/attachments';if(image?!['image/png','image/jpeg','image/webp','image/gif'].includes(contentType):contentType!=='application/json')return apiFailure('Matching JSON or image content required',415);const maxBody=image?10485760:1900000;
    const reader=request.body?.getReader();if(!reader)return apiFailure('Answer body required',400);
    const chunks=[];let total=0,expired=false;
    const bodyTimer=setTimeout(()=>{expired=true;void reader.cancel().catch(()=>{})},20000);
-   try{for(;;){const{done,value}=await reader.read();if(expired)return apiFailure('Answer upload timed out; keep your draft',504);if(done)break;total+=value.byteLength;if(total>1900000){await reader.cancel();return apiFailure('Answer document is too large',413)}chunks.push(value)}}finally{clearTimeout(bodyTimer)}
+   try{for(;;){const{done,value}=await reader.read();if(expired)return apiFailure('Answer upload timed out; keep your draft',504);if(done)break;total+=value.byteLength;if(total>maxBody){await reader.cancel();return apiFailure('Answer document is too large',413)}chunks.push(value)}}finally{clearTimeout(bodyTimer)}
    const bytes=new Uint8Array(total);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength}body=bytes.buffer;
    if(![...brokers.values()].includes(broker))return apiFailure('GitHub sign-in required',401);
   }
   return new Promise(resolve=>{
   const id=++broker.next;const timer=setTimeout(()=>{broker.pending.delete(id);resolve((type==='api'?apiFailure:fallback)('Private workspace request timed out',504))},type==='resource'?120000:20000);
   broker.pending.set(id,{resolve,timer,method:request.method,type});
-  broker.port.postMessage({type,id,url:request.url,method:request.method,...(body?{body}:{})},body?[body]:[]);
+  broker.port.postMessage({type,id,url:request.url,method:request.method,...(body?{body,contentType}:{})},body?[body]:[]);
  });})().catch(()=>apiFailure('Private workspace request failed; keep your draft',503));
 }
 async function recover(event){
@@ -95,10 +96,10 @@ self.addEventListener('fetch',event=>{
  }
  if(!url.pathname.startsWith(mountPath)){
   // Existing absolute API calls must never fall through to a public host or old Sites.
-  if(broker&&url.pathname.startsWith('/api/')){
-   if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&writableJSON(url.pathname)))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+  if(broker&&(url.pathname.startsWith('/api/')||attachmentPath(url.pathname))){
+   if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&(writableJSON(url.pathname)||url.pathname==='/api/attachments')))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
    else forward(event,broker,'api');
-  }else if(url.pathname.startsWith('/api/'))event.respondWith(recover(event).then(b=>b?forwarded(event.request,b,'api'):apiFailure('GitHub sign-in required',401)));
+  }else if(url.pathname.startsWith('/api/')||attachmentPath(url.pathname))event.respondWith(recover(event).then(b=>b?forwarded(event.request,b,'api'):apiFailure('GitHub sign-in required',401)));
   return;
  }
  if(!broker){event.respondWith(recover(event).then(b=>{if(!b)return event.request.mode==='navigate'?signInEntry(event.request):fallback('Open the workspace and sign in with GitHub',401);if(event.resultingClientId)brokers.set(event.resultingClientId,b);return forwarded(event.request,b,'resource')}));return}
