@@ -42,9 +42,9 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
    files.set('options-sheets/resource-seals.json',sourceSeal.bytes);files.set('data/queue.json',queueFile.bytes);
    const fullPaths=new Set(['native.json','native.css','token-bindings.json','server-contract.json'].map(p=>'review-workspace/options-sheets/'+p));
    deferred=createDeferredSource({transport:repo,paths:fullPaths,getToken:()=>session.getToken(),load:async({signal:fullSignal})=>{
-    const full=await bundle(config.assets.fullNative,'private-workspace-full-native',192000000,fullSignal);
+    doc.documentElement.dataset.fullNativeState='loading';let full;try{full=await bundle(config.assets.fullNative,'private-workspace-full-native',192000000,fullSignal)}catch(error){doc.documentElement.dataset.fullNativeState='failed';doc.documentElement.dataset.fullNativeError=String(error.message).slice(0,240);throw error}
     const pins=JSON.parse(new TextDecoder().decode(sourceSeal.bytes)).files,result=new Map();
-    for(const[path,bytes]of full.files){const name=path.replace(/^options-sheets\//,'');await verifySealedBytes(bytes,pins[name]);result.set('review-workspace/'+path,bytes)}return result;
+    for(const[path,bytes]of full.files){const name=path.replace(/^options-sheets\//,'');await verifySealedBytes(bytes,pins[name]);result.set('review-workspace/'+path,bytes)}doc.documentElement.dataset.fullNativeState='verified';delete doc.documentElement.dataset.fullNativeError;return result;
    }});
    source=createSourceSession({transport:deferred,getToken:()=>session.getToken(),verifiedFiles:files,maxCacheBytes:384000000});
    const reader=createRecordReader({transport:source}),decisionWriter=createDecisionWriter({reader,transport:source,canWrite:()=>Boolean(session.identity()?.canWrite&&config.canWrite),questionIds:new Set(queue.items.map(q=>q.id))});
