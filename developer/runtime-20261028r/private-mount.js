@@ -1,3 +1,4 @@
+import{scopedEditorURL}from'./scoped-editor-links.js';
 /** Mount unmodified private runtime paths below the generic public Pages shell. */
 import{createPrivateResources}from'./private-resources.js';
 export async function mountPrivateRuntime({workerURL,scope,transport,handleAPI,navigator:nav=globalThis.navigator,origin=globalThis.location.origin,Channel=globalThis.MessageChannel,timeoutMs=20000,onRecovered=()=>{}}={}){
@@ -25,7 +26,7 @@ export async function mountPrivateRuntime({workerURL,scope,transport,handleAPI,n
  function controller(){const current=nav.serviceWorker.controller;if(!current||current.scriptURL!==worker.href)throw Error('Workspace controller changed');return current}
  async function receive(port,event){
   if(closed)return;const data=event.data;
-  if(data?.type==='open-entry'){const request=openRequests.get(data.requestId);if(!request)return;clearTimeout(request.timer);openRequests.delete(data.requestId);if(data.error||typeof data.url!=='string')request.reject(Error('Prototype entry refused'));else request.resolve(data.url);return}
+  if(data?.type==='open-entry'){const request=openRequests.get(data.requestId);if(!request)return;clearTimeout(request.timer);openRequests.delete(data.requestId);if(data.error||typeof data.url!=='string')request.reject(Error('Private UI entry refused'));else request.resolve(data.url);return}
   if(data?.type==='reclaimed'){const request=claimRequests.get(data.challenge);if(request){clearTimeout(request.timer);claimRequests.delete(data.challenge);onRecovered();request.resolve()}return}
   if(!['resource','api'].includes(data?.type)||!Number.isSafeInteger(data.id))return;
   let response;try{const request=new Request(data.url,{method:data.method,...(data.body?{body:data.body,headers:{'Content-Type':data.contentType||'application/json'}}:{})});response=data.type==='api'?await handleAPI?.(request):await resources.respond(request)}catch{response=null}
@@ -49,6 +50,6 @@ export async function mountPrivateRuntime({workerURL,scope,transport,handleAPI,n
  await bind();
  return {baseURL:new URL(mountPath,origin).href,ensure,
   entryURL(path){const url=new URL(path,new URL(mountPath,origin));if(url.origin!==origin||!url.pathname.startsWith(mountPath))throw Error('Private entry path required');url.searchParams.set('_mount',entry);return url.href},
-  async openEntryURL(path){await ensure();const url=new URL(path,new URL(mountPath,origin));if(url.origin!==origin||![mountPath+'prototype/',mountPath+'prototype/index.html'].includes(url.pathname))throw Error('Exact prototype entry required');return new Promise((resolve,reject)=>{const requestId=++nextOpen,timer=setTimeout(()=>{openRequests.delete(requestId);reject(Error('Prototype entry timed out'))},5000);openRequests.set(requestId,{resolve,reject,timer});channel.port1.postMessage({type:'open-entry',requestId,url:url.href})})},
+  async openEntryURL(path){await ensure();const url=new URL(path,new URL(mountPath,origin));const editor=[mountPath+'editor/',mountPath+'editor/index.html'].includes(url.pathname);if(url.origin!==origin||url.username||url.password||url.hash||!(editor?scopedEditorURL(url.href.replace('/editor/index.html','/editor/'),new URL(mountPath,origin).href):[mountPath+'prototype/',mountPath+'prototype/index.html'].includes(url.pathname)))throw Error('Exact private UI entry required');return new Promise((resolve,reject)=>{const requestId=++nextOpen,timer=setTimeout(()=>{openRequests.delete(requestId);reject(Error('Private UI entry timed out'))},5000);openRequests.set(requestId,{resolve,reject,timer});channel.port1.postMessage({type:'open-entry',requestId,url:url.href})})},
   async reclaim(challenge){if(typeof challenge!=='string'||!/^[-a-zA-Z0-9]{8,100}$/.test(challenge))throw Error('Valid client challenge required');await ensure();return new Promise((resolve,reject)=>{const timer=setTimeout(()=>{claimRequests.delete(challenge);reject(Error('Client recovery timed out'))},5000);claimRequests.set(challenge,{resolve,reject,timer});controller().postMessage({type:'private-reclaim',challenge})})},close,registration};
 }
