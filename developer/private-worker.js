@@ -1,4 +1,5 @@
-/** Generic Pages service worker. Private bytes travel through a live page port only. */
+/** Entry hints are consumed before exact root-referrer binding.
+ * Generic Pages service worker. Private bytes travel through a live page port only. */
 const brokers=new Map(),claims=new Map();
 const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
