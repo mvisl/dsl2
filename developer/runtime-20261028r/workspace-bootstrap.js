@@ -12,7 +12,7 @@ import{createScreenWriter}from'./screen-writer.js';
 import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js';
 import{mountPrivateRuntime}from'./private-mount.js';
-import{mountWorkspaceViews}from'./workspace-views.js?v=tab-navigation1';
+import{mountWorkspaceViews}from'./workspace-views.js?v=scoped-editor1';
 export function startWorkspaceHost({document:doc=globalThis.document,window:win=globalThis.window,bridgeOrigin,workerURL,scope,fetcher=globalThis.fetch}={}){
  const session=createGitHubSession({window:win,bridgeOrigin}),get=id=>doc.getElementById(id);
  const requested=new URL(win.location.href).searchParams.get('returnTo'),entryTarget=requested?sourceEntryTarget(requested,new URL(scope,win.location.origin).href):null;
