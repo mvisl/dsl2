@@ -8,7 +8,7 @@ export function createGitHubSession({window:win=globalThis.window,crypto=globalT
   if(active)return active;
   const bytes=crypto.getRandomValues(new Uint8Array(32));let raw='';for(const c of bytes)raw+=String.fromCharCode(c);
   const flow=btoa(raw).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-  const popup=win.open(bridgeOrigin+'/start?flow='+flow,'design-workspace-sign-in','popup,width=600,height=720');
+  const popup=win.open(bridgeOrigin+'/start?flow='+flow,'_blank');
   if(!popup)throw Error('Allow the GitHub sign-in window and try again');
   const pending=new Promise((resolve,reject)=>{
    const finish=(error,value)=>{cancelActive=null;win.clearTimeout(timer);win.removeEventListener('message',receive);try{popup.close()}catch{}error?reject(error):resolve(value)};
