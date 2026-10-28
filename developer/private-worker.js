@@ -44,7 +44,7 @@ self.addEventListener('message',event=>{
 });
 function forward(event,broker,type){event.respondWith(forwarded(event.request,broker,type))}
 function forwarded(request,broker,type){
- if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&new URL(request.url).pathname==='/api/decisions'))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+ if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&['/api/decisions','/api/screens'].includes(new URL(request.url).pathname)))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
  return (async()=>{
   let body;
   if(request.method==='POST'){
@@ -83,7 +83,7 @@ self.addEventListener('fetch',event=>{
  if(!url.pathname.startsWith(mountPath)){
   // Existing absolute API calls must never fall through to a public host or old Sites.
   if(broker&&url.pathname.startsWith('/api/')){
-   if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&url.pathname==='/api/decisions'))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+   if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&['/api/decisions','/api/screens'].includes(url.pathname)))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
    else forward(event,broker,'api');
   }else if(url.pathname.startsWith('/api/'))event.respondWith(recover(event).then(b=>b?forwarded(event.request,b,'api'):apiFailure('GitHub sign-in required',401)));
   return;
