@@ -13,6 +13,7 @@ import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js';
 import{mountPrivateRuntime}from'./private-mount.js?v=owned-child1';
 import{mountWorkspaceViews}from'./workspace-views.js?v=owned-child1';
+function workspaceDesignCapabilities(config){return{schemaVersion:1,supported:{applicationScreens:config.readableApplicationScreens},readable:{applicationScreens:config.readableApplicationScreens,componentStackFamilies:Array.isArray(config.readableComponentFamilies)?[...new Set(config.readableComponentFamilies.filter(name=>typeof name==='string'&&/^[-a-z0-9]{1,64}$/.test(name)))].slice(0,32):[]}};}
 export function startWorkspaceHost({document:doc=globalThis.document,window:win=globalThis.window,bridgeOrigin,workerURL,scope,fetcher=globalThis.fetch}={}){
  const session=createGitHubSession({window:win,bridgeOrigin}),get=id=>doc.getElementById(id);
  const requested=new URL(win.location.href).searchParams.get('returnTo'),entryTarget=requested?sourceEntryTarget(requested,new URL(scope,win.location.origin).href):null;
@@ -66,7 +67,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
     return{recipe:validated,sourceURL:entry?'https://www.figma.com/design/'+entry.fileKey+'/?node-id='+entry.nodeId.replace(':','-'):null};
    };
    const screenWriter=createScreenWriter({reader,transport:source,canWrite:()=>Boolean(session.identity()?.canWrite&&config.canWrite),authorityFor,validateOtherRecipe});
-   let inboxAPI;const recordAPI=createRecordAPI({reader,origin:win.location.origin,decisionWriter,screenWriter,resourceCapabilities:()=>({selectedOptionsProfiles:true}),designCapabilities:()=>({schemaVersion:1,supported:{applicationScreens:config.readableApplicationScreens},readable:{applicationScreens:config.readableApplicationScreens}})});
+   let inboxAPI;const recordAPI=createRecordAPI({reader,origin:win.location.origin,decisionWriter,screenWriter,resourceCapabilities:()=>({selectedOptionsProfiles:true}),designCapabilities:()=>workspaceDesignCapabilities(config)});
    const handleAPI=async request=>(inboxAPI?await inboxAPI(request):null)??recordAPI(request);
    phase('Подключаем конструктор и вопросы…');if(entryTarget){const consumed=new URL(win.location.href);consumed.searchParams.delete('returnTo');win.history.replaceState(win.history.state,'',consumed.href)}mount=await mountPrivateRuntime({workerURL,scope,transport:source,handleAPI,origin:win.location.origin,onRecovered:()=>{doc.documentElement.dataset.recoveredClients=String(Number(doc.documentElement.dataset.recoveredClients||0)+1)}});
    if(current!==epoch){mount.close();source.close();deferred.closeDeferred();return}
