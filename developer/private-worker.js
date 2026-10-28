@@ -16,6 +16,9 @@ function signInEntry(request){
 
 self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
+// History navigation hints are not credentials; HTTP referrers never carry hashes.
+// Keep exact origin/path/other query fields plus the root-issued random entry.
+function rootReferrer(referrer,sourceURL){try{const actual=new URL(referrer),source=new URL(sourceURL);for(const url of [actual,source]){url.hash='';url.searchParams.delete('returnTo')}return actual.href===source.href}catch{return false}}
 function forget(broker){for(const[id,value]of brokers)if(value===broker)brokers.delete(id);for(const item of broker.pending.values()){clearTimeout(item.timer);item.resolve((item.type==='api'?apiFailure:fallback)('GitHub sign-in required',401))}broker.pending.clear();broker.entries.clear();broker.port.close()}
 self.addEventListener('message',event=>{
  if(!event.source?.id)return;
@@ -73,7 +76,7 @@ self.addEventListener('fetch',event=>{
  let broker=brokers.get(event.clientId)||brokers.get(event.replacesClientId);
  if(!broker&&event.request.mode==='navigate'&&url.pathname.startsWith(mountPath)){
   const entry=url.searchParams.get('_mount');
-  broker=[...new Set(brokers.values())].find(value=>entry===value.entry&&event.request.referrer===value.sourceURL);
+  broker=[...new Set(brokers.values())].find(value=>entry===value.entry&&rootReferrer(event.request.referrer,value.sourceURL));
   if(!broker&&event.request.method==='GET'){
    const destination=new URL(url);destination.searchParams.delete('_mount');
    broker=[...new Set(brokers.values())].find(value=>{const permit=value.entries.get(entry);if(!permit||permit.expires<Date.now()||permit.url!==destination.href)return false;
