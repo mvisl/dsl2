@@ -2,7 +2,7 @@
 import{createWorkspaceLocationMirror}from'./workspace-location.js';
 import{readSealedAsset}from'./sealed-asset.js';
 import{sourceEntryTarget}from'./entry-target.js';
-import{createGitHubSession}from'./auth-session.js';
+import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js';
 import{createSourceSession}from'./source-session.js';
 import{createDeferredSource}from'./deferred-source.js';
