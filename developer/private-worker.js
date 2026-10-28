@@ -3,6 +3,7 @@
 const brokers=new Map(),claims=new Map();
 const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
+const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
 function signInEntry(request){
  const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root),params=new URLSearchParams();
@@ -10,6 +11,7 @@ function signInEntry(request){
   for(const name of ['screen','record','profile','optionsSheet','nativeTrades','f1Trades','map','view']){const values=current.searchParams.getAll(name);if(values.length===1&&/^[-\w:;.]{1,160}$/.test(values[0]))params.set(name,values[0])}
   entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
  }
+ if(['inbox/','inbox/index.html'].some(p=>current.pathname===mountPath+p)){const values=current.searchParams.getAll('request');if(values.length===1&&/^[-\w]{1,100}$/.test(values[0]))entry.searchParams.set('inbox',values[0])}
  const href=entry.href.replaceAll('&','&amp;').replaceAll('"','&quot;');
  return new Response('<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="referrer" content="no-referrer"><title>Вход в рабочий стол</title><body style="font:18px system-ui;background:#151515;color:#eee;padding:48px;max-width:640px"><h1>Войдите в рабочий стол</h1><p>Для этого экрана нужен GitHub-вход. После входа можно открыть исходный экран. Локальный черновик доступен только на устройстве, где он создан.</p><a style="color:#f9a367" href="'+href+'">Продолжить через GitHub →</a></body></html>',{status:401,headers:{'Cache-Control':'no-store','Content-Type':'text/html; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});
 }
@@ -18,12 +20,21 @@ self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
 // History navigation hints are not credentials; HTTP referrers never carry hashes.
 // Keep exact origin/path/other query fields plus the root-issued random entry.
-function rootReferrer(referrer,sourceURL){try{const actual=new URL(referrer),source=new URL(sourceURL);for(const url of [actual,source]){url.hash='';url.searchParams.delete('returnTo')}return actual.href===source.href}catch{return false}}
+function rootReferrer(referrer,sourceURL){try{const actual=new URL(referrer),source=new URL(sourceURL);for(const url of [actual,source]){url.hash='';url.searchParams.delete('returnTo');url.searchParams.delete('inbox')}return actual.href===source.href}catch{return false}}
 function forget(broker){for(const[id,value]of brokers)if(value===broker)brokers.delete(id);for(const item of broker.pending.values()){clearTimeout(item.timer);item.resolve((item.type==='api'?apiFailure:fallback)('GitHub sign-in required',401))}broker.pending.clear();broker.entries.clear();broker.port.close()}
+function issueUIEntry(broker,value){
+ const url=new URL(value),paths=['prototype/','prototype/index.html','editor/','editor/index.html','compose/','compose/index.html','inbox/','inbox/index.html','index.html'];
+ if(![...brokers.values()].includes(broker)||url.origin!==self.location.origin||url.username||url.password||url.hash||url.href.length>2048||!paths.some(path=>url.pathname===mountPath+path))throw Error('Exact private UI entry required');
+ url.searchParams.delete('_mount');for(const[key,item]of broker.entries)if(item.expires<Date.now())broker.entries.delete(key);if(broker.entries.size>=8)throw Error('Too many pending entries');
+ const entry=crypto.randomUUID();broker.entries.set(entry,{url:url.href,expires:Date.now()+10000});url.searchParams.set('_mount',entry);return url.href;
+}
 self.addEventListener('message',event=>{
  if(!event.source?.id)return;
  const source=new URL(event.source.url);if(source.origin!==self.location.origin||!source.href.startsWith(self.registration.scope))return;
  if(event.data?.type==='private-check'&&event.ports?.[0]){event.ports[0].postMessage({alive:brokers.has(event.source.id)});event.ports[0].close();return}
+ if(event.data?.type==='private-ui-entry'&&event.ports?.[0]){
+  const port=event.ports[0],work=(async()=>{try{const broker=brokers.get(event.source.id)||await recover({clientId:event.source.id});if(!broker)throw Error('GitHub sign-in required');port.postMessage({url:issueUIEntry(broker,event.data.url)})}catch{port.postMessage({error:true})}finally{port.close()}})();event.waitUntil?.(work);return;
+ }
  if(event.data?.type==='private-reclaim'){
   const claim=claims.get(event.data.challenge),broker=brokers.get(event.source.id);
   if(claim&&broker){clearTimeout(claim.timer);claims.delete(event.data.challenge);brokers.set(claim.clientId,broker);broker.port.postMessage({type:'reclaimed',challenge:event.data.challenge});claim.resolve(broker)}return;
@@ -34,9 +45,7 @@ self.addEventListener('message',event=>{
  broker.port.onmessage=message=>{
   const data=message.data;if(data?.type==='close'){forget(broker);return}
   if(data?.type==='open-entry'&&Number.isSafeInteger(data.requestId)){
-   try{const url=new URL(data.url);if(url.origin!==self.location.origin||url.username||url.password||url.hash||url.href.length>2048||![mountPath+'prototype/',mountPath+'prototype/index.html'].includes(url.pathname))throw Error();
-    url.searchParams.delete('_mount');for(const[key,value]of broker.entries)if(value.expires<Date.now())broker.entries.delete(key);if(broker.entries.size>=8)throw Error();
-    const entry=crypto.randomUUID();broker.entries.set(entry,{url:url.href,expires:Date.now()+10000});url.searchParams.set('_mount',entry);broker.port.postMessage({type:'open-entry',requestId:data.requestId,url:url.href});
+   try{broker.port.postMessage({type:'open-entry',requestId:data.requestId,url:issueUIEntry(broker,data.url)});
    }catch{broker.port.postMessage({type:'open-entry',requestId:data.requestId,error:true})}return;
   }
   const item=broker.pending.get(data?.id);if(!item)return;
@@ -48,7 +57,7 @@ self.addEventListener('message',event=>{
 });
 function forward(event,broker,type){event.respondWith(forwarded(event.request,broker,type))}
 function forwarded(request,broker,type){
- if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&['/api/decisions','/api/screens'].includes(new URL(request.url).pathname)))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+ if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&writableJSON(new URL(request.url).pathname)))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
  return (async()=>{
   let body;
   if(request.method==='POST'){
@@ -87,7 +96,7 @@ self.addEventListener('fetch',event=>{
  if(!url.pathname.startsWith(mountPath)){
   // Existing absolute API calls must never fall through to a public host or old Sites.
   if(broker&&url.pathname.startsWith('/api/')){
-   if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&['/api/decisions','/api/screens'].includes(url.pathname)))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+   if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&writableJSON(url.pathname)))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
    else forward(event,broker,'api');
   }else if(url.pathname.startsWith('/api/'))event.respondWith(recover(event).then(b=>b?forwarded(event.request,b,'api'):apiFailure('GitHub sign-in required',401)));
   return;

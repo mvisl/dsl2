@@ -3,6 +3,7 @@ export function sourceEntryTarget(value,scope){
  try{
   const base=new URL(scope),url=new URL(value,base),root=base.pathname+'private/';
   if(url.origin!==base.origin||url.username||url.password||url.hash)return null;
+  if(['inbox/','inbox/index.html'].some(p=>url.pathname===root+p)){const values=url.searchParams.getAll('request');if(values.length!==1||!/^[-\w]{1,100}$/.test(values[0]))return null;return{inboxId:values[0],returnPath:'private/inbox/?request='+encodeURIComponent(values[0])}}
   if(!['editor/','editor/index.html','prototype/','prototype/index.html'].some(p=>url.pathname===root+p))return null;
   const query=new URLSearchParams();
   for(const name of ['screen','record','profile','optionsSheet','nativeTrades','f1Trades','map','view']){
