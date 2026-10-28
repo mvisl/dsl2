@@ -8,7 +8,7 @@ import{createSourceSession}from'./source-session.js';
 import{createDeferredSource}from'./deferred-source.js';
 import{verifySealedBytes,readSealedTarGzip}from'./sealed-tar.js';
 import{createRecordReader}from'./record-reader.js';
-import{createScreenWriter}from'./screen-writer.js';
+import{createScreenWriter}from'./screen-writer.js?v=component-study1';
 import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js';
 import{mountPrivateRuntime}from'./private-mount.js?v=owned-child1';
@@ -55,9 +55,10 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
     if(!authorities)authorities=Promise.all(config.nativeContracts.map(async path=>{const file=await source.readSource(path,{signal});return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(file.bytes))})).catch(error=>{authorities=null;throw error});
     const list=await authorities,match=list.find(a=>a.profiles?.[recipe?.context?.nativeProfile]?.recipe?.screenType===recipe?.screenType);if(!match)throw Error('Native source validation is unavailable');return match;
    };
-   let runtimeModule,selectionModule;const validationRuntimes=new Map();
-   const validateOtherRecipe=async(recipe)=>{
-    await mount.ensure();runtimeModule??=import(new URL('editor/runtime.js',mount.baseURL).href);selectionModule??=import(new URL('editor/source-startup.js',mount.baseURL).href);
+   let runtimeModule,selectionModule,componentStudyValidator;const validationRuntimes=new Map();
+   const validateOtherRecipe=async(recipe,{signal}={})=>{
+    await mount.ensure();if(recipe?.schemaVersion===1){if(!componentStudyValidator){const{createComponentStudyValidator}=await import(new URL('compose/study-authority.js',mount.baseURL).href);componentStudyValidator=createComponentStudyValidator({readSource:path=>source.readSource(path)});}return componentStudyValidator(recipe,{signal});}
+    runtimeModule??=import(new URL('editor/runtime.js',mount.baseURL).href);selectionModule??=import(new URL('editor/source-startup.js',mount.baseURL).href);
     const[{loadPreviewRuntime},{requiresCompleteRuntime}]=await Promise.all([runtimeModule,selectionModule]);
     const load=type=>{if(!validationRuntimes.has(type))validationRuntimes.set(type,loadPreviewRuntime({selectedSource:type}).catch(error=>{validationRuntimes.delete(type);throw error}));return validationRuntimes.get(type)};
     let runtime=await load(recipe?.schemaVersion===2?recipe.screenType:null);if(requiresCompleteRuntime(recipe,runtime))runtime=await load(null);

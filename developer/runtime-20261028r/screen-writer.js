@@ -22,20 +22,21 @@ export function createScreenWriter({reader,transport,canWrite=()=>false,authorit
   if(payload.expectedRevision!==state.screenStore.revision)fail('Screen library changed. Reload before saving; your draft is unchanged.',409);
   if(state.screenStore.screens.length>=2000)fail('Screen library capacity reached');
   let parent=null;if(payload.parentScreenId!==undefined){if(typeof payload.parentScreenId!=='string'||!/^[-\w:;.]{1,100}$/.test(payload.parentScreenId))fail('Invalid parent identity');parent=state.screenStore.screens.find(s=>s.id===payload.parentScreenId);if(!parent)fail('Parent screen is unavailable')}
-  const{recipe,sourceURL}=await validateSource(payload.recipe,{signal});
-  if(recipe.schemaVersion===1&&!parent)fail('A component study requires an existing saved parent');
+  const{recipe,sourceURL,componentStudy}=await validateSource(payload.recipe,{signal});
+  const newStudy=recipe.schemaVersion===1&&!parent;
+  if(newStudy&&(!plain(componentStudy)||componentStudy.schemaVersion!==1||componentStudy.kind!=='verified-component-stack'||!Array.isArray(componentStudy.sourceRefs)||!componentStudy.sourceRefs.length||!recipe.items?.length))fail('A new component study requires verified component source authority');
   try{await validateCopyProvenance(recipe,[...state.screenStore.screens,...(state.archivedScreens||[]).map(x=>x.record)],{validateSource:r=>validateSource(r,{signal})})}catch(error){fail(error.message)}
   if(parent&&(!same(parent.recipe.context,recipe.context)||parent.recipe.screenType!==recipe.screenType||parent.recipe.generation!==recipe.generation))fail('Variant must preserve its parent source context');
-  let refs=payload.sourceRefs??parent?.sourceRefs??[{label:'Native '+recipe.generation+' source',url:sourceURL}];
+  let refs=payload.sourceRefs??parent?.sourceRefs??(newStudy?componentStudy.sourceRefs:[{label:'Native '+recipe.generation+' source',url:sourceURL}]);
   if(!Array.isArray(refs)||refs.length>20||refs.some(r=>!plain(r)||Object.keys(r).some(k=>!['label','url'].includes(k))||typeof r.label!=='string'||r.label.length>200||typeof r.url!=='string'||r.url.length>2000))fail('Invalid source references');
-  if(!parent&&(!refs.length||refs.some(r=>r.url!==sourceURL))||parent&&!same(refs,parent.sourceRefs))fail('Source references must preserve the exact native source');
+  if(!parent&&(newStudy?!same(refs,componentStudy.sourceRefs):!refs.length||refs.some(r=>r.url!==sourceURL))||parent&&!same(refs,parent.sourceRefs))fail('Source references must preserve the exact native source');
   const screen={id:uuid(),title:payload.title.trim(),status:parent?'variant':'draft',readOnly:true,parentScreenId:parent?.id??null,sourceRefs:structuredClone(refs),recipe,updatedAt:now()};
   const index=structuredClone(state.index),revision=state.screenStore.revision+1;index.revision=revision;
   let created={schemaVersion:1,revision:0,screens:[],creationReceipts:{}};
   const existing=index.screenSources.find(s=>s.path===CREATED);
   if(existing){if(existing.includeIds!==null)fail('Created variant store needs explicit reconciliation',503);const file=await transport.readRecordAtCommit(CREATED,state.commit,{signal});created=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(file.bytes));if(created.schemaVersion!==1||!Array.isArray(created.screens)||!plain(created.creationReceipts))fail('Created variant store unavailable',503)}else index.screenSources.push({path:CREATED,includeIds:null});
   created.revision=revision;created.screens.push(screen);created.creationReceipts[key]={fingerprint,screenId:screen.id,revision};
-  const receipt=await transport.writeRecords([{path:CREATED,value:created},{path:INDEX,value:index}],{expectedCommit:state.commit,message:'Save immutable native screen variant',signal});
+  const receipt=await transport.writeRecords([{path:CREATED,value:created},{path:INDEX,value:index}],{expectedCommit:state.commit,message:newStudy?'Save immutable component study':'Save immutable native screen variant',signal});
   for(const[path,expected]of [[CREATED,created],[INDEX,index]]){const file=await transport.readRecordAtCommit(path,receipt.commit,{signal});if(!same(JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(file.bytes)),expected))fail('Variant save could not be verified; retry the original operation',503)}
   return{revision,screen};
  }};
