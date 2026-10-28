@@ -5,7 +5,7 @@ export function sourceEntryTarget(value,scope){
   if(url.origin!==base.origin||url.username||url.password||url.hash)return null;
   if(!['editor/','editor/index.html','prototype/','prototype/index.html'].some(p=>url.pathname===root+p))return null;
   const query=new URLSearchParams();
-  for(const name of ['screen','profile','optionsSheet','nativeTrades','f1Trades','map','view']){
+  for(const name of ['screen','record','profile','optionsSheet','nativeTrades','f1Trades','map','view']){
    const values=url.searchParams.getAll(name);if(values.length>1)return null;
    if(values.length){if(!/^[-\w:;.]{1,160}$/.test(values[0]))return null;query.set(name,values[0])}
   }

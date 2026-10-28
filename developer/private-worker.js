@@ -6,7 +6,7 @@ const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cach
 function signInEntry(request){
  const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root),params=new URLSearchParams();
  if(['editor/','editor/index.html','prototype/','prototype/index.html'].some(p=>current.pathname===mountPath+p)){
-  for(const name of ['screen','profile','optionsSheet','nativeTrades','f1Trades','map','view']){const values=current.searchParams.getAll(name);if(values.length===1&&/^[-\w:;.]{1,160}$/.test(values[0]))params.set(name,values[0])}
+  for(const name of ['screen','record','profile','optionsSheet','nativeTrades','f1Trades','map','view']){const values=current.searchParams.getAll(name);if(values.length===1&&/^[-\w:;.]{1,160}$/.test(values[0]))params.set(name,values[0])}
   entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
  }
  const href=entry.href.replaceAll('&','&amp;').replaceAll('"','&quot;');
