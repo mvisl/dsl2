@@ -1,4 +1,4 @@
-import{createGitHubSession}from'./auth-session.js';
+import{createGitHubSession}from'./auth-session.js?v=github-tab-20261028';
 const session=createGitHubSession({bridgeOrigin:'https://design-workspace-github-auth.mvisl1.workers.dev'});
 const login=document.querySelector('#login'),logout=document.querySelector('#logout'),status=document.querySelector('#status');
 login.onclick=async()=>{
