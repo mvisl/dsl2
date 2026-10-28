@@ -3,6 +3,16 @@ const brokers=new Map(),claims=new Map();
 const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
+function signInEntry(request){
+ const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root),params=new URLSearchParams();
+ if(['editor/','editor/index.html','prototype/','prototype/index.html'].some(p=>current.pathname===mountPath+p)){
+  for(const name of ['screen','profile','optionsSheet','nativeTrades','f1Trades','map','view']){const values=current.searchParams.getAll(name);if(values.length===1&&/^[-\w:;.]{1,160}$/.test(values[0]))params.set(name,values[0])}
+  entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
+ }
+ const href=entry.href.replaceAll('&','&amp;').replaceAll('"','&quot;');
+ return new Response('<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="referrer" content="no-referrer"><title>Вход в рабочий стол</title><body style="font:18px system-ui;background:#151515;color:#eee;padding:48px;max-width:640px"><h1>Войдите в рабочий стол</h1><p>Для этого экрана нужен GitHub-вход. После входа можно открыть исходный экран. Локальный черновик доступен только на устройстве, где он создан.</p><a style="color:#f9a367" href="'+href+'">Продолжить через GitHub →</a></body></html>',{status:401,headers:{'Cache-Control':'no-store','Content-Type':'text/html; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});
+}
+
 self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
 function forget(broker){for(const[id,value]of brokers)if(value===broker)brokers.delete(id);for(const item of broker.pending.values()){clearTimeout(item.timer);item.resolve((item.type==='api'?apiFailure:fallback)('GitHub sign-in required',401))}broker.pending.clear();broker.entries.clear();broker.port.close()}
@@ -78,7 +88,7 @@ self.addEventListener('fetch',event=>{
   }else if(url.pathname.startsWith('/api/'))event.respondWith(recover(event).then(b=>b?forwarded(event.request,b,'api'):apiFailure('GitHub sign-in required',401)));
   return;
  }
- if(!broker){event.respondWith(recover(event).then(b=>{if(!b)return fallback('Open the workspace and sign in with GitHub',401);if(event.resultingClientId)brokers.set(event.resultingClientId,b);return forwarded(event.request,b,'resource')}));return}
+ if(!broker){event.respondWith(recover(event).then(b=>{if(!b)return event.request.mode==='navigate'?signInEntry(event.request):fallback('Open the workspace and sign in with GitHub',401);if(event.resultingClientId)brokers.set(event.resultingClientId,b);return forwarded(event.request,b,'resource')}));return}
  if(event.resultingClientId)brokers.set(event.resultingClientId,broker);
  forward(event,broker,'resource');
 });
