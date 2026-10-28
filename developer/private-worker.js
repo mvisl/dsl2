@@ -1,5 +1,5 @@
 /** Generic Pages service worker. Private bytes travel through a live page port only. */
-const brokers=new Map();
+const brokers=new Map(),claims=new Map();
 const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
@@ -7,9 +7,14 @@ self.addEventListener('install',event=>event.waitUntil(self.skipWaiting()));
 self.addEventListener('activate',event=>event.waitUntil(self.clients.claim()));
 function forget(broker){for(const[id,value]of brokers)if(value===broker)brokers.delete(id);for(const item of broker.pending.values()){clearTimeout(item.timer);item.resolve((item.type==='api'?apiFailure:fallback)('GitHub sign-in required',401))}broker.pending.clear();broker.entries.clear();broker.port.close()}
 self.addEventListener('message',event=>{
- if(event.data?.type!=='private-mount'||!event.ports?.[0]||!event.source?.id)return;
- const source=new URL(event.source.url);
- if(source.origin!==self.location.origin||!source.href.startsWith(self.registration.scope))return;
+ if(!event.source?.id)return;
+ const source=new URL(event.source.url);if(source.origin!==self.location.origin||!source.href.startsWith(self.registration.scope))return;
+ if(event.data?.type==='private-check'&&event.ports?.[0]){event.ports[0].postMessage({alive:brokers.has(event.source.id)});event.ports[0].close();return}
+ if(event.data?.type==='private-reclaim'){
+  const claim=claims.get(event.data.challenge),broker=brokers.get(event.source.id);
+  if(claim&&broker){clearTimeout(claim.timer);claims.delete(event.data.challenge);brokers.set(claim.clientId,broker);broker.port.postMessage({type:'reclaimed',challenge:event.data.challenge});claim.resolve(broker)}return;
+ }
+ if(event.data?.type!=='private-mount'||!event.ports?.[0])return;
  const old=brokers.get(event.source.id);if(old)forget(old);
  const broker={port:event.ports[0],pending:new Map(),entries:new Map(),next:0,entry:crypto.randomUUID(),sourceURL:source.href};brokers.set(event.source.id,broker);
  broker.port.onmessage=message=>{
@@ -25,14 +30,16 @@ self.addEventListener('message',event=>{
   if(!(data.bytes instanceof ArrayBuffer)||!Number.isInteger(data.status)||data.status<200||data.status>599){item.resolve(fallback('Invalid private resource response',502));return}
   item.resolve(new Response(item.method==='HEAD'||[204,205,304].includes(data.status)?null:data.bytes,{status:data.status,headers:{...data.headers,'Cache-Control':'no-store'}}));
  };
- broker.port.start();broker.port.postMessage({type:'mounted',mountPath,entry:broker.entry,protocol:4});
+ broker.port.start();broker.port.postMessage({type:'mounted',mountPath,entry:broker.entry,protocol:5});
 });
-function forward(event,broker,type){
- event.respondWith((async()=>{
+function forward(event,broker,type){event.respondWith(forwarded(event.request,broker,type))}
+function forwarded(request,broker,type){
+ if(type==='api'&&!['GET','HEAD'].includes(request.method)&&!(request.method==='POST'&&new URL(request.url).pathname==='/api/decisions'))return Promise.resolve(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
+ return (async()=>{
   let body;
-  if(event.request.method==='POST'){
-   if(event.request.headers.get('Content-Type')?.split(';')[0]!=='application/json')return apiFailure('JSON answer required',415);
-   const reader=event.request.body?.getReader();if(!reader)return apiFailure('Answer body required',400);
+  if(request.method==='POST'){
+   if(request.headers.get('Content-Type')?.split(';')[0]!=='application/json')return apiFailure('JSON answer required',415);
+   const reader=request.body?.getReader();if(!reader)return apiFailure('Answer body required',400);
    const chunks=[];let total=0,expired=false;
    const bodyTimer=setTimeout(()=>{expired=true;void reader.cancel().catch(()=>{})},20000);
    try{for(;;){const{done,value}=await reader.read();if(expired)return apiFailure('Answer upload timed out; keep your draft',504);if(done)break;total+=value.byteLength;if(total>1900000){await reader.cancel();return apiFailure('Answer document is too large',413)}chunks.push(value)}}finally{clearTimeout(bodyTimer)}
@@ -41,9 +48,14 @@ function forward(event,broker,type){
   }
   return new Promise(resolve=>{
   const id=++broker.next;const timer=setTimeout(()=>{broker.pending.delete(id);resolve((type==='api'?apiFailure:fallback)('Private workspace request timed out',504))},20000);
-  broker.pending.set(id,{resolve,timer,method:event.request.method,type});
-  broker.port.postMessage({type,id,url:event.request.url,method:event.request.method,...(body?{body}:{})},body?[body]:[]);
- });})().catch(()=>apiFailure('Private workspace request failed; keep your draft',503)));
+  broker.pending.set(id,{resolve,timer,method:request.method,type});
+  broker.port.postMessage({type,id,url:request.url,method:request.method,...(body?{body}:{})},body?[body]:[]);
+ });})().catch(()=>apiFailure('Private workspace request failed; keep your draft',503));
+}
+async function recover(event){
+ const clientId=event.clientId||event.replacesClientId;if(!clientId||typeof self.clients.get!=='function')return null;
+ const client=await self.clients.get(clientId);if(!client)return null;const url=new URL(client.url);if(url.origin!==self.location.origin||!url.pathname.startsWith(mountPath))return null;
+ return new Promise(resolve=>{const challenge=crypto.randomUUID(),timer=setTimeout(()=>{claims.delete(challenge);resolve(null)},4000);claims.set(challenge,{clientId,resolve,timer});client.postMessage({type:'private-owner-probe',challenge})});
 }
 self.addEventListener('fetch',event=>{
  const url=new URL(event.request.url);if(url.origin!==self.location.origin)return;
@@ -63,10 +75,10 @@ self.addEventListener('fetch',event=>{
   if(broker&&url.pathname.startsWith('/api/')){
    if(!['GET','HEAD'].includes(event.request.method)&&!(event.request.method==='POST'&&url.pathname==='/api/decisions'))event.respondWith(apiFailure('GitHub record writes are not connected yet. Keep your draft.',501));
    else forward(event,broker,'api');
-  }
+  }else if(url.pathname.startsWith('/api/'))event.respondWith(recover(event).then(b=>b?forwarded(event.request,b,'api'):apiFailure('GitHub sign-in required',401)));
   return;
  }
- if(!broker){event.respondWith(fallback('Open the workspace and sign in with GitHub',401));return}
+ if(!broker){event.respondWith(recover(event).then(b=>{if(!b)return fallback('Open the workspace and sign in with GitHub',401);if(event.resultingClientId)brokers.set(event.resultingClientId,b);return forwarded(event.request,b,'resource')}));return}
  if(event.resultingClientId)brokers.set(event.resultingClientId,broker);
  forward(event,broker,'resource');
 });
