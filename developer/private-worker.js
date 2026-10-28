@@ -70,7 +70,7 @@ function forwarded(request,broker,type){
    if(![...brokers.values()].includes(broker))return apiFailure('GitHub sign-in required',401);
   }
   return new Promise(resolve=>{
-  const id=++broker.next;const timer=setTimeout(()=>{broker.pending.delete(id);resolve((type==='api'?apiFailure:fallback)('Private workspace request timed out',504))},20000);
+  const id=++broker.next;const timer=setTimeout(()=>{broker.pending.delete(id);resolve((type==='api'?apiFailure:fallback)('Private workspace request timed out',504))},type==='resource'?120000:20000);
   broker.pending.set(id,{resolve,timer,method:request.method,type});
   broker.port.postMessage({type,id,url:request.url,method:request.method,...(body?{body}:{})},body?[body]:[]);
  });})().catch(()=>apiFailure('Private workspace request failed; keep your draft',503));
