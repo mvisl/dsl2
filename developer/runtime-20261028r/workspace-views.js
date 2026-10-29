@@ -1,19 +1,25 @@
 import{mountScopedEditorLinks,watchOwnedPrivateWindow}from'./scoped-editor-links.js?v=owned-child1';
-/** Retain independent editor/review/Inbox DOMs; persistent state contains navigation only. */
-export function mountWorkspaceViews({mount,editorFrame,questionsFrame,inboxFrame,window:win=globalThis.window,storage=globalThis.localStorage,tabStorage=globalThis.sessionStorage,initialEditorPath='editor/',initialQuestionsPath='index.html',initialInboxPath='inbox/index.html',initialMode,preferInitial=false,onMode=()=>{},onError=()=>{},onInboxLocation=()=>{},onComposeHandled=()=>{}}={}){
+/** Retain independent editor/review/Inbox DOMs; persistent state contains navigation only.
+ * Surface 'developer' has exactly Constructor + Inbox; the legacy 'questions' mode name maps
+ * to Inbox there and owner review is never loaded. Surface 'lab' keeps the owner workflow. */
+export const LEGACY_VIEW_KEY='dsl2-github:workspace-view',DEVELOPER_VIEW_KEY='dsl2-github:workspace-view:developer:v2';
+export function mountWorkspaceViews({mount,editorFrame,questionsFrame,inboxFrame,window:win=globalThis.window,storage=globalThis.localStorage,tabStorage=globalThis.sessionStorage,surface='lab',initialEditorPath='editor/',initialQuestionsPath='index.html',initialInboxPath='inbox/index.html',initialMode,preferInitial=false,onMode=()=>{},onError=()=>{},onInboxLocation=()=>{},onComposeHandled=()=>{}}={}){
  if(typeof mount?.entryURL!=='function'||!editorFrame||!questionsFrame)throw Error('Private mount and workspace views required');
  if(!['index.html','index.html?reviewMode=calibration','index.html?reviewMode=calibration&calibrationQA=1'].includes(initialQuestionsPath))throw Error('Exact review entry required');
- const base=new URL(mount.baseURL),key='dsl2-github:workspace-view',children=new Set(),childWatchers=new Map(),modes=inboxFrame?['constructor','questions','inbox']:['constructor','questions'];let mode='constructor',editorPath=initialEditorPath,inboxPath=initialInboxPath,started=new Set(),disposed=false,pendingCompose=null,pendingRequest=null;
+ if(!['lab','developer'].includes(surface))throw Error('Unknown workspace surface');const developer=surface==='developer';if(developer&&!inboxFrame)throw Error('Developer Inbox frame required');
+ const base=new URL(mount.baseURL),key=developer?DEVELOPER_VIEW_KEY:LEGACY_VIEW_KEY,children=new Set(),childWatchers=new Map(),modes=developer?['constructor','inbox']:inboxFrame?['constructor','questions','inbox']:['constructor','questions'];let mode='constructor',editorPath=initialEditorPath,inboxPath=initialInboxPath,started=new Set(),disposed=false,pendingCompose=null,pendingRequest=null;
+ const modeFor=value=>developer&&value==='questions'?'inbox':value;
  function safePath(value){try{const url=new URL(value,base);if(url.origin!==base.origin||![base.pathname+'editor/',base.pathname+'editor/index.html'].includes(url.pathname))return null;const query=new URLSearchParams();for(const name of ['screen','workingCopy','profile','optionsSheet']){const values=url.searchParams.getAll(name);if(values.length>1)return null;if(values.length){if(!/^[-\w:;.]{1,160}$/.test(values[0]))return null;query.set(name,values[0])}}return'editor/'+(query.size?'?'+query:'')}catch{return null}}
  function safeInbox(value){try{const url=new URL(value,base);if(url.origin!==base.origin||![base.pathname+'inbox/',base.pathname+'inbox/index.html'].includes(url.pathname)||url.hash)return null;const query=new URLSearchParams();for(const name of ['request','screenId','componentId','variantId','fileKey','nodeId','link']){const values=url.searchParams.getAll(name);if(values.length>1)return null;if(!values.length)continue;const value=values[0];if(name==='link'){const link=new URL(value);if(link.username||link.password||value.length>2048||!(link.protocol==='https:'||link.protocol==='http:'&&['localhost','127.0.0.1'].includes(link.hostname)))return null}else if(!/^[-\w:;.]{1,512}$/.test(value)||name!=='nodeId'&&value.length>100)return null;query.set(name,value)}return'inbox/index.html'+(query.size?'?'+query:'')}catch{return null}}
  editorPath=safePath(editorPath);inboxPath=safeInbox(inboxPath);if(!editorPath||!inboxPath)throw Error('Exact workspace entries required');
- function restored(store){try{const saved=JSON.parse(store?.getItem(key)||'null');return saved?.version===1&&modes.includes(saved.mode)?saved:null}catch{return null}}
- const saved=preferInitial?null:restored(tabStorage)||restored(storage);if(saved){mode=saved.mode;editorPath=safePath(saved.editorPath)||editorPath;if(!initialMode)inboxPath=safeInbox(saved.inboxPath)||inboxPath}
- if(initialMode&&modes.includes(initialMode))mode=initialMode;
+ function restored(store,lookup=key){try{const saved=JSON.parse(store?.getItem(lookup)||'null');if(saved?.version!==1)return null;const restoredMode=modeFor(saved.mode);return modes.includes(restoredMode)?{...saved,mode:restoredMode}:null}catch{return null}}
+ // Developer tabs migrate an existing legacy view once, so open working copies and Inbox threads survive.
+ const saved=preferInitial?null:restored(tabStorage)||restored(storage)||(developer?restored(tabStorage,LEGACY_VIEW_KEY)||restored(storage,LEGACY_VIEW_KEY):null);if(saved){mode=saved.mode;editorPath=safePath(saved.editorPath)||editorPath;if(!initialMode)inboxPath=safeInbox(saved.inboxPath)||inboxPath}
+ if(initialMode&&modes.includes(modeFor(initialMode)))mode=modeFor(initialMode);
  function persist(){const value=JSON.stringify({version:1,mode,editorPath,inboxPath});for(const store of [tabStorage,storage])try{store?.setItem(key,value)}catch{}}
  const own=source=>source===editorFrame.contentWindow||source===questionsFrame.contentWindow||inboxFrame&&source===inboxFrame.contentWindow||children.has(source);
  async function start(which){if(started.has(which)||disposed)return;started.add(which);try{if(mount.ensure)await mount.ensure();if(disposed)return;const frame=which==='constructor'?editorFrame:which==='questions'?questionsFrame:inboxFrame;frame.src=mount.entryURL(which==='constructor'?editorPath:which==='questions'?initialQuestionsPath:inboxPath)}catch(error){started.delete(which);onError(error.message)}}
- function setMode(next){if(!modes.includes(next))throw Error('Unknown workspace mode');mode=next;start(mode);editorFrame.hidden=mode!=='constructor';questionsFrame.hidden=mode!=='questions';if(inboxFrame)inboxFrame.hidden=mode!=='inbox';persist();onMode(mode)}
+ function setMode(next){next=modeFor(next);if(!modes.includes(next))throw Error('Unknown workspace mode');mode=next;start(mode);editorFrame.hidden=mode!=='constructor';questionsFrame.hidden=mode!=='questions';if(inboxFrame)inboxFrame.hidden=mode!=='inbox';persist();onMode(mode)}
  function trackChild(child){children.add(child);childWatchers.set(child,watchOwnedPrivateWindow({child,baseURL:base.href,open:openPrivateChild,onError}));}
  async function openPrivateChild(path){if(disposed)throw Error('GitHub sign-in required');const url=await mount.openEntryURL(path);if(disposed)throw Error('GitHub sign-in required');const child=win.open(url,'_blank');if(!child)throw Error('Private window could not open');trackChild(child)}
  let closeEditorLinks=()=>{};
@@ -25,7 +31,7 @@ export function mountWorkspaceViews({mount,editorFrame,questionsFrame,inboxFrame
   if(data?.type==='dsl2-private-client-reclaim'){try{await mount.reclaim(data.challenge)}catch(error){onError(error.message)}return}
   if(data?.type==='dsl2-workspace-compose'){openInbox(data.hash);return}
   if(data?.type==='dsl2-workspace-inbox'){openInbox(undefined,data.path);return}
-  if(data?.type==='dsl2-workspace-switch'&&modes.includes(data.mode)){setMode(data.mode);return}
+  if(data?.type==='dsl2-workspace-switch'&&modes.includes(modeFor(data.mode))){setMode(data.mode);return}
   if(inboxFrame&&event.source===inboxFrame.contentWindow){
    if(data?.type==='dsl2-inbox-compose-handled'&&data.hash===pendingCompose){pendingCompose=null;onComposeHandled(data.hash);return}
    if(data?.type==='dsl2-inbox-location'){const next=safeInbox(data.url);if(next){inboxPath=next;if(new URL(next,base).searchParams.get('request')===pendingRequest)pendingRequest=null;persist();onInboxLocation(next)}return}
@@ -35,5 +41,5 @@ export function mountWorkspaceViews({mount,editorFrame,questionsFrame,inboxFrame
   if(data?.type==='dsl2-workspace-location'){const next=safePath(data.url);if(next){editorPath=next;persist()}}
  }
  editorFrame.addEventListener('load',ready);inboxFrame?.addEventListener('load',readyInbox);win.addEventListener('message',receive);setMode(mode);
- return{setMode,openPrototype,openInbox,getMode:()=>mode,destroy(){disposed=true;closeEditorLinks();pendingCompose=null;pendingRequest=null;editorFrame.removeEventListener('load',ready);inboxFrame?.removeEventListener('load',readyInbox);win.removeEventListener('message',receive);editorFrame.src='about:blank';questionsFrame.src='about:blank';if(inboxFrame)inboxFrame.src='about:blank';started.clear();for(const stop of childWatchers.values())stop();childWatchers.clear();for(const child of children)try{child.close()}catch{}children.clear()}};
+ return{setMode,openPrototype,openInbox,getMode:()=>mode,modes:[...modes],surface,destroy(){disposed=true;closeEditorLinks();pendingCompose=null;pendingRequest=null;editorFrame.removeEventListener('load',ready);inboxFrame?.removeEventListener('load',readyInbox);win.removeEventListener('message',receive);editorFrame.src='about:blank';questionsFrame.src='about:blank';if(inboxFrame)inboxFrame.src='about:blank';started.clear();for(const stop of childWatchers.values())stop();childWatchers.clear();for(const child of children)try{child.close()}catch{}children.clear()}};
 }

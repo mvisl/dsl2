@@ -12,12 +12,12 @@
       "sha256": "8ff0fb70b6ff97c1d6a472605c2069bb78f9f6b278a4e287ccd76526289cf0e5"
     },
     "index.html": {
-      "bytes": 1406,
-      "sha256": "b4bbcfc352549b81b9774cbaad6ce6e8f21733bf1c60ce24c25019d762090f8e"
+      "bytes": 1415,
+      "sha256": "628d66efeafa4ebff3f93d2aa91d17bfac494d0be29fb680f9043491a48b7c0b"
     },
     "guest/styles.css": {
-      "bytes": 3279,
-      "sha256": "de30c3bc036af31b194c647a6151abe44d82d7567546068e6ef51a93fa2dbef1"
+      "bytes": 3770,
+      "sha256": "2bdd46d26a66e253ee294cb1f7e1e0733ad0601901ecc4a2351073f9762d834a"
     },
     "guest/app.js": {
       "bytes": 6189,

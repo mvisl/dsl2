@@ -1,7 +1,9 @@
 /** Mirror the active Inbox only. Auth and private bytes never belong in this hint. */
-export function createWorkspaceLocationMirror({privateBaseURL,getURL,replaceURL,
+export function createWorkspaceLocationMirror({privateBaseURL,getURL,replaceURL,surface='lab',
  initialMode='constructor',initialInboxPath='inbox/index.html'}={}){
- const base=new URL(privateBaseURL),modes=new Set(['constructor','questions','inbox']);
+ if(!['lab','developer'].includes(surface))throw Error('Unknown workspace surface');
+ const base=new URL(privateBaseURL),modes=new Set(surface==='developer'?['constructor','inbox']:['constructor','questions','inbox']);
+ if(surface==='developer'&&initialMode==='questions')initialMode='inbox';
  if(base.username||base.password||base.search||base.hash||!base.pathname.endsWith('/')||
     typeof getURL!=='function'||typeof replaceURL!=='function')throw Error('Exact private base and URL adapters required');
  function requestID(path){
@@ -22,7 +24,7 @@ export function createWorkspaceLocationMirror({privateBaseURL,getURL,replaceURL,
   if(url.href!==getURL())replaceURL(url.href);
  }
  return {
-  setMode(next){if(!modes.has(next))throw Error('Unknown workspace mode');mirror(next,id);mode=next;},
+  setMode(next){if(surface==='developer'&&next==='questions')next='inbox';if(!modes.has(next))throw Error('Unknown workspace mode');mirror(next,id);mode=next;},
   inboxLocation(path){const next=requestID(path);if(mode==='inbox')mirror(mode,next);id=next;}
  };
 }
