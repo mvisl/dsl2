@@ -4,7 +4,7 @@ const brokers=new Map(),claims=new Map();
 const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const attachmentPath=path=>/^\/data\/attachments\/[a-f0-9]{32}\.(png|jpg|webp|gif)$/.test(path);
-const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
+const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox','/api/calibration'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
 function signInEntry(request){
  const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root),params=new URLSearchParams();
