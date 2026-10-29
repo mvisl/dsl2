@@ -13,15 +13,15 @@
     },
     "index.html": {
       "bytes": 1406,
-      "sha256": "54d787a7809a87e36ddc0f36e655b1099ae8cfcf45f3f9651fc1a4d1e1fa7b58"
+      "sha256": "b4bbcfc352549b81b9774cbaad6ce6e8f21733bf1c60ce24c25019d762090f8e"
     },
     "guest/styles.css": {
-      "bytes": 3176,
-      "sha256": "53827e7ff3ec93b38b445ab5790d506b84866fe8da83f5093f1d6d3cd754d218"
+      "bytes": 3279,
+      "sha256": "de30c3bc036af31b194c647a6151abe44d82d7567546068e6ef51a93fa2dbef1"
     },
     "guest/app.js": {
-      "bytes": 5391,
-      "sha256": "4244ead9f46a646858cc5b592eeed881414e031704bc2aef888cf3ffd3b59022"
+      "bytes": 6189,
+      "sha256": "3463689d07b2a531f5da4f03fe11b40ec3f6e5ed638136d4f5016767898a66f4"
     },
     "guest/assets/a4.svg": {
       "bytes": 150,
