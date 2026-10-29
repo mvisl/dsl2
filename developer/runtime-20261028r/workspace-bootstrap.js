@@ -3,7 +3,7 @@ import{createWorkspaceLocationMirror}from'./workspace-location.js';
 import{readSealedAsset}from'./sealed-asset.js';
 import{loadSelectedRuntime}from'./selected-runtime.js';
 import{loadFullNativeRuntime}from'./full-native-runtime.js';
-import{sourceEntryTarget}from'./entry-target.js?v=lab1';
+import{sourceEntryTarget}from'./entry-target.js?v=lab2';
 import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js';
 import{createSourceSession}from'./source-session.js?v=verified-group1';
@@ -14,7 +14,7 @@ import{createScreenWriter}from'./screen-writer.js?v=component-study1';
 import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js';
 import{mountPrivateRuntime}from'./private-mount.js?v=owned-child1';
-import{mountWorkspaceViews}from'./workspace-views.js?v=owned-child1';
+import{mountWorkspaceViews}from'./workspace-views.js?v=lab2';
 function workspaceDesignCapabilities(config){return{schemaVersion:1,supported:{applicationScreens:config.readableApplicationScreens},readable:{applicationScreens:config.readableApplicationScreens,componentStackFamilies:Array.isArray(config.readableComponentFamilies)?[...new Set(config.readableComponentFamilies.filter(name=>typeof name==='string'&&/^[-a-z0-9]{1,64}$/.test(name)))].slice(0,32):[]}};}
 export function startWorkspaceHost({document:doc=globalThis.document,window:win=globalThis.window,bridgeOrigin,workerURL,scope,fetcher=globalThis.fetch}={}){
  const session=createGitHubSession({window:win,bridgeOrigin}),get=id=>doc.getElementById(id);
@@ -84,7 +84,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
    const bankFile=await source.readSource('review-workspace/calibration/cases.json');
    calibrationAPI=createCalibrationAPI({transport:source,origin:win.location.origin,bank:JSON.parse(new TextDecoder().decode(bankFile.bytes)),getActor:attachmentActor,canWrite:attachmentWrite});
    const route=createWorkspaceLocationMirror({privateBaseURL:mount.baseURL,getURL:()=>win.location.href,replaceURL:url=>win.history.replaceState(win.history.state,'',url),initialMode:entryTarget?.review?'questions':initialInboxId?'inbox':'constructor',initialInboxPath:initialInboxId?'inbox/index.html?request='+encodeURIComponent(initialInboxId):'inbox/index.html'});
-   views=mountWorkspaceViews({mount,editorFrame:get('builder'),questionsFrame:get('questions'),inboxFrame:get('inbox'),initialInboxPath:initialInboxId?'inbox/index.html?request='+encodeURIComponent(initialInboxId):'inbox/index.html',initialMode:entryTarget?.review?'questions':initialInboxId?'inbox':undefined,onInboxLocation:route.inboxLocation,onComposeHandled:hash=>{if(win.location.hash===hash){const url=new URL(win.location.href);url.hash='';win.history.replaceState(win.history.state,'',url.href)}},initialEditorPath:(!prototypeTarget&&entryTarget?.editorPath)||config.initialEditorPath,preferInitial:!!entryTarget,onError:reportConnectionError,onMode:mode=>{route.setMode(mode);if(get('workspace-notice'))get('workspace-notice').hidden=true;for(const button of modes.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode))}});
+   views=mountWorkspaceViews({mount,editorFrame:get('builder'),questionsFrame:get('questions'),initialQuestionsPath:entryTarget?.reviewPath||'index.html',inboxFrame:get('inbox'),initialInboxPath:initialInboxId?'inbox/index.html?request='+encodeURIComponent(initialInboxId):'inbox/index.html',initialMode:entryTarget?.review?'questions':initialInboxId?'inbox':undefined,onInboxLocation:route.inboxLocation,onComposeHandled:hash=>{if(win.location.hash===hash){const url=new URL(win.location.href);url.hash='';win.history.replaceState(win.history.state,'',url.href)}},initialEditorPath:(!prototypeTarget&&entryTarget?.editorPath)||config.initialEditorPath,preferInitial:!!entryTarget,onError:reportConnectionError,onMode:mode=>{route.setMode(mode);if(get('workspace-notice'))get('workspace-notice').hidden=true;for(const button of modes.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode))}});
    workspace={source,mount,views,deferred};if(win.location.hash.startsWith('#compose='))views.openInbox(win.location.hash);if(prototypeTarget)await views.openPrototype(prototypeTarget);shell.hidden=false;gate.hidden=true;modes.hidden=false;meter.hidden=true;
   }catch(error){views?.destroy();mount?.close();source?.close();deferred?.closeDeferred();if(current!==epoch)return;if([401,403].includes(error.status))session.logout();status.textContent=error.message||'Рабочий стол не загрузился. Можно повторить.';meter.hidden=true;login.textContent='Повторить загрузку'}finally{if(current===epoch)login.disabled=false}
  };
