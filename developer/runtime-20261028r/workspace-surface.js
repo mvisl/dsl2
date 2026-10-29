@@ -1,9 +1,18 @@
 /** Developer host shows exactly Constructor + Questions (Inbox); owner review stays on the
  * separately entered Lab surface. The surface marker is navigation only, never auth. */
+export const LAB_SURFACE_HASH='#surface=lab';
 export function workspaceSurface({requested,entryTarget,url}){
  if(entryTarget?.review)return'lab';
  if(requested==='lab'||requested==='developer')return requested;
- return new URL(url).searchParams.get('surface')==='lab'?'lab':'developer';
+ const current=new URL(url);return current.searchParams.get('surface')==='lab'||current.hash===LAB_SURFACE_HASH?'lab':'developer';
+}
+// The private worker binds frame entries to the root's creation URL with only consumed
+// hints (returnTo, inbox, fragment) ignored, so a consumed entry may add no query field.
+// The Lab reload marker therefore lives in the fragment, which HTTP referrers never carry.
+export function consumedEntryURL(href,{surface,requestedSurface}={}){
+ const consumed=new URL(href);consumed.searchParams.delete('returnTo');
+ if(surface==='lab'&&!requestedSurface&&!consumed.hash&&consumed.searchParams.get('surface')!=='lab')consumed.hash=LAB_SURFACE_HASH;
+ return consumed.href;
 }
 export function configureModeControls(nav,surface,doc=nav.ownerDocument){
  nav.dataset.surface=surface;

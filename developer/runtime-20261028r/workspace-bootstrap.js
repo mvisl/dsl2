@@ -15,7 +15,7 @@ import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js';
 import{mountPrivateRuntime}from'./private-mount.js?v=owned-child1';
 import{mountWorkspaceViews}from'./workspace-views.js?v=developer2';
-import{workspaceSurface,configureModeControls}from'./workspace-surface.js';
+import{workspaceSurface,configureModeControls,consumedEntryURL}from'./workspace-surface.js?v=lab-entry1';
 function workspaceDesignCapabilities(config){return{schemaVersion:1,supported:{applicationScreens:config.readableApplicationScreens},readable:{applicationScreens:config.readableApplicationScreens,componentStackFamilies:Array.isArray(config.readableComponentFamilies)?[...new Set(config.readableComponentFamilies.filter(name=>typeof name==='string'&&/^[-a-z0-9]{1,64}$/.test(name)))].slice(0,32):[]}};}
 export function startWorkspaceHost({document:doc=globalThis.document,window:win=globalThis.window,bridgeOrigin,workerURL,scope,surface:requestedSurface,fetcher=globalThis.fetch}={}){
  const session=createGitHubSession({window:win,bridgeOrigin}),get=id=>doc.getElementById(id);
@@ -77,7 +77,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
    const screenWriter=createScreenWriter({reader,transport:source,canWrite:()=>Boolean(session.identity()?.canWrite&&config.canWrite),authorityFor,validateOtherRecipe});
    let inboxAPI,calibrationAPI;const recordAPI=createRecordAPI({reader,origin:win.location.origin,decisionWriter,screenWriter,resourceCapabilities:()=>({selectedOptionsProfiles:true}),designCapabilities:()=>workspaceDesignCapabilities(config)});
    const handleAPI=async request=>(calibrationAPI?await calibrationAPI(request):null)??(inboxAPI?await inboxAPI(request):null)??recordAPI(request);
-   phase('Подключаем конструктор и вопросы…');if(entryTarget){const consumed=new URL(win.location.href);consumed.searchParams.delete('returnTo');if(surface==='lab'&&!requestedSurface)consumed.searchParams.set('surface','lab');win.history.replaceState(win.history.state,'',consumed.href)}mount=await mountPrivateRuntime({workerURL,scope,transport:source,handleAPI,origin:win.location.origin,onRecovered:()=>{doc.documentElement.dataset.recoveredClients=String(Number(doc.documentElement.dataset.recoveredClients||0)+1)}});
+   phase('Подключаем конструктор и вопросы…');if(entryTarget)win.history.replaceState(win.history.state,'',consumedEntryURL(win.location.href,{surface,requestedSurface}));mount=await mountPrivateRuntime({workerURL,scope,transport:source,handleAPI,origin:win.location.origin,onRecovered:()=>{doc.documentElement.dataset.recoveredClients=String(Number(doc.documentElement.dataset.recoveredClients||0)+1)}});
    if(current!==epoch){mount.close();source.close();deferred.closeDeferred();return}
    const[{createInboxAPI},{createAttachmentAPI}]=await Promise.all([import(new URL('github/inbox-api.js',mount.baseURL).href),import(new URL('github/attachment-api.js',mount.baseURL).href)]);
    const attachmentActor=()=>{const identity=session.identity();return identity?{id:'github:'+identity.user.id,scope:'repository:'+session.repository().id}:null},attachmentWrite=()=>Boolean(session.identity()?.canWrite&&config.canWrite),attachments=createAttachmentAPI({reader,transport:source,origin:win.location.origin,getActor:attachmentActor,canWrite:attachmentWrite});
