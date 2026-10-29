@@ -7,9 +7,18 @@ export function createSourceSession({transport,getToken,verifiedFiles=new Map(),
  for(const[path,data]of verifiedFiles){const full='review-workspace/'+path;if(!valid(full)||!(data instanceof Uint8Array))throw Error('Invalid verified source member');bytes+=data.length;if(bytes>maxCacheBytes)throw Error('Verified source packet exceeds session bounds');cache.set(full,{path:full,bytes:data})}
  function close(){if(closed)return;closed=true;controller.abort();cache.clear();pending.clear();bytes=0;for(const item of queue.splice(0))item.reject(refusal())}
  function live(){if(closed)throw refusal();if(!getToken()){close();throw refusal()}}
- function pump(){while(!closed&&active<limit&&queue.length){const item=queue.shift();active++;(async()=>{try{live();const file=await transport.readSource(item.path,{signal:controller.signal});live();if(!(file.bytes instanceof Uint8Array))throw Error('Invalid pinned source bytes');if(file.bytes.length+bytes<=maxCacheBytes){cache.set(item.path,file);bytes+=file.bytes.length}item.resolve(file)}catch(error){item.reject(closed?refusal():error)}finally{active--;pump()}})()}}
+ function pump(){while(!closed&&active<limit&&queue.length){const item=queue.shift();active++;(async()=>{try{live();const file=await transport.readSource(item.path,{signal:controller.signal});live();if(!(file.bytes instanceof Uint8Array))throw Error('Invalid pinned source bytes');if(!cache.has(item.path)&&file.bytes.length+bytes<=maxCacheBytes){cache.set(item.path,file);bytes+=file.bytes.length}item.resolve(file)}catch(error){item.reject(closed?refusal():error)}finally{active--;pump()}})()}}
  async function readSource(path){live();if(!valid(path))throw Error('Exact private source path required');let work=cache.has(path)?Promise.resolve(cache.get(path)):pending.get(path);if(!work){if(pending.size>=5000)throw Error('Too many source requests');work=new Promise((resolve,reject)=>{queue.push({path,resolve,reject})});pending.set(path,work);pump()}
   try{const file=await work;live();return{...file,bytes:file.bytes.slice()}}finally{if(pending.get(path)===work)pending.delete(path)}
  }
- return{...transport,readSource,close,stats:()=>({closed,active,queued:queue.length,cached:cache.size,bytes})};
+ function admitVerifiedSources(group){
+  live();if(!(group instanceof Map)||!group.size||group.size>20)throw Error('Bounded verified source group required');
+  let added=0;const additions=[];
+  for(const[path,data]of group){if(!valid(path)||!(data instanceof Uint8Array))throw Error('Invalid verified source group');if(cache.has(path)){if(cache.get(path).bytes!==data)throw Error('Verified source group conflicts with cache')}else{added+=data.length;additions.push([path,{path,bytes:data}])}}
+  if(bytes+added>maxCacheBytes)throw Error('Verified source group exceeds session bounds');
+  // Synchronous preflight then insertion: no observer sees a partial group.
+  for(const[path,file]of additions)cache.set(path,file);bytes+=added;
+  return{addedFiles:additions.length,addedBytes:added,bytes};
+ }
+ return{...transport,readSource,close,admitVerifiedSources,stats:()=>({closed,active,queued:queue.length,cached:cache.size,bytes})};
 }

@@ -1,10 +1,12 @@
 /** Generic public host. Private coordinates, code and records arrive only after sign-in. */
 import{createWorkspaceLocationMirror}from'./workspace-location.js';
 import{readSealedAsset}from'./sealed-asset.js';
+import{loadSelectedRuntime}from'./selected-runtime.js';
+import{loadFullNativeRuntime}from'./full-native-runtime.js';
 import{sourceEntryTarget}from'./entry-target.js';
 import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js';
-import{createSourceSession}from'./source-session.js';
+import{createSourceSession}from'./source-session.js?v=verified-group1';
 import{createDeferredSource}from'./deferred-source.js';
 import{verifySealedBytes,readSealedTarGzip}from'./sealed-tar.js';
 import{createRecordReader}from'./record-reader.js';
@@ -36,7 +38,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
    if(config.schemaVersion!==1||config.repository?.id!==session.repository()?.id||!/^[-a-zA-Z0-9_.]+$/.test(config.repository.owner)||!/^[-a-zA-Z0-9_.]+$/.test(config.repository.name)||!/^[a-f0-9]{40}$/.test(config.sourceCommit))throw Error('Источник рабочего стола не подтверждён.');
    const repo=createRepositoryTransport({owner:config.repository.owner,repo:config.repository.name,commit:config.sourceCommit,dataBranch:config.dataBranch,getToken:()=>session.getToken(),fetcher});
    const imports=await bundle(config.assets.sources,'private-workspace-browser-imports',32000000,signal);if(imports.manifest.sourceRevision!==config.sourceCommit)throw Error('Workspace source revision changed.');
-   const selected=await bundle(config.assets.selected,'private-selected-profile-runtime',128000000,signal);
+   const selected=await loadSelectedRuntime({spec:config.assets.selected,expectedSourceRevision:config.sourceCommit,loadAsset:(seal,signal)=>asset(seal,'Загружаем проверенный пакет ресурсов…',signal),loadLegacy:bundle,signal,onProgress:p=>{meter.max=p.total;meter.value=p.completed}});
    const sealPath='review-workspace/options-sheets/resource-seals.json',sourceSeal=await repo.readSource(sealPath,{signal});await verifySealedBytes(sourceSeal.bytes,selected.manifest.sourcePins[sealPath]);
    const reviews=await bundle(config.assets.reviews,'private-review-preview-storage',16000000,signal);
    const queueFile=await repo.readSource('review-workspace/data/queue.json',{signal});await verifySealedBytes(queueFile.bytes,{bytes:queueFile.bytes.length,sha256:reviews.manifest.queueSHA256});
@@ -45,9 +47,13 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
    files.set('options-sheets/resource-seals.json',sourceSeal.bytes);files.set('data/queue.json',queueFile.bytes);
    const fullPaths=new Set(['native.json','native.css','token-bindings.json','server-contract.json'].map(p=>'review-workspace/options-sheets/'+p));
    deferred=createDeferredSource({transport:repo,paths:fullPaths,getToken:()=>session.getToken(),load:async({signal:fullSignal})=>{
-    doc.documentElement.dataset.fullNativeState='loading';let full;try{full=await bundle(config.assets.fullNative,'private-workspace-full-native',192000000,fullSignal)}catch(error){doc.documentElement.dataset.fullNativeState='failed';doc.documentElement.dataset.fullNativeError=String(error.message).slice(0,240);throw error}
-    const pins=JSON.parse(new TextDecoder().decode(sourceSeal.bytes)).files,result=new Map();
-    for(const[path,bytes]of full.files){const name=path.replace(/^options-sheets\//,'');await verifySealedBytes(bytes,pins[name]);result.set('review-workspace/'+path,bytes)}doc.documentElement.dataset.fullNativeState='verified';delete doc.documentElement.dataset.fullNativeError;return result;
+    doc.documentElement.dataset.fullNativeState='loading';let full,admitted=false;
+    try{
+     const pins=JSON.parse(new TextDecoder().decode(sourceSeal.bytes)).files,expectedMembers=Object.fromEntries(['native.json','native.css','token-bindings.json','server-contract.json'].map(name=>['options-sheets/'+name,pins[name]]));
+     full=await loadFullNativeRuntime({spec:config.assets.fullNative,expectedSourceRevision:config.sourceCommit,expectedMembers,maxReassembledBytes:384000000-source.stats().bytes,loadAsset:(seal,signal)=>asset(seal,'Проверяем исходники и графику…',signal),loadLegacy:bundle,signal:fullSignal,onProgress:p=>{meter.max=p.total;meter.value=p.completed}});
+     const result=new Map([...full.files].map(([path,bytes])=>['review-workspace/'+path,bytes]));
+     source.admitVerifiedSources(result);admitted=true;doc.documentElement.dataset.fullNativeState='verified';delete doc.documentElement.dataset.fullNativeError;return result;
+    }catch(error){if(full&&!admitted){for(const b of full.files.values())b.fill(0);full.files.clear()}doc.documentElement.dataset.fullNativeState='failed';doc.documentElement.dataset.fullNativeError=String(error.message).slice(0,240);throw error}
    }});
    source=createSourceSession({transport:deferred,getToken:()=>session.getToken(),verifiedFiles:files,maxCacheBytes:384000000});
    const reader=createRecordReader({transport:source}),decisionWriter=createDecisionWriter({reader,transport:source,canWrite:()=>Boolean(session.identity()?.canWrite&&config.canWrite),questionIds:new Set(queue.items.map(q=>q.id))});
