@@ -5,8 +5,9 @@
   "screenId": "active-trades-empty",
   "layerCount": 75,
   "editableTextCount": 3,
+  "basePath": "/dsl2/developer/",
   "files": {
-    "model.json": {
+    "guest/model.json": {
       "bytes": 99052,
       "sha256": "8ff0fb70b6ff97c1d6a472605c2069bb78f9f6b278a4e287ccd76526289cf0e5"
     },
@@ -14,95 +15,95 @@
       "bytes": 1406,
       "sha256": "0bc8192fb95fb66afe5c56c1d740e05af8b4f8999fcd89938ccdd40df7cc980a"
     },
-    "styles.css": {
+    "guest/styles.css": {
       "bytes": 3176,
       "sha256": "53827e7ff3ec93b38b445ab5790d506b84866fe8da83f5093f1d6d3cd754d218"
     },
-    "app.js": {
+    "guest/app.js": {
       "bytes": 5302,
       "sha256": "f1de29d6cdfe617c8f7c22ed30710193278a4412c24bc10f24274b3553916846"
     },
-    "assets/a4.svg": {
+    "guest/assets/a4.svg": {
       "bytes": 150,
       "sha256": "68d6c338a8719cba43d1114955fe626098c22232744942cfa6a114286664eeb3"
     },
-    "assets/a5.svg": {
+    "guest/assets/a5.svg": {
       "bytes": 309,
       "sha256": "bf45e6108e66002c6b939c0bceda6b7de95b881a4cbf70f7a289dc0a69b22a4c"
     },
-    "assets/a7.svg": {
+    "guest/assets/a7.svg": {
       "bytes": 327,
       "sha256": "7fc5df9a46d1d53d8063694349d95d36c2859583024af131218b338666b598dc"
     },
-    "assets/a6.svg": {
+    "guest/assets/a6.svg": {
       "bytes": 557,
       "sha256": "3cef9628d1e7e9452d9f1da271f175a670dd0fbc775dc3660c1a84a729cfbfed"
     },
-    "assets/a2.svg": {
+    "guest/assets/a2.svg": {
       "bytes": 1033,
       "sha256": "a927430e7715ed6a035e83dc693043230774ae4cf52163e97be02b0daa0e4c6b"
     },
-    "assets/a3.svg": {
+    "guest/assets/a3.svg": {
       "bytes": 150,
       "sha256": "68d6c338a8719cba43d1114955fe626098c22232744942cfa6a114286664eeb3"
     },
-    "assets/a1.svg": {
+    "guest/assets/a1.svg": {
       "bytes": 2427,
       "sha256": "7506292e3e1876def6cc92d19189781c56ff14b2c1424428d634984521129b3d"
     },
-    "assets/a0.svg": {
+    "guest/assets/a0.svg": {
       "bytes": 5112,
       "sha256": "09847ddc59e978cdc8146c99962bdb96e140db05e11f07168b81823d3ce8f585"
     },
-    "assets/a14.svg": {
+    "guest/assets/a14.svg": {
       "bytes": 309,
       "sha256": "bf45e6108e66002c6b939c0bceda6b7de95b881a4cbf70f7a289dc0a69b22a4c"
     },
-    "assets/OFL-Roboto.txt": {
+    "guest/assets/OFL-Roboto.txt": {
       "bytes": 4394,
       "sha256": "061402327a96aadb0bfb694a960ed289ecd38d383e396243831ab81feb109c41"
     },
-    "assets/a15.svg": {
+    "guest/assets/a15.svg": {
       "bytes": 284,
       "sha256": "e0443ddd412f92c3f6b2742c0521452fd9a9b99aa561276fa0299f1a90604326"
     },
-    "assets/a16.svg": {
+    "guest/assets/a16.svg": {
       "bytes": 161,
       "sha256": "4a0dd855c41fdb982873e9c5a00c251df72d6c52c2d29e7108937f199eb5756b"
     },
-    "assets/a12.svg": {
+    "guest/assets/a12.svg": {
       "bytes": 309,
       "sha256": "bf45e6108e66002c6b939c0bceda6b7de95b881a4cbf70f7a289dc0a69b22a4c"
     },
-    "assets/font-700.ttf": {
+    "guest/assets/font-700.ttf": {
       "bytes": 124292,
       "sha256": "35757eaa996b3359022f47f164a67ee9eac04971af24c5b8fbd4b89e844ff190"
     },
-    "assets/a13.svg": {
+    "guest/assets/a13.svg": {
       "bytes": 789,
       "sha256": "8aaf5f596cf139191be10e5a77bacb3b210670eb938eb6352a2f03390f6634c1"
     },
-    "assets/a11.svg": {
+    "guest/assets/a11.svg": {
       "bytes": 1539,
       "sha256": "becedbfa1f7d1ecf5843cf1f4015d4b3b2fbbe700f7bc3b421ff0c5a9161556c"
     },
-    "assets/a8.svg": {
+    "guest/assets/a8.svg": {
       "bytes": 162,
       "sha256": "8a7822c34221a9c05a99e120731fc5718750d44d0a41047552df2e5898f60c2e"
     },
-    "assets/font-500.ttf": {
+    "guest/assets/font-500.ttf": {
       "bytes": 123904,
       "sha256": "4d984240cefb093a74300bcae4b5dbd49f700e0af501eaaa079c56aa64142d2f"
     },
-    "assets/a9.svg": {
+    "guest/assets/a9.svg": {
       "bytes": 718,
       "sha256": "1561caec75fc34e59c8172f03ffcabed5f5bb6962c940c41aa9885d52ee387b3"
     },
-    "assets/a10.svg": {
+    "guest/assets/a10.svg": {
       "bytes": 309,
       "sha256": "bf45e6108e66002c6b939c0bceda6b7de95b881a4cbf70f7a289dc0a69b22a4c"
     },
-    "assets/font-400.ttf": {
+    "guest/assets/font-400.ttf": {
       "bytes": 123720,
       "sha256": "dece7c71bbe61710787f0839c722c65e87355dd2eb4a823e6b5488121ff81e4b"
     }
