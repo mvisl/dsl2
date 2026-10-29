@@ -7,9 +7,9 @@ export async function verifySealedBytes(bytes,seal,{crypto=globalThis.crypto}={}
  if(!(bytes instanceof Uint8Array)||!Number.isSafeInteger(seal?.bytes)||bytes.length!==seal.bytes||!/^[a-f0-9]{64}$/.test(seal.sha256))throw Error('Invalid sealed file size or identity');
  const hash=[...new Uint8Array(await crypto.subtle.digest('SHA-256',bytes))].map(v=>v.toString(16).padStart(2,'0')).join('');if(hash!==seal.sha256)throw Error('Sealed file checksum mismatch');return bytes;
 }
-export async function readSealedTarGzip(bytes,{seal,members,maxExpandedBytes=16000000,crypto=globalThis.crypto,onProgress=()=>{}}={}){
+export async function readSealedTarGzip(bytes,{seal,members,maxExpandedBytes=16000000,maxMembers=2000,crypto=globalThis.crypto,onProgress=()=>{}}={}){
  await verifySealedBytes(bytes,seal,{crypto});
- if(!members||typeof members!=='object'||Array.isArray(members)||Object.keys(members).length>2000||!Number.isSafeInteger(maxExpandedBytes)||maxExpandedBytes<1024||maxExpandedBytes>256000000)throw Error('Bounded archive manifest required');
+ if(!members||typeof members!=='object'||Array.isArray(members)||(!Number.isInteger(maxMembers)||maxMembers<1||maxMembers>2200)||Object.keys(members).length>maxMembers||!Number.isSafeInteger(maxExpandedBytes)||maxExpandedBytes<1024||maxExpandedBytes>256000000)throw Error('Bounded archive manifest required');
  const reader=new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip')).getReader(),chunks=[];let total=0;
  try{for(;;){const{done,value}=await reader.read();if(done)break;total+=value.byteLength;if(total>maxExpandedBytes)throw Error('Expanded archive exceeds bounds');chunks.push(value)}}catch(error){await reader.cancel().catch(()=>{});throw error}
  const raw=new Uint8Array(total);let offset=0;for(const chunk of chunks){raw.set(chunk,offset);offset+=chunk.length}

@@ -8,7 +8,7 @@ import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js';
 import{createSourceSession}from'./source-session.js?v=verified-group1';
 import{createDeferredSource}from'./deferred-source.js';
-import{verifySealedBytes,readSealedTarGzip}from'./sealed-tar.js';
+import{verifySealedBytes,readSealedTarGzip}from'./sealed-tar.js?v=lab-members1';
 import{createRecordReader}from'./record-reader.js';
 import{createScreenWriter}from'./screen-writer.js?v=component-study1';
 import{createDecisionWriter}from'./decision-writer.js';
@@ -29,7 +29,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
  async function response(url,{signal,method='GET'}={}){const token=session.getToken();if(!token)throw Error('Войдите через GitHub повторно.');const r=await fetcher(url,{method,headers:{Authorization:'Bearer '+token},redirect:'error',cache:'no-store',signal});if(!r.ok)throw Object.assign(Error('Не удалось получить приватные ресурсы: '+r.status),{status:r.status});return r}
  async function asset(seal,label,signal){if(typeof seal?.alias!=='string'||!/^[-a-z0-9]+$/.test(seal.alias)||!Number.isSafeInteger(seal.bytes)||seal.bytes>16000000)throw Error('Неизвестный пакет ресурсов.');phase(label);meter.max=seal.bytes;meter.value=0;const bytes=await readSealedAsset({load:(part,partSignal)=>response(bridgeOrigin+'/assets/'+seal.alias+(Number.isSafeInteger(part)?'/parts/'+part:''),{signal:partSignal||signal}),seal,signal,onBytes:value=>{meter.value=value},onRetry:()=>phase('Передача прервалась. Повторяем проверенный пакет…')});meter.value=bytes.length;return bytes;
  }
- async function bundle(spec,kind,limit,signal){try{const manifest=JSON.parse(new TextDecoder().decode(await asset(spec.manifest,'Проверяем описание приватных ресурсов…',signal)));if(manifest.kind!==kind||manifest.archive.sha256!==spec.archive.sha256||manifest.archive.bytes!==spec.archive.bytes)throw Error('Описание пакета изменилось.');const raw=await asset(spec.archive,'Загружаем пакет приватных ресурсов…',signal);phase('Проверяем исходники и графику…');meter.max=Object.keys(manifest.members).length;meter.value=0;const files=await readSealedTarGzip(raw,{seal:spec.archive,members:manifest.members,maxExpandedBytes:limit,onProgress:p=>{meter.max=p.total;meter.value=p.completed}});return{manifest,files}}catch(error){throw Error(kind+': '+error.message)}}
+ async function bundle(spec,kind,limit,signal){try{const manifest=JSON.parse(new TextDecoder().decode(await asset(spec.manifest,'Проверяем описание приватных ресурсов…',signal)));if(manifest.kind!==kind||manifest.archive.sha256!==spec.archive.sha256||manifest.archive.bytes!==spec.archive.bytes)throw Error('Описание пакета изменилось.');const raw=await asset(spec.archive,'Загружаем пакет приватных ресурсов…',signal);phase('Проверяем исходники и графику…');meter.max=Object.keys(manifest.members).length;meter.value=0;const files=await readSealedTarGzip(raw,{seal:spec.archive,members:manifest.members,maxExpandedBytes:limit,maxMembers:kind==='private-workspace-browser-imports'?2200:2000,onProgress:p=>{meter.max=p.total;meter.value=p.completed}});return{manifest,files}}catch(error){throw Error(kind+': '+error.message)}}
  login.onclick=async()=>{
   if(login.disabled)return;const current=++epoch;controller=new AbortController();const signal=controller.signal;login.disabled=true;meter.hidden=false;let source,mount,views,deferred;
   try{
