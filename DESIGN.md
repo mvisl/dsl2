@@ -1,7 +1,7 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.39
-last_updated: 2026-10-23
+version: 1.2.40
+last_updated: 2026-10-28
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
 changelog_url: https://mvisl.github.io/dsl2/CHANGELOG.md
@@ -61,9 +61,9 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.39 draft for AI prototyping
+Version: 1.2.40 draft for AI prototyping
 
-Last updated: 2026-10-23
+Last updated: 2026-10-28
 
 Primary scope:
 
@@ -193,9 +193,10 @@ If the agent cannot read Figma, these are the safest defaults:
 - Positive: `#53A642`.
 - Negative: `#E64545`.
 - Main spacing scale: 4, 8, 12, 16, 20, 24, 32, 40, 48, 64.
-- Default card radius: 16.
-- Glass/card radius: 20.
-- Full pill radius for badges, active tabs, and rounded controls.
+- Surface corners: use the documented role for that component and action layout; there is no blanket card or glass radius.
+- A full-width footer of one or two large actions uses the documented modal top and lower-corner roles. Compact-action and no-action patterns retain their own policy.
+- If the required role is absent from this guide, keep a source-verification TODO instead of assigning 16 or 20 to every surface.
+- Full pill/capsule: use the existing role only for badges, selected tabs and rounded controls whose source pattern calls for a pill.
 - Mobile screen width: 375 px.
 - Product tone: dark, dense, calm, finance-native, orange-accented, not promotional.
 
@@ -609,6 +610,12 @@ Use radius variables where available:
 - Full pill/capsule
 
 Badges, selected tab pills, and rounded icon buttons should use full capsule logic when the source/reference indicates a pill.
+
+### Composition before a radius value
+
+Select the component and its action layout before resolving corner variables. A full-width lower row of one or two large actions uses the modal top-corner role (`Modal`) and lower-corner role (`ModalDown`). A compact action row and a surface without actions are separate patterns; do not enlarge their lower corners merely because another modal uses a large-action footer. Retain the documented scoped policy and verify the outer surface together with its clipped footer.
+
+Do not use glass treatment as a reason to substitute another corner value. Preserve the role binding and resolve its aliases in the actual generation mode. The numbers below describe inspected source contracts; they are not permission to restyle every card, nor proof that every current consumer has been migrated.
 
 ### Source-mode radius roles
 

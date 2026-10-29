@@ -1,6 +1,15 @@
 # Changelog
 
-## 1.2.39 - 2026-10-23
+## 1.2.40 - 2026-10-28
+
+- Use modal top and lower-corner roles for a full-width footer of large actions.
+- Keep compact-action and no-action surfaces on their documented corner policy.
+- Preserve corner bindings under glass treatments and verify the outer surface together with its footer.
+- Leave missing offline roles source-unverified rather than inventing a universal card radius.
+
+## 1.2.39
+
+Preserve native dimensions under viewing zoom and keep relevant previews independent from unrelated source loading.
 
 - Keep intrinsic component geometry unchanged under canvas and thumbnail zoom.
 - Load each preview from its required source and component families; isolate unrelated failures.
