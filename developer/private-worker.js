@@ -6,13 +6,34 @@ const apiFailure=(message,status=503)=>Response.json({error:message,saved:false}
 const attachmentPath=path=>/^\/data\/attachments\/[a-f0-9]{32}\.(png|jpg|webp|gif)$/.test(path);
 const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox','/api/calibration'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
 const depositContexts=['current28','historical11'];
+// Mirror of github/editor-selectors.js (this classic worker cannot import it); a test keeps them equal.
+const walletProfiles=['collapsed','cfd','portfolioEntry'],editorNativeSelectors=['historicalMore','accountBenefits','depositSeven','optionsSheet','outcomeScreen','marketsList','metatrader','reports','internalTransfer','historicalWallet','instrumentSearch','about','onboarding','calendar','news','notificationSettings','welcomeBonus','productInbox','personalDetails','settingsProfile','depositTier','accountHistory','depositWarning','paymentOverlay','recurringDraft','withdrawalDraft','depositExtended','depositDraft','markets','notifications','currentPayments','fcilPayments','fcilWallet','wallet','nativeTrades','f1Trades'],editorSelectors=['screen','workingCopy','profile',...editorNativeSelectors,'depositContext'];
+/** Exact editor selectors (one source: record, local copy with its exact parent, or one native selector) or null. */
+function exactEditorSelectors(params,{drop=[],allowEmpty=false}={}){
+ for(const name of params.keys())if(!editorSelectors.includes(name)&&!drop.includes(name))return null;
+ const query=new URLSearchParams();for(const name of editorSelectors){const values=params.getAll(name);if(values.length>1)return null;if(values.length){if(!/^[-\w:;.]{1,160}$/.test(values[0]))return null;query.set(name,values[0])}}
+ if(!query.size)return allowEmpty?query:null;
+ const natives=editorNativeSelectors.filter(name=>query.has(name));if(natives.length>1)return null;const native=natives[0],record=query.has('screen'),copy=query.has('workingCopy');
+ if(!native&&!record&&!copy)return null;
+ if(query.has('fcilWallet')&&!walletProfiles.includes(query.get('fcilWallet')))return null;
+ if(query.has('depositContext')&&(native!=='fcilWallet'||!depositContexts.includes(query.get('depositContext'))))return null;
+ if(query.has('profile')&&!record)return null;
+ if(native&&record&&!copy&&!['fcilWallet','optionsSheet'].includes(native))return null;
+ return query;
+}
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
 function signInEntry(request){
- const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root),params=new URLSearchParams();
- if(['editor/','editor/index.html','prototype/','prototype/index.html'].some(p=>current.pathname===mountPath+p)){
+ const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root);
+ // Direct editor: every supported selector survives exactly; a stale _mount is discarded; anything else
+ // unknown, duplicate or incompatible withholds the return target instead of continuing to the bare editor.
+ if(['editor/','editor/index.html'].some(p=>current.pathname===mountPath+p)){
+  const params=exactEditorSelectors(current.searchParams,{drop:['_mount'],allowEmpty:true});
+  if(params)entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
+ }
+ if(['prototype/','prototype/index.html'].some(p=>current.pathname===mountPath+p)){const params=new URLSearchParams();
   for(const name of ['screen','record','profile','optionsSheet','nativeTrades','f1Trades','map','view']){const values=current.searchParams.getAll(name);if(values.length===1&&/^[-\w:;.]{1,160}$/.test(values[0]))params.set(name,values[0])}
   // Prototype Deposit context survives exactly or the return target is withheld; never defaulted to 28.
-  const contexts=current.pathname.startsWith(mountPath+'prototype/')?current.searchParams.getAll('depositContext'):[],context=contexts.length===1&&depositContexts.includes(contexts[0]);if(context)params.set('depositContext',contexts[0]);
+  const contexts=current.searchParams.getAll('depositContext'),context=contexts.length===1&&depositContexts.includes(contexts[0]);if(context)params.set('depositContext',contexts[0]);
   if(!contexts.length||context)entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
  }
  if(['inbox/','inbox/index.html'].some(p=>current.pathname===mountPath+p)){const values=current.searchParams.getAll('request');if(values.length===1&&/^[-\w]{1,100}$/.test(values[0]))entry.searchParams.set('inbox',values[0])}
@@ -29,7 +50,7 @@ function forget(broker){for(const[id,value]of brokers)if(value===broker)brokers.
 function issueUIEntry(broker,value){
  const url=new URL(value),paths=['prototype/','prototype/index.html','editor/','editor/index.html','compose/','compose/index.html','inbox/','inbox/index.html','calibration/','calibration/index.html','index.html'];
  if(![...brokers.values()].includes(broker)||url.origin!==self.location.origin||url.username||url.password||url.hash||url.href.length>2048||!paths.some(path=>url.pathname===mountPath+path))throw Error('Exact private UI entry required');
- const editor=['editor/','editor/index.html'].some(path=>url.pathname===mountPath+path),prototype=['prototype/','prototype/index.html'].some(path=>url.pathname===mountPath+path);if(editor||prototype){const allowed=editor?['screen','profile','optionsSheet']:['screen','record','workingCopy','profile','optionsSheet','nativeTrades','f1Trades','map','view','depositContext'],query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!allowed.includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value)||key==='depositContext'&&!depositContexts.includes(value))throw Error('Exact private selector required');query.set(key,value)}if(editor&&!query.get('screen'))throw Error('Exact editor selector required')}
+ const editor=['editor/','editor/index.html'].some(path=>url.pathname===mountPath+path),prototype=['prototype/','prototype/index.html'].some(path=>url.pathname===mountPath+path);if(editor&&!exactEditorSelectors(url.searchParams))throw Error('Exact editor selector required');if(prototype){const allowed=['screen','record','workingCopy','profile','optionsSheet','nativeTrades','f1Trades','map','view','depositContext'],query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!allowed.includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value)||key==='depositContext'&&!depositContexts.includes(value))throw Error('Exact private selector required');query.set(key,value)}}
  // Nested calibration frames carry only the explicit QA scope flag; owner canonical uses the bare path.
  if(['calibration/','calibration/index.html'].some(path=>url.pathname===mountPath+path)&&url.search&&url.search!=='?calibrationQA=1')throw Error('Exact calibration selector required');
  url.searchParams.delete('_mount');for(const[key,item]of broker.entries)if(item.expires<Date.now())broker.entries.delete(key);if(broker.entries.size>=8)throw Error('Too many pending entries');
