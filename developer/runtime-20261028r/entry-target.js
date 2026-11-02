@@ -1,4 +1,7 @@
 /** Public navigation hints contain source selectors only, never local drafts or auth. */
+// Prototype-only Deposit context: exactly the values prototype/app.js accepts. A present but
+// ambiguous or unknown value refuses the target instead of letting the prototype default to 28.
+export const DEPOSIT_CONTEXTS=['current28','historical11'];
 export function sourceEntryTarget(value,scope){
  try{
   const base=new URL(scope),url=new URL(value,base),root=base.pathname+'private/';
@@ -11,6 +14,13 @@ export function sourceEntryTarget(value,scope){
    const values=url.searchParams.getAll(name);if(values.length>1)return null;
    if(values.length){if(!/^[-\w:;.]{1,160}$/.test(values[0]))return null;query.set(name,values[0])}
   }
-  return {editorPath:'editor/'+(query.size?'?'+query:''),returnPath:url.pathname.slice(base.pathname.length)+(query.size?'?'+query:'')};
+  const returnQuery=new URLSearchParams(query);
+  if(['prototype/','prototype/index.html'].some(p=>url.pathname===root+p)){
+   const contexts=url.searchParams.getAll('depositContext');if(contexts.length>1||contexts.length&&!DEPOSIT_CONTEXTS.includes(contexts[0]))return null;
+   if(contexts.length)returnQuery.set('depositContext',contexts[0]);
+  }
+  return {editorPath:'editor/'+(query.size?'?'+query:''),returnPath:url.pathname.slice(base.pathname.length)+(returnQuery.size?'?'+returnQuery:'')};
  }catch{return null}
 }
+/** Mount-relative prototype entry for a consumed target, or null for any other target. */
+export function prototypeEntryPath(target){return target?.returnPath?.startsWith('private/prototype/')?target.returnPath.slice('private/'.length):null}

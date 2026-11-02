@@ -5,12 +5,15 @@ const mountPath=new URL('private/',self.registration.scope).pathname;
 const apiFailure=(message,status=503)=>Response.json({error:message,saved:false},{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}});
 const attachmentPath=path=>/^\/data\/attachments\/[a-f0-9]{32}\.(png|jpg|webp|gif)$/.test(path);
 const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox','/api/calibration'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
+const depositContexts=['current28','historical11'];
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
 function signInEntry(request){
  const current=new URL(request.url),root=new URL(self.registration.scope),entry=new URL('workspace-preview.html',root),params=new URLSearchParams();
  if(['editor/','editor/index.html','prototype/','prototype/index.html'].some(p=>current.pathname===mountPath+p)){
   for(const name of ['screen','record','profile','optionsSheet','nativeTrades','f1Trades','map','view']){const values=current.searchParams.getAll(name);if(values.length===1&&/^[-\w:;.]{1,160}$/.test(values[0]))params.set(name,values[0])}
-  entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
+  // Prototype Deposit context survives exactly or the return target is withheld; never defaulted to 28.
+  const contexts=current.pathname.startsWith(mountPath+'prototype/')?current.searchParams.getAll('depositContext'):[],context=contexts.length===1&&depositContexts.includes(contexts[0]);if(context)params.set('depositContext',contexts[0]);
+  if(!contexts.length||context)entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
  }
  if(['inbox/','inbox/index.html'].some(p=>current.pathname===mountPath+p)){const values=current.searchParams.getAll('request');if(values.length===1&&/^[-\w]{1,100}$/.test(values[0]))entry.searchParams.set('inbox',values[0])}
  const href=entry.href.replaceAll('&','&amp;').replaceAll('"','&quot;');
@@ -26,7 +29,7 @@ function forget(broker){for(const[id,value]of brokers)if(value===broker)brokers.
 function issueUIEntry(broker,value){
  const url=new URL(value),paths=['prototype/','prototype/index.html','editor/','editor/index.html','compose/','compose/index.html','inbox/','inbox/index.html','calibration/','calibration/index.html','index.html'];
  if(![...brokers.values()].includes(broker)||url.origin!==self.location.origin||url.username||url.password||url.hash||url.href.length>2048||!paths.some(path=>url.pathname===mountPath+path))throw Error('Exact private UI entry required');
- const editor=['editor/','editor/index.html'].some(path=>url.pathname===mountPath+path),prototype=['prototype/','prototype/index.html'].some(path=>url.pathname===mountPath+path);if(editor||prototype){const allowed=editor?['screen','profile','optionsSheet']:['screen','record','workingCopy','profile','optionsSheet','nativeTrades','f1Trades','map','view'],query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!allowed.includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value))throw Error('Exact private selector required');query.set(key,value)}if(editor&&!query.get('screen'))throw Error('Exact editor selector required')}
+ const editor=['editor/','editor/index.html'].some(path=>url.pathname===mountPath+path),prototype=['prototype/','prototype/index.html'].some(path=>url.pathname===mountPath+path);if(editor||prototype){const allowed=editor?['screen','profile','optionsSheet']:['screen','record','workingCopy','profile','optionsSheet','nativeTrades','f1Trades','map','view','depositContext'],query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!allowed.includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value)||key==='depositContext'&&!depositContexts.includes(value))throw Error('Exact private selector required');query.set(key,value)}if(editor&&!query.get('screen'))throw Error('Exact editor selector required')}
  // Nested calibration frames carry only the explicit QA scope flag; owner canonical uses the bare path.
  if(['calibration/','calibration/index.html'].some(path=>url.pathname===mountPath+path)&&url.search&&url.search!=='?calibrationQA=1')throw Error('Exact calibration selector required');
  url.searchParams.delete('_mount');for(const[key,item]of broker.entries)if(item.expires<Date.now())broker.entries.delete(key);if(broker.entries.size>=8)throw Error('Too many pending entries');

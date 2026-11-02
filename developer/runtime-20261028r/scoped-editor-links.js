@@ -1,4 +1,6 @@
+import{DEPOSIT_CONTEXTS}from'./entry-target.js?v=deposit-context1';
 /** Adapt legacy saved-version routes to the actual authenticated mount. */
+export const PROTOTYPE_SELECTORS=['screen','record','workingCopy','profile','optionsSheet','nativeTrades','f1Trades','map','view','depositContext'];
 export function scopedEditorURL(value,baseURL){
  try{const base=new URL(baseURL),url=new URL(value,base);if(url.origin!==base.origin||url.username||url.password||url.hash||!['/editor/','/workbench/editor/',base.pathname+'editor/'].includes(url.pathname))return null;
  const query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!['screen','profile','optionsSheet'].includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value))return null;query.set(key,value)}
@@ -6,7 +8,7 @@ export function scopedEditorURL(value,baseURL){
  }catch{return null}
 }
 export function scopedPrototypeURL(value,baseURL){
- try{const base=new URL(baseURL),url=new URL(value,base);if(url.origin!==base.origin||url.username||url.password||url.hash||!['prototype/','prototype/index.html'].some(p=>url.pathname===base.pathname+p))return null;const query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!['screen','record','workingCopy','profile','optionsSheet','nativeTrades','f1Trades','map','view'].includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value))return null;query.set(key,value)}return new URL('prototype/'+(query.size?'?'+query:''),base).href}catch{return null}
+ try{const base=new URL(baseURL),url=new URL(value,base);if(url.origin!==base.origin||url.username||url.password||url.hash||!['prototype/','prototype/index.html'].some(p=>url.pathname===base.pathname+p))return null;const query=new URLSearchParams();for(const[key,value]of url.searchParams){if(!PROTOTYPE_SELECTORS.includes(key)||query.has(key)||!/^[-\w:;.]{1,160}$/.test(value)||key==='depositContext'&&!DEPOSIT_CONTEXTS.includes(value))return null;query.set(key,value)}return new URL('prototype/'+(query.size?'?'+query:''),base).href}catch{return null}
 }
 export function mountScopedEditorLinks({frame,baseURL,open,onError=()=>{}}={}){
  let doc;try{const current=new URL(frame.contentWindow.location.href),base=new URL(baseURL);if(current.origin!==base.origin||!current.pathname.startsWith(base.pathname))return()=>{};doc=frame.contentDocument}catch{return()=>{}}

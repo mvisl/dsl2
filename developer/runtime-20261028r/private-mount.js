@@ -1,4 +1,4 @@
-import{scopedEditorURL,scopedPrototypeURL}from'./scoped-editor-links.js?v=owned-child1';
+import{scopedEditorURL,scopedPrototypeURL}from'./scoped-editor-links.js?v=deposit-context1';
 /** Mount unmodified private runtime paths below the generic public Pages shell. */
 import{createPrivateResources}from'./private-resources.js';
 export async function mountPrivateRuntime({workerURL,scope,transport,handleAPI,navigator:nav=globalThis.navigator,origin=globalThis.location.origin,Channel=globalThis.MessageChannel,timeoutMs=20000,onRecovered=()=>{}}={}){

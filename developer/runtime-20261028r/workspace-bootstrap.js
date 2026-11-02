@@ -3,7 +3,7 @@ import{createWorkspaceLocationMirror}from'./workspace-location.js?v=developer2';
 import{readSealedAsset}from'./sealed-asset.js';
 import{loadSelectedRuntime}from'./selected-runtime.js';
 import{loadFullNativeRuntime}from'./full-native-runtime.js';
-import{sourceEntryTarget}from'./entry-target.js?v=lab2';
+import{sourceEntryTarget,prototypeEntryPath}from'./entry-target.js?v=deposit-context1';
 import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js';
 import{createSourceSession}from'./source-session.js?v=verified-group1';
@@ -13,8 +13,8 @@ import{createRecordReader}from'./record-reader.js';
 import{createScreenWriter}from'./screen-writer.js?v=component-study1';
 import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js';
-import{mountPrivateRuntime}from'./private-mount.js?v=owned-child1';
-import{mountWorkspaceViews}from'./workspace-views.js?v=developer2';
+import{mountPrivateRuntime}from'./private-mount.js?v=deposit-context1';
+import{mountWorkspaceViews}from'./workspace-views.js?v=prototype-route2';
 import{workspaceSurface,configureModeControls,consumedEntryURL}from'./workspace-surface.js?v=lab-entry1';
 function workspaceDesignCapabilities(config){return{schemaVersion:1,supported:{applicationScreens:config.readableApplicationScreens},readable:{applicationScreens:config.readableApplicationScreens,componentStackFamilies:Array.isArray(config.readableComponentFamilies)?[...new Set(config.readableComponentFamilies.filter(name=>typeof name==='string'&&/^[-a-z0-9]{1,64}$/.test(name)))].slice(0,32):[]}};}
 export function startWorkspaceHost({document:doc=globalThis.document,window:win=globalThis.window,bridgeOrigin,workerURL,scope,surface:requestedSurface,fetcher=globalThis.fetch}={}){
@@ -22,7 +22,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
  const requested=new URL(win.location.href).searchParams.get('returnTo'),entryTarget=requested?sourceEntryTarget(requested,new URL(scope,win.location.origin).href):null;
  const surface=workspaceSurface({requested:requestedSurface,entryTarget,url:win.location.href});
  const inboxId=new URL(win.location.href).searchParams.get('inbox'),initialInboxId=entryTarget?.inboxId||(/^[-\w]{1,100}$/.test(inboxId||'')?inboxId:null);
- const prototypeTarget=entryTarget?.returnPath.startsWith('private/prototype/')?entryTarget.returnPath.slice('private/'.length):null;
+ const prototypeTarget=prototypeEntryPath(entryTarget);
  const login=get('login'),gate=get('gate'),shell=get('shell'),status=get('status'),meter=get('meter'),modes=get('mode-controls');configureModeControls(modes,surface,doc);
  let workspace=null,epoch=0,controller=null;
  const reportConnectionError=()=>{let notice=get('workspace-notice');if(!notice){notice=doc.createElement('p');notice.id='workspace-notice';notice.setAttribute('role','alert');doc.body.append(notice)}notice.textContent='Соединение прервалось. Повторите переход.';notice.hidden=false};
@@ -86,8 +86,8 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
    const bankFile=await source.readSource('review-workspace/calibration/cases.json');
    calibrationAPI=createCalibrationAPI({transport:source,origin:win.location.origin,bank:JSON.parse(new TextDecoder().decode(bankFile.bytes)),getActor:attachmentActor,canWrite:attachmentWrite});
    const route=createWorkspaceLocationMirror({privateBaseURL:mount.baseURL,surface,getURL:()=>win.location.href,replaceURL:url=>win.history.replaceState(win.history.state,'',url),initialMode:entryTarget?.review?'questions':initialInboxId?'inbox':'constructor',initialInboxPath:initialInboxId?'inbox/index.html?request='+encodeURIComponent(initialInboxId):'inbox/index.html'});
-   views=mountWorkspaceViews({mount,surface,editorFrame:get('builder'),questionsFrame:get('questions'),initialQuestionsPath:entryTarget?.reviewPath||'index.html',inboxFrame:get('inbox'),initialInboxPath:initialInboxId?'inbox/index.html?request='+encodeURIComponent(initialInboxId):'inbox/index.html',initialMode:entryTarget?.review?'questions':initialInboxId?'inbox':undefined,onInboxLocation:route.inboxLocation,onComposeHandled:hash=>{if(win.location.hash===hash){const url=new URL(win.location.href);url.hash='';win.history.replaceState(win.history.state,'',url.href)}},initialEditorPath:(!prototypeTarget&&entryTarget?.editorPath)||config.initialEditorPath,preferInitial:!!entryTarget,onError:reportConnectionError,onMode:mode=>{route.setMode(mode);if(get('workspace-notice'))get('workspace-notice').hidden=true;for(const button of modes.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode))}});
-   workspace={source,mount,views,deferred};if(win.location.hash.startsWith('#compose='))views.openInbox(win.location.hash);if(prototypeTarget)await views.openPrototype(prototypeTarget);shell.hidden=false;gate.hidden=true;modes.hidden=false;meter.hidden=true;
+   views=mountWorkspaceViews({mount,surface,editorFrame:get('builder'),questionsFrame:get('questions'),initialQuestionsPath:entryTarget?.reviewPath||'index.html',inboxFrame:get('inbox'),initialInboxPath:initialInboxId?'inbox/index.html?request='+encodeURIComponent(initialInboxId):'inbox/index.html',initialMode:entryTarget?.review?'questions':initialInboxId?'inbox':undefined,onInboxLocation:route.inboxLocation,onComposeHandled:hash=>{if(win.location.hash===hash){const url=new URL(win.location.href);url.hash='';win.history.replaceState(win.history.state,'',url.href)}},initialEditorPath:(!prototypeTarget&&entryTarget?.editorPath)||config.initialEditorPath,initialPrototypePath:prototypeTarget,preferInitial:!!entryTarget,onError:reportConnectionError,onMode:mode=>{route.setMode(mode);if(get('workspace-notice'))get('workspace-notice').hidden=true;for(const button of modes.querySelectorAll('[data-mode]'))button.setAttribute('aria-pressed',String(button.dataset.mode===mode))}});
+   workspace={source,mount,views,deferred};if(win.location.hash.startsWith('#compose='))views.openInbox(win.location.hash);shell.hidden=false;gate.hidden=true;modes.hidden=false;meter.hidden=true;
   }catch(error){views?.destroy();mount?.close();source?.close();deferred?.closeDeferred();if(current!==epoch)return;if([401,403].includes(error.status))session.logout();status.textContent=error.message||'Рабочий стол не загрузился. Можно повторить.';meter.hidden=true;login.textContent='Повторить загрузку'}finally{if(current===epoch)login.disabled=false}
  };
  for(const button of modes.querySelectorAll('[data-mode]'))button.onclick=()=>workspace?.views.setMode(button.dataset.mode);
