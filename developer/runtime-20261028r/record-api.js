@@ -1,7 +1,10 @@
 /** Legacy read routes backed by consistent private GitHub snapshots. */
+import{SAVE_STAGES,SAVE_REASONS,WRITE_OUTCOMES}from'./screen-writer.js?v=save-diagnostics2';
 const headers={'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'};
 const json=(value,status=200)=>Response.json(value,{status,headers});
-export function createRecordAPI({reader,origin,decisionWriter,screenWriter,resourceCapabilities,designCapabilities}={}){
+// Only the fixed stage, reason and write-outcome codes ever leave the writer; anything else is dropped.
+const saveDiagnostic=error=>{const d=error?.saveDiagnostic;return d&&SAVE_STAGES.includes(d.stage)&&SAVE_REASONS.includes(d.reason)&&WRITE_OUTCOMES.includes(d.writeOutcome)?{stage:d.stage,reason:d.reason,writeOutcome:d.writeOutcome}:null};
+export function createRecordAPI({reader,origin,decisionWriter,screenWriter,resourceCapabilities,designCapabilities,onSaveDiagnostic=()=>{}}={}){
  if(typeof reader?.snapshot!=='function'||new URL(origin).origin!==origin)throw Error('Record reader and exact origin required');
  return async request=>{
   const url=new URL(request.url);if(url.origin!==origin)return null;
@@ -23,7 +26,8 @@ export function createRecordAPI({reader,origin,decisionWriter,screenWriter,resou
   if(request.method==='POST'&&route==='/api/screens'&&screenWriter){
    if(request.headers.get('Content-Type')?.split(';')[0]!=='application/json')return json({error:'JSON variant required',saved:false},415);
    let payload;try{const bytes=await request.arrayBuffer();if(bytes.byteLength>500000)return json({error:'Variant is too large',saved:false},413);payload=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes))}catch{return json({error:'Invalid variant JSON',saved:false},400)}
-   try{return json(await screenWriter.save(payload,{signal:request.signal}),201)}catch(error){return json({error:[400,403,409].includes(error?.status)?error.message:'GitHub variant save could not be confirmed. Keep the original operation.',saved:false},[400,401,403,409,429].includes(error?.status)?error.status:503)}
+   let saved;try{saved=await screenWriter.save(payload,{signal:request.signal})}catch(error){const diagnostic=saveDiagnostic(error);try{onSaveDiagnostic(diagnostic)}catch{}return json({error:[400,403,409].includes(error?.status)?error.message:'GitHub variant save could not be confirmed. Keep the original operation.',saved:false,...diagnostic?{diagnostic}:{}},[400,401,403,409,429].includes(error?.status)?error.status:503)}
+   try{onSaveDiagnostic({saved:true})}catch{}return json(saved,201)
   }
   if(request.method==='POST'&&route==='/api/decisions'&&decisionWriter){
    if(request.headers.get('Content-Type')?.split(';')[0]!=='application/json')return json({error:'JSON answer required',saved:false},415);

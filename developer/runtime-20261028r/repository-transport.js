@@ -15,7 +15,7 @@ export function createRepositoryTransport({owner,repo,commit,dataBranch,getToken
  async function request(path,{method='GET',body,signal}={}){
   if(!path.startsWith(prefix+'/'))throw Error('Foreign repository request refused');
   const token=await getToken();if(typeof token!=='string'||!token)throw Error('GitHub sign-in required');
-  let response;try{response=await fetcher(API+path,{method,headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,redirect:'error',cache:'no-store',signal});}catch(e){if(e?.name==='AbortError')throw e;throw Error('GitHub connection failed; working copy unchanged')}
+  let response;try{response=await fetcher(API+path,{method,headers:{Accept:'application/vnd.github+json',Authorization:'Bearer '+token,'X-GitHub-Api-Version':'2022-11-28',...(body?{'Content-Type':'application/json'}:{})},body:body?JSON.stringify(body):undefined,redirect:'error',cache:'no-store',signal});}catch(e){if(e?.name==='AbortError')throw e;throw Object.assign(Error('GitHub connection failed; working copy unchanged'),{code:'network'})}
   if(!response.ok){const e=Error(response.status===409||response.status===422?'Repository changed; reload and review before saving':response.status===401?'GitHub session expired':response.status===403?'GitHub access unavailable':response.status===404?'Private repository file unavailable':'GitHub request failed');e.status=response.status;throw e}
   return response.json();
  }

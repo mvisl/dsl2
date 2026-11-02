@@ -3,16 +3,17 @@ import{createWorkspaceLocationMirror}from'./workspace-location.js?v=developer2';
 import{readSealedAsset}from'./sealed-asset.js';
 import{loadSelectedRuntime}from'./selected-runtime.js';
 import{loadFullNativeRuntime}from'./full-native-runtime.js';
+import{createOtherRecipeValidator}from'./other-recipe-validator.js?v=save-diagnostics2';
 import{sourceEntryTarget,prototypeEntryPath}from'./entry-target.js?v=editor-selectors1';
 import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
-import{createRepositoryTransport}from'./repository-transport.js';
+import{createRepositoryTransport}from'./repository-transport.js?v=save-diagnostics2';
 import{createSourceSession}from'./source-session.js?v=verified-group1';
 import{createDeferredSource}from'./deferred-source.js';
 import{verifySealedBytes,readSealedTarGzip}from'./sealed-tar.js?v=lab-members1';
 import{createRecordReader}from'./record-reader.js';
-import{createScreenWriter}from'./screen-writer.js?v=component-study1';
+import{createScreenWriter}from'./screen-writer.js?v=save-diagnostics2';
 import{createDecisionWriter}from'./decision-writer.js';
-import{createRecordAPI}from'./record-api.js';
+import{createRecordAPI}from'./record-api.js?v=save-diagnostics2';
 import{mountPrivateRuntime}from'./private-mount.js?v=editor-selectors1';
 import{mountWorkspaceViews}from'./workspace-views.js?v=editor-selectors1';
 import{workspaceSurface,configureModeControls,consumedEntryURL}from'./workspace-surface.js?v=lab-entry1';
@@ -64,18 +65,15 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
     if(!authorities)authorities=Promise.all(config.nativeContracts.map(async path=>{const file=await source.readSource(path,{signal});return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(file.bytes))})).catch(error=>{authorities=null;throw error});
     const list=await authorities,match=list.find(a=>a.profiles?.[recipe?.context?.nativeProfile]?.recipe?.screenType===recipe?.screenType);if(!match)throw Error('Native source validation is unavailable');return match;
    };
-   let runtimeModule,selectionModule,componentStudyValidator;const validationRuntimes=new Map();
+   let componentStudyValidator,otherRecipeValidator;
    const validateOtherRecipe=async(recipe,{signal}={})=>{
     await mount.ensure();if(recipe?.schemaVersion===1){if(!componentStudyValidator){const{createComponentStudyValidator}=await import(new URL('compose/study-authority.js',mount.baseURL).href);componentStudyValidator=createComponentStudyValidator({readSource:path=>source.readSource(path)});}return componentStudyValidator(recipe,{signal});}
-    runtimeModule??=import(new URL('editor/runtime.js',mount.baseURL).href);selectionModule??=import(new URL('editor/source-startup.js',mount.baseURL).href);
-    const[{loadPreviewRuntime},{requiresCompleteRuntime}]=await Promise.all([runtimeModule,selectionModule]);
-    const load=type=>{if(!validationRuntimes.has(type))validationRuntimes.set(type,loadPreviewRuntime({selectedSource:type}).catch(error=>{validationRuntimes.delete(type);throw error}));return validationRuntimes.get(type)};
-    let runtime=await load(recipe?.schemaVersion===2?recipe.screenType:null);if(requiresCompleteRuntime(recipe,runtime))runtime=await load(null);
-    const validated=runtime.validate(recipe),entry=validated.schemaVersion===2?runtime.contextFor(validated).entry:null;
-    return{recipe:validated,sourceURL:entry?'https://www.figma.com/design/'+entry.fileKey+'/?node-id='+entry.nodeId.replace(':','-'):null};
+    // The editor's own source dispatcher (editor/source-loaders.js); strict runtime.validate, context and entry decide.
+    otherRecipeValidator??=createOtherRecipeValidator({loadModules:()=>Promise.all(['editor/runtime.js','editor/source-startup.js','editor/source-loaders.js'].map(path=>import(new URL(path,mount.baseURL).href))).then(([runtime,startup,loaders])=>({loadPreviewRuntime:runtime.loadPreviewRuntime,requiresCompleteRuntime:startup.requiresCompleteRuntime,createSourceLoaders:loaders.createSourceLoaders}))});
+    return otherRecipeValidator(recipe);
    };
    const screenWriter=createScreenWriter({reader,transport:source,canWrite:()=>Boolean(session.identity()?.canWrite&&config.canWrite),authorityFor,validateOtherRecipe});
-   let inboxAPI,calibrationAPI;const recordAPI=createRecordAPI({reader,origin:win.location.origin,decisionWriter,screenWriter,resourceCapabilities:()=>({selectedOptionsProfiles:true}),designCapabilities:()=>workspaceDesignCapabilities(config)});
+   let inboxAPI,calibrationAPI;const recordAPI=createRecordAPI({reader,origin:win.location.origin,decisionWriter,screenWriter,resourceCapabilities:()=>({selectedOptionsProfiles:true}),onSaveDiagnostic:d=>{doc.documentElement.dataset.variantSaveDiagnostic=d?.saved?'saved':d?d.stage+':'+d.reason+':'+d.writeOutcome:'unclassified'},designCapabilities:()=>workspaceDesignCapabilities(config)});
    const handleAPI=async request=>(calibrationAPI?await calibrationAPI(request):null)??(inboxAPI?await inboxAPI(request):null)??recordAPI(request);
    phase('Подключаем конструктор и вопросы…');if(entryTarget)win.history.replaceState(win.history.state,'',consumedEntryURL(win.location.href,{surface,requestedSurface}));mount=await mountPrivateRuntime({workerURL,scope,transport:source,handleAPI,origin:win.location.origin,onRecovered:()=>{doc.documentElement.dataset.recoveredClients=String(Number(doc.documentElement.dataset.recoveredClients||0)+1)}});
    if(current!==epoch){mount.close();source.close();deferred.closeDeferred();return}
