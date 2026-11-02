@@ -36,6 +36,11 @@ function signInEntry(request){
   const contexts=current.searchParams.getAll('depositContext'),context=contexts.length===1&&depositContexts.includes(contexts[0]);if(context)params.set('depositContext',contexts[0]);
   if(!contexts.length||context)entry.searchParams.set('returnTo',current.pathname.slice(root.pathname.length)+(params.size?'?'+params:''));
  }
+ if(['signals/','signals/index.html'].some(p=>current.pathname===mountPath+p)){
+  const params=new URLSearchParams();let valid=true;
+  for(const[key,value]of current.searchParams){if(key==='_mount')continue;if(key!=='node-id'||params.has(key)||!/^\d+:\d+$/.test(value)){valid=false;break}params.set(key,value)}
+  if(valid)entry.searchParams.set('returnTo','private/signals/'+(params.size?'?'+params:''));
+ }
  if(['inbox/','inbox/index.html'].some(p=>current.pathname===mountPath+p)){const values=current.searchParams.getAll('request');if(values.length===1&&/^[-\w]{1,100}$/.test(values[0]))entry.searchParams.set('inbox',values[0])}
  const href=entry.href.replaceAll('&','&amp;').replaceAll('"','&quot;');
  return new Response('<!doctype html><html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width"><meta name="referrer" content="no-referrer"><title>Вход в рабочий стол</title><body style="font:18px system-ui;background:#151515;color:#eee;padding:48px;max-width:640px"><h1>Войдите в рабочий стол</h1><p>Для этого экрана нужен GitHub-вход. После входа можно открыть исходный экран. Локальный черновик доступен только на устройстве, где он создан.</p><a style="color:#f9a367" href="'+href+'">Продолжить через GitHub →</a></body></html>',{status:401,headers:{'Cache-Control':'no-store','Content-Type':'text/html; charset=utf-8','X-Content-Type-Options':'nosniff','Referrer-Policy':'no-referrer','Content-Security-Policy':"default-src 'none'; style-src 'unsafe-inline'; base-uri 'none'; frame-ancestors 'none'"}});
