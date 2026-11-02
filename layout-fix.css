@@ -198,6 +198,45 @@ body::after,
   color: var(--text-secondary);
 }
 
+.topbar {
+  flex-wrap: wrap;
+  row-gap: var(--space-8);
+}
+
+.topbar__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-8);
+  margin-left: auto;
+}
+
+.topbar-link {
+  min-height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 var(--space-8);
+  border-radius: var(--radius-pill);
+  color: var(--text-secondary);
+  font-size: 14px;
+  line-height: 18px;
+  white-space: nowrap;
+  text-decoration: underline;
+  text-decoration-color: rgba(144, 146, 148, 0.4);
+  text-underline-offset: 3px;
+  transition: color 180ms ease, text-decoration-color 180ms ease;
+}
+
+.topbar-link:hover,
+.topbar-link:focus-visible {
+  color: #fff;
+  text-decoration-color: var(--accent-brand);
+}
+
+.topbar-link:focus-visible {
+  outline: 2px solid rgba(var(--accent-brand-rgb), 0.64);
+  outline-offset: 2px;
+}
+
 .version {
   min-height: 36px;
   display: inline-flex;
