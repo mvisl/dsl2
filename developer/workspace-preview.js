@@ -1,2 +1,2 @@
-import{startWorkspaceHost}from'./runtime-20261103a/workspace-bootstrap.js?v=45';
+import{startWorkspaceHost}from'./runtime-20261103b/workspace-bootstrap.js?v=46';
 startWorkspaceHost({bridgeOrigin:'https://design-workspace-github-auth.mvisl1.workers.dev',workerURL:new URL('./private-worker.js',import.meta.url).href,scope:new URL('./',import.meta.url).pathname});
