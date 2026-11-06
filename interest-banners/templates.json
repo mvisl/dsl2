@@ -3,7 +3,7 @@
     "key": "up-to",
     "fields": [
       {
-        "key": "field-0",
+        "key": "label",
         "text": "Earn up to",
         "icon": null,
         "x": 12,
@@ -22,10 +22,11 @@
             "font/size/lg"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "rate",
         "text": "4.5%",
         "icon": null,
         "x": 12,
@@ -45,10 +46,11 @@
           ]
         },
         "anchor": "left",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "period",
         "text": "PER \nYEAR",
         "icon": null,
         "x": 124,
@@ -67,10 +69,11 @@
             "font/size/lg"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "caption",
         "text": "Rate depends on loyalty level",
         "icon": null,
         "x": 12,
@@ -89,10 +92,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "cta",
         "text": "Explore rates",
         "icon": null,
         "x": 234,
@@ -114,7 +118,8 @@
             "font/size/md"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-4"
       }
     ],
     "label": "Up to",
@@ -156,7 +161,7 @@
     "key": "new-verification",
     "fields": [
       {
-        "key": "field-0",
+        "key": "label",
         "text": "Earn up to",
         "icon": null,
         "x": 12,
@@ -175,10 +180,11 @@
             "font/size/lg"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "rate",
         "text": "4.5%",
         "icon": null,
         "x": 12,
@@ -198,10 +204,11 @@
           ]
         },
         "anchor": "left",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "period",
         "text": "PER \nYEAR",
         "icon": null,
         "x": 124,
@@ -220,10 +227,11 @@
             "font/size/lg"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "caption",
         "text": "Rate depends on loyalty level",
         "icon": null,
         "x": 12,
@@ -242,10 +250,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "verificationIcon",
         "text": "",
         "icon": "shield-small",
         "x": 310,
@@ -264,10 +273,11 @@
             "Text/text-tertiary"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-4"
       },
       {
-        "key": "field-5",
+        "key": "verificationTitle",
         "text": "Identity\nVerification",
         "icon": null,
         "x": 239,
@@ -289,10 +299,11 @@
             "font/size/2xl"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-5"
       },
       {
-        "key": "field-6",
+        "key": "verificationCaption",
         "text": "Required for payouts",
         "icon": null,
         "x": 219,
@@ -314,7 +325,8 @@
             "font/size/sm"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-6"
       }
     ],
     "label": "New client + verification",
@@ -337,7 +349,7 @@
     "key": "earning",
     "fields": [
       {
-        "key": "field-0",
+        "key": "label",
         "text": "Paid to Date",
         "icon": null,
         "x": 12,
@@ -359,10 +371,11 @@
             "font/size/sm"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "amount",
         "text": "$23.08",
         "icon": null,
         "x": 12,
@@ -385,10 +398,11 @@
           ]
         },
         "anchor": "left",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "status",
         "text": "Gold status",
         "icon": null,
         "x": 37,
@@ -410,10 +424,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "nextRateLabel",
         "text": "Next Higher rate",
         "icon": null,
         "x": 200,
@@ -435,10 +450,11 @@
             "font/size/sm"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "nextRate",
         "text": "3.5%",
         "icon": null,
         "x": 200,
@@ -458,10 +474,11 @@
           ]
         },
         "anchor": "right",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-4"
       },
       {
-        "key": "field-5",
+        "key": "cta",
         "text": "Get Platinum",
         "icon": null,
         "x": 239,
@@ -483,7 +500,8 @@
             "font/size/sm"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-5"
       }
     ],
     "label": "Earning",
@@ -517,7 +535,7 @@
     "key": "accrued-verification",
     "fields": [
       {
-        "key": "field-0",
+        "key": "label",
         "text": "Accrued interest",
         "icon": null,
         "x": 12,
@@ -539,10 +557,11 @@
             "font/size/sm"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "amount",
         "text": "$1.74",
         "icon": null,
         "x": 12,
@@ -565,10 +584,11 @@
           ]
         },
         "anchor": "left",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "status",
         "text": "Gold status",
         "icon": null,
         "x": 37,
@@ -590,10 +610,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "verificationIcon",
         "text": "",
         "icon": "shield-small",
         "x": 310,
@@ -612,10 +633,11 @@
             "Text/text-tertiary"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "verificationTitle",
         "text": "Identity\nVerification",
         "icon": null,
         "x": 213,
@@ -637,10 +659,11 @@
             "font/size/3xl"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-4"
       },
       {
-        "key": "field-5",
+        "key": "verificationCaption",
         "text": "Required for payouts",
         "icon": null,
         "x": 219,
@@ -662,7 +685,8 @@
             "font/size/sm"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-5"
       }
     ],
     "label": "Accrued interest + verification",
@@ -686,7 +710,7 @@
     "key": "next",
     "fields": [
       {
-        "key": "field-0",
+        "key": "status",
         "text": "Gold",
         "icon": null,
         "x": 45,
@@ -708,10 +732,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "rate",
         "text": "3%",
         "icon": null,
         "x": 16,
@@ -734,10 +759,11 @@
           ]
         },
         "anchor": "left",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "caption",
         "text": "Current level",
         "icon": null,
         "x": 16,
@@ -759,10 +785,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "nextStatus",
         "text": "Platinum",
         "icon": null,
         "x": 250,
@@ -784,10 +811,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "nextRate",
         "text": "3.5%",
         "icon": null,
         "x": 175.5,
@@ -807,10 +835,11 @@
           ]
         },
         "anchor": "right",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-4"
       },
       {
-        "key": "field-5",
+        "key": "nextCaption",
         "text": "Next Level",
         "icon": null,
         "x": 175.5,
@@ -832,7 +861,8 @@
             "font/size/md"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-5"
       }
     ],
     "label": "Next level",
@@ -865,7 +895,7 @@
     "key": "get-platinum",
     "fields": [
       {
-        "key": "field-0",
+        "key": "status",
         "text": "Get Platinum",
         "icon": null,
         "x": 36,
@@ -887,10 +917,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "title",
         "text": "Same funds.",
         "icon": null,
         "x": 12,
@@ -912,10 +943,11 @@
             "font/size/3xl"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "subtitle",
         "text": "More interest",
         "icon": null,
         "x": 12,
@@ -934,10 +966,11 @@
             "font/size/3xl"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "caption",
         "text": "Meet the requirements to reach Platinum",
         "icon": null,
         "x": 12,
@@ -959,10 +992,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "nextRate",
         "text": "3.5%",
         "icon": null,
         "x": 247,
@@ -982,7 +1016,8 @@
           ]
         },
         "anchor": "right",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-4"
       }
     ],
     "label": "Get Platinum",
@@ -1005,7 +1040,7 @@
     "key": "rate-verification",
     "fields": [
       {
-        "key": "field-0",
+        "key": "status",
         "text": "Gold",
         "icon": null,
         "x": 45,
@@ -1027,10 +1062,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "rate",
         "text": "3%",
         "icon": null,
         "x": 16,
@@ -1053,10 +1089,11 @@
           ]
         },
         "anchor": "left",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "caption",
         "text": "Current level",
         "icon": null,
         "x": 16,
@@ -1078,10 +1115,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "verificationIcon",
         "text": "",
         "icon": "shield-small",
         "x": 167,
@@ -1103,10 +1141,11 @@
             "font/size/2xl"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "verificationLabel",
         "text": "Payouts",
         "icon": null,
         "x": 191,
@@ -1128,10 +1167,11 @@
             "font/size/md"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-4"
       },
       {
-        "key": "field-5",
+        "key": "verificationTitle",
         "text": "Verification \nneeded",
         "icon": null,
         "x": 167,
@@ -1153,10 +1193,11 @@
             "font/size/3xl"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-5"
       },
       {
-        "key": "field-6",
+        "key": "verificationCaption",
         "text": "Accrual continues",
         "icon": null,
         "x": 167,
@@ -1178,7 +1219,8 @@
             "font/size/md"
           ]
         },
-        "anchor": "right"
+        "anchor": "right",
+        "legacyKey": "field-6"
       }
     ],
     "label": "Rate + verification",
@@ -1201,7 +1243,7 @@
     "key": "keep-earning",
     "fields": [
       {
-        "key": "field-0",
+        "key": "status",
         "text": "Gold status",
         "icon": null,
         "x": 36,
@@ -1223,10 +1265,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-0"
       },
       {
-        "key": "field-1",
+        "key": "title",
         "text": "Keep earning.",
         "icon": null,
         "x": 12,
@@ -1251,10 +1294,11 @@
             "Text/text-primary"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-1"
       },
       {
-        "key": "field-2",
+        "key": "subtitle",
         "text": "Verify for payouts.",
         "icon": null,
         "x": 12,
@@ -1273,10 +1317,11 @@
             "font/size/3xl"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-2"
       },
       {
-        "key": "field-3",
+        "key": "caption",
         "text": "Interest accrues before verification",
         "icon": null,
         "x": 12,
@@ -1298,10 +1343,11 @@
             "font/size/xs"
           ]
         },
-        "anchor": "left"
+        "anchor": "left",
+        "legacyKey": "field-3"
       },
       {
-        "key": "field-4",
+        "key": "verificationIcon",
         "text": "",
         "icon": "shield",
         "x": 291.5,
@@ -1321,7 +1367,8 @@
           ]
         },
         "anchor": "right",
-        "tracking": -0.5
+        "tracking": -0.5,
+        "legacyKey": "field-4"
       }
     ],
     "label": "Keep earning",

@@ -1,100 +1,169 @@
-# Interest banner · DSL 0.6
+# Interest banner — copy into your project
 
-Eight editable campaign templates with native vector arrow/slash artwork. No runtime dependencies. The web component uses HTML text, inline SVG gradients/masks and the open-source Roboto variable font. The font is registered once through FontFace at document scope, so the standalone component works without the lab stylesheet. Import and await `fontReady` if a strict font-loading gate is needed. The glowing crown is an original foreground bitmap; the backgrounds are entirely vector.
+The page is a demonstration and integration guide. Your application uses **its own local copy** of the component and assets. It never loads the public demonstration page, GitHub, a CDN or an external font.
 
-## Run
+## Choose your integration
 
-Unzip `interest-banner-component.zip` and serve the directory over HTTP:
+| Project | Take | Start with |
+|---|---|---|
+| Web application | JS component and its local files | `example.html` |
+| Vue 3 | Ready Vue wrapper + component files | `examples/vue/InterestBanner.vue` |
+| Cordova / existing WebView | One self-contained local HTML file | `interest-banner.standalone.html` |
+| Your own renderer | SVG assets / background renderer | `interest-background.js` |
+
+Download `interest-banner-component.zip`. Preserve the folder structure when copying. All fonts, icons, gradients and masks are included. The artwork, typography, height122px and corner4px are the approved design, not runtime customization options.
+
+## 1. Web
+
+Copy this folder into your application, for example `components/interest-banner/`.
+
+```html
+<interest-banner id="interest"></interest-banner>
+<script type="module">
+  import './components/interest-banner/interest-banner.js';
+  const banner = document.querySelector('#interest');
+  banner.config = {
+    template: 'earning',
+    position: 56.125356,
+    fields: { 'amount': { text: '$23.08' } }
+  };
+  banner.addEventListener('click', () => {
+    // Open your application's Interest screen.
+  });
+</script>
+```
+
+Set the width of the parent container. The component fills it and measures changes automatically; no window-resize wiring is needed. Use a local HTTP dev server for the module example:
 
 ```sh
 python3 -m http.server 8080
 ```
 
-Open `http://localhost:8080/example.html`. ES modules and local fonts require an HTTP server; do not open the example with `file://`.
+Open `http://localhost:8080/example.html`.
+
+## 2. Vue 3
+
+Copy the whole folder into `src/components/interest-banner/`. Import the supplied wrapper; no custom-element compiler configuration is needed because the wrapper mounts the element itself.
+
+```vue
+<script setup>
+import InterestBanner from './components/interest-banner/examples/vue/InterestBanner.vue';
+const fields = { 'amount': { text: '$23.08' } };
+function openInterest() { /* your routing */ }
+</script>
+<template>
+  <InterestBanner
+    template="earning"
+    :position="56.125356"
+    :fields="fields"
+    @activate="openInterest"
+  />
+</template>
+```
+
+Props are reactive: `template`, `position`, `fields`. The wrapper emits `activate` on click or keyboard activation. The component has static asset references suitable for a Vite production build. The runnable example is included:
+
+```sh
+cd examples/vue
+npm install
+npm run dev
+# or npm run build
+```
+
+The supplied wrapper targets Vue3.
+
+## 3. Cordova / local WebView
+
+Copy **one file**, `interest-banner.standalone.html`, into your application's local resources, for example `www/components/`. It embeds its CSS, JavaScript, font, icons and both vector backgrounds. It has no imports or network requests and works without a build step.
 
 ```html
-<script type="module" src="./interest-banner.js"></script>
-<div style="width:100%;max-width:600px">
-  <interest-banner template="earning" position="56.125356"></interest-banner>
-</div>
+<iframe id="interest"
+  src="components/interest-banner.standalone.html"
+  title="Interest"
+  style="border:0;width:100%;height:122px">
+</iframe>
+<script>
+  const frame = document.querySelector('#interest');
+  frame.addEventListener('load', () => {
+    const bridge = frame.contentWindow.InterestBannerBridge;
+    bridge.configure({
+      template: 'earning',
+      position: 56.125356,
+      fields: { 'amount': { text: '$23.08' } }
+    });
+    frame.contentWindow.addEventListener('interest-banner-activate', () => {
+      // Your application's routing.
+    });
+  });
+</script>
 ```
 
-## API
+`configure()` replaces the runtime configuration. Pass the data you want to retain on each update. `getState()` returns the resolved configuration and actual width. `ready` is a promise for the local font. The complete local example is `examples/cordova/index.html`.
 
-Attributes: `template`, `shape="arrow|slash"`, `position` (0–100), `height` (CSS pixels, default122), `radius` (default4), `hue` (degrees), `glow` (0–1), `background-only` (boolean). `position` always marks the split **at half the height**: the arrow apex or the midpoint of the diagonal. For the diagonal it does not mark the bottom intersection.
+Use the local content/CSP policy already established in your Cordova application; the font and icons are embedded as data resources. The archive does not add Cordova plugins, remote whitelists or server dependencies. Cordova-specific device builds must be run in your own target application; the supplied local example is browser-tested.
 
-The percentage is multiplied by the actual `ResizeObserver` container width. Changing width moves the split proportionally. Copper geometry, rounding and glow keep their aspect ratio: they scale with height only. The shared graphite fills the container and the left illumination stays at the left. The moving geometry extends4096px left. Beyond the source artwork’s left margin, a25-stop vertical continuation matches its boundary colours, so large widths do not expose the hidden base fill. Native banner positions are unchanged.
+## Runtime API
 
-```js
-const banner = document.querySelector('interest-banner');
-banner.config = {
-  template: 'earning',
-  shape: 'arrow',
-  position: 56.125356,
-  height: 122,
-  radius: 4,
-  hue: 0,
-  glow: 1,
-  backgroundOnly: false,
-  fontFamily: 'InterestRoboto, Roboto, Arial, sans-serif',
-  fontScale: 1,
-  metricSize: 44,
-  // Optional override for every44px number:
-  // metricColor: '#ffa500',
-  fields: {
-    'field-1': {text: '$23.08', size: 44, opacity: 1, color: '#ffa500'},
-    'field-2': {text: 'Gold status', hidden: false}
-  },
-  icons: {0: {hidden: false}}
-};
+Only these parameters are supported:
 
-banner.addEventListener('banner-render', event => {
-  console.log(event.detail); // {width, height, position, edge}
-});
-
-const svg = banner.getSVG(); // Background only, current rendered width
-const resolved = banner.resolvedConfig;
-```
-
-Attributes take precedence over the same `config` property. Remove an attribute before controlling that property solely through `config`. Text is assigned as escaped text, not HTML. `fields` keys, editable geometry and source style/binding metadata are listed in `templates.json` / exported `templates`. Above351px foreground text remains its native size; below351px it scales down to fit the source composition. The background split remains percentage-anchored independently of foreground text.
+| Parameter | Meaning |
+|---|---|
+| `template` | One of the8 approved templates |
+| `position` | Divider X as percent of the actual container width,0–100 |
+| `shape` | `arrow` or `slash`; normally supplied by the template |
+| `fields` | Text/value data, keyed by semantic field names such as `amount`, `rate` and `status` |
+| `backgroundOnly` | Background-only preview / renderer |
 
 Template keys: `up-to`, `new-verification`, `earning`, `accrued-verification`, `next`, `get-platinum`, `rate-verification`, `keep-earning`.
 
-## Background without the web component
+`templates.json` records fields, defaults and source DSL0.6 bindings. Fields use semantic keys such as `amount`, `rate`, `status`, `title`, `caption`, `nextRate`. Old `field-N` keys are accepted as aliases. Values can be strings or `{text: '…'}`. Unknown design-changing properties are ignored, including older saved settings for hue, glow, sizes, colours, opacity, fonts, icon visibility, height and radius. There are no corresponding controls in the developer page.
 
 ```js
-import {backgroundSVG} from './interest-background.js';
-document.querySelector('#background').innerHTML = backgroundSVG({
-  shape: 'slash', width: 600, height: 122, position: 67.236467, radius: 4
+banner.config = {
+  template: 'earning',
+  position: 60,
+  fields: { 'amount': '$42.00' }
+};
+const current = banner.resolvedConfig;
+const svg = banner.getSVG(); // Background at the actual rendered width
+banner.addEventListener('banner-render', event => {
+  console.log(event.detail); // {width, height:122, position, edge}
 });
 ```
 
-`interest-background.js` is self-contained: exported SVG artwork is embedded. It also exports `downloadBlob`. Width is clamped to1–4096px, height24–1024px, position0–100. The lab intentionally offers a narrower useful UI range. SVG exports are static snapshots at the selected size. Downloadable **adjustable HTML backgrounds** embed this renderer and controls, work offline, and can generate new SVG sizes without a server.
+HTML attributes `template`, `shape`, `position`, `background-only` are also supported. Attributes take precedence over the matching config properties; choose one method instead of duplicating them. Text is escaped, not inserted as HTML. `fontReady` can be imported to await the included local Roboto font.
 
-## DSL 0.6 provenance
+## Position and widths
 
-The lab reports actual existing text-style and variable bindings, not a claim that every visual property is a design-system token. Source-bound text styles include:
+The anchor is the split **at half the banner height**: the arrow apex or the middle of the diagonal. It is not the diagonal's bottom intersection.
 
-- `Text/Small 15 [15-20]`
-- `Text/Super Small [12-16]`
-- `Text/Small [14-18]`
-- `Text/Small Link [13-18]`
-
-`templates.json` records every field's actual bound variable names (e.g. `font/size/md`, `Text/text-primary`). Fields without a text style are explicitly marked authored. Campaign44/32 metrics, gradient lettering, decorative glow and artwork have authored values. Font-size variable names map to CSS custom properties by replacing slashes with hyphens and adding `--dsl06-`; e.g. `font/size/md` becomes `--dsl06-font-size-md`.
-
-```css
-interest-banner {
-  --dsl06-font-size-xs: 12px;
-  --dsl06-font-size-sm: 13px;
-  --dsl06-font-size-md: 14px;
-  --dsl06-font-size-lg: 15px;
-}
+```text
+edgeX = actualContainerWidth × position / 100
 ```
 
-The web component uses source-resolved colours as fallbacks and allows per-field colour overrides through `config`. Colour aliases also map to lowercase CSS variables (e.g. Text/text-primary → --dsl06-text-text-primary); the source colour remains the fallback. This is not a connection to the protected DSL2 runtime. No existing constructor routes, private data, account behaviour or financial logic are imported. Rates and balances are design fixtures, not live offers.
+Changing width moves the split proportionally. The arrow/diagonal, rounding and light are never stretched horizontally. The left illumination remains fixed. Source artwork has a matching far-left continuation for wide containers. In the demo, screen-width presets include12px padding on each side:375px screen →351px banner. Your application owns its outer layout; the component itself adds no margins.
 
-## Integration into another constructor
+## Background only
 
-Import `InterestBanner`, `templates` and `backgroundSVG`. Use the template keys for the left catalog, `config` for the property panel and the `banner-render` event for rulers. Keep this component's schema and background renderer separate from unrelated source registries. It is a self-contained public lab; it does not mutate the main DSL2 constructor.
+```js
+import { backgroundSVG } from './interest-background.js';
+const svg = backgroundSVG({shape:'slash', width:600, position:67.236467});
+```
 
-Roboto is distributed under the SIL Open Font License; see `assets/OFL-Roboto.txt`. Original approved foreground icon vectors and background gradients are included with the component.
+The renderer is self-contained and entirely vector. SVG downloads are fixed-size snapshots. The separately downloadable background HTML files let developers change **width and X position only**, offline, then export SVG. Height, radius and all visual treatment remain fixed.
+
+## DSL 0.6 reference
+
+The inspector is read-only source provenance. It shows the actual text styles and variable names of the approved Figma templates; it is not an editor for the design system. Source styles include `Text/Small15[15-20]`, `Text/Super Small[12-16]`, `Text/Small[14-18]`, `Text/Small Link[13-18]`. Authored display typography is explicitly distinguished from text-style-bound fields. Keep the included tokens/source values when integrating. Do not turn palette, glow or font choices into application runtime parameters.
+
+The decorative glowing crown is the original bitmap foreground. Both backgrounds are vectors. Roboto is distributed under SIL OFL; see `assets/OFL-Roboto.txt`.
+
+## Rebuild and test
+
+```sh
+node test-background.mjs
+python3 build-standalone.py
+python3 build-package.py
+```
+
+Reference documentation: [Vue and Web Components](https://vuejs.org/guide/extras/web-components), [Vite asset handling](https://vite.dev/guide/assets.html), [Cordova architecture](https://cordova.apache.org/docs/en/latest/guide/overview/). These are documentation links, not application dependencies.

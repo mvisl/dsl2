@@ -9,19 +9,19 @@ function inner(svg,prefix){return svg.replace(/^<svg[^>]*>/,'').replace(/<\/svg>
  * The left illumination is fixed. Only copper + rim + inward light translate.
  */
 export function backgroundSVG(options={}){
- const width=clamp(finite(options.width,351),1,4096),height=clamp(finite(options.height,122),24,1024);
+ const width=clamp(finite(options.width,351),1,4096),height=122;
  const shape=options.shape==='slash'?'slash':'arrow';
  const position=clamp(finite(options.position,shape==='arrow'?56.125356:67.236467),0,100);
- const radius=clamp(finite(options.radius,4),0,height/2),s=height/122;
+ const radius=4,s=1;
  const edge=width*position/100,base=shape==='arrow'?197:236;
- const hue=clamp(finite(options.hue,0),-180,180),glow=clamp(finite(options.glow,1),0,1);
+ // Approved artwork is fixed. The public API only controls shape, X position and container width.
  const uid=`ib${++serial}-`,clip=`${uid}clip`,artClip=`${uid}art`,continuation=`${uid}continuation`;
  const delta=edge-base*s,continuationEnd=Math.max(0,delta-64*s);
  const extensionStops=EXTENSION[shape].map(a=>`<stop offset="${a.offset}" stop-color="${a.color}"/>`).join('');
  let copper=inner(ART[shape],uid+'c-');
  // First silhouette mask group contains the continuous inward reflection.
- copper=copper.replace(/<g mask=/,`<g opacity="${glow}" mask=`);
- return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${shape} interest background"><defs><linearGradient id="${continuation}" x1="0" y1="0" x2="0" y2="1">${extensionStops}</linearGradient><clipPath id="${artClip}"><rect x="-64" y="0" width="4160" height="122"/></clipPath><clipPath id="${clip}"><rect width="${width}" height="${height}" rx="${radius}"/></clipPath></defs><g clip-path="url(#${clip})"><g transform="scale(${width/351} ${s})">${inner(ART.graphite,uid+'g-')}</g><rect width="${continuationEnd>0?continuationEnd+.1:0}" height="${height}" fill="url(#${continuation})" style="filter:hue-rotate(${hue}deg)"/><g data-moving-surface="${shape}" data-edge-x="${edge}" transform="translate(${edge-base*s} 0) scale(${s})" style="filter:hue-rotate(${hue}deg)"><g clip-path="url(#${artClip})">${copper}</g></g><g transform="scale(${s})">${inner(ART.light,uid+'l-')}</g></g></svg>`;
+
+ return `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="${shape} interest background"><defs><linearGradient id="${continuation}" x1="0" y1="0" x2="0" y2="1">${extensionStops}</linearGradient><clipPath id="${artClip}"><rect x="-64" y="0" width="4160" height="122"/></clipPath><clipPath id="${clip}"><rect width="${width}" height="${height}" rx="${radius}"/></clipPath></defs><g clip-path="url(#${clip})"><g transform="scale(${width/351} ${s})">${inner(ART.graphite,uid+'g-')}</g><rect width="${continuationEnd>0?continuationEnd+.1:0}" height="${height}" fill="url(#${continuation})"/><g data-moving-surface="${shape}" data-edge-x="${edge}" transform="translate(${edge-base*s} 0) scale(${s})"><g clip-path="url(#${artClip})">${copper}</g></g><g transform="scale(${s})">${inner(ART.light,uid+'l-')}</g></g></svg>`;
 }
 export function downloadBlob(content,name,type='text/plain'){
  const url=URL.createObjectURL(new Blob([content],{type}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);

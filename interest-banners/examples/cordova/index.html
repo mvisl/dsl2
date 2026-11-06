@@ -1,0 +1,15 @@
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Interest banner · local Cordova/WebView example</title><style>body{font:14px system-ui;margin:12px;background:#eee}iframe{display:block;border:0;width:100%;height:122px}label{display:block;margin:20px 0}</style></head><body>
+<h1>Local Cordova / WebView example</h1>
+<p>The banner and every resource are inside the downloaded project. No remote page or CDN.</p>
+<label>Position <input id="position" type="range" min="5" max="95" step=".1" value="56.125356"></label>
+<iframe id="banner" src="../../interest-banner.standalone.html" title="Interest"></iframe>
+<p id="status">Click the banner to connect your navigation.</p>
+<script>
+const frame=document.querySelector('#banner');
+frame.addEventListener('load',()=>{
+ const bridge=frame.contentWindow.InterestBannerBridge;
+ bridge.configure({template:'earning',position:56.125356,fields:{'amount':{text:'$23.08'}}});
+ frame.contentWindow.addEventListener('interest-banner-activate',()=>document.querySelector('#status').textContent='Your app opens the Interest screen here.');
+ document.querySelector('#position').addEventListener('input',event=>bridge.configure({template:'earning',position:Number(event.target.value)}));
+});
+</script></body></html>
