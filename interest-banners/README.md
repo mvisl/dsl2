@@ -1,6 +1,6 @@
 # Interest banner · DSL 0.6
 
-Eight editable campaign templates with native vector arrow/slash artwork. No runtime dependencies. The web component uses HTML text, inline SVG gradients/masks and the open-source Roboto variable font. The glowing crown is an original foreground bitmap; the backgrounds are entirely vector.
+Eight editable campaign templates with native vector arrow/slash artwork. No runtime dependencies. The web component uses HTML text, inline SVG gradients/masks and the open-source Roboto variable font. The font is registered once through FontFace at document scope, so the standalone component works without the lab stylesheet. Import and await `fontReady` if a strict font-loading gate is needed. The glowing crown is an original foreground bitmap; the backgrounds are entirely vector.
 
 ## Run
 

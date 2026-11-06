@@ -7,6 +7,15 @@ const number=(n,f)=>Number.isFinite(Number(n))?Number(n):f;
 const escape=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const styleURL=new URL('./component.css',import.meta.url).href;
 const fontURL=new URL('./assets/roboto-variable.ttf',import.meta.url).href;
+// Register once at document scope: @font-face inside a shadow root is not portable.
+export const fontReady = (async()=>{
+ if(typeof FontFace==='undefined'||!document.fonts)return false;
+ let face=[...document.fonts].find(f=>f.family==='InterestRoboto');
+ if(!face){face=new FontFace('InterestRoboto',`url("${fontURL}")`,{weight:'100 900',display:'swap'});document.fonts.add(face);}
+ await face.load();return true;
+})();
+fontReady.catch(()=>{}); // Keep the fallback usable; integrations can await fontReady for strict font QA.
+
 export class InterestBanner extends HTMLElement {
  static observedAttributes=['template','shape','position','height','radius','background-only','hue','glow'];
  #config={}; #observer; #frame; #width=351;
@@ -39,7 +48,7 @@ export class InterestBanner extends HTMLElement {
    const src=o.src||new URL('assets/'+(i.asset||i.name+(i.name==='crown-glow'?'.png':'.svg')),baseURL).href;
    return `<span class="art-icon" style="${pos};top:${i.y*vertical}px;width:${i.width*s}px;height:${i.height*vertical}px;opacity:${o.opacity??i.opacity??1};transform:rotate(${i.rotation??0}deg);transform-origin:top left"><img alt="" src="${escape(src)}"></span>`;
   }).join('');
-  this.shadowRoot.innerHTML=`<link rel="stylesheet" href="${styleURL}"><style>@font-face{font-family:InterestRoboto;src:url('${fontURL}');font-weight:100 900;font-display:swap}:host{--interest-font:${escape(cfg.fontFamily||'InterestRoboto,Roboto,Arial,sans-serif')}} </style><div class="banner" part="banner" style="border-radius:${cfg.radius}px"><div class="background" aria-hidden="true">${backgroundSVG({...cfg,width,height})}</div>${cfg.backgroundOnly?'':`<div class="content" part="content">${nodes}${icons}<slot></slot></div>`}</div>`;
+  this.shadowRoot.innerHTML=`<link rel="stylesheet" href="${styleURL}"><style>:host{--interest-font:${escape(cfg.fontFamily||'InterestRoboto,Roboto,Arial,sans-serif')}} </style><div class="banner" part="banner" style="border-radius:${cfg.radius}px"><div class="background" aria-hidden="true">${backgroundSVG({...cfg,width,height})}</div>${cfg.backgroundOnly?'':`<div class="content" part="content">${nodes}${icons}<slot></slot></div>`}</div>`;
   this.dispatchEvent(new CustomEvent('banner-render',{detail:{width,height,edge:width*cfg.position/100,position:cfg.position},bubbles:true}));
  }
 }
