@@ -1,6 +1,17 @@
 # Changelog
 
-## 1.2.40 - 2026-10-28
+## 1.2.41 - 2026-11-16
+
+- Retain familiar DSL 0.6 roles through explicit semantic mappings and documented exceptions.
+- Preserve stable component identities, variable aliases and confirmed context differences.
+- Separate current reusable families and examples from proposals and historical sources.
+- Use readable headings and whole-screen examples; ask about meaningful differences in the same task.
+- Attempt independent GPT ImageGen, Claude Design and Stitch exploration; disclose provider limits and verify native assembly.
+- Publish verified reusable guidance on active design-system workdays without certifying unfinished work.
+
+## 1.2.40
+
+Resolve surface corners from the component and its bottom actions instead of applying one fallback radius to every card.
 
 - Use modal top and lower-corner roles for a full-width footer of large actions.
 - Keep compact-action and no-action surfaces on their documented corner policy.

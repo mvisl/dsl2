@@ -1,7 +1,7 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.40
-last_updated: 2026-10-28
+version: 1.2.41
+last_updated: 2026-11-16
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
 changelog_url: https://mvisl.github.io/dsl2/CHANGELOG.md
@@ -61,9 +61,9 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.40 draft for AI prototyping
+Version: 1.2.41 draft for AI prototyping
 
-Last updated: 2026-10-28
+Last updated: 2026-11-16
 
 Primary scope:
 
@@ -86,6 +86,7 @@ Recommended setup:
 - Do not copy/paste the content into many places. Link to the canonical GitHub version instead.
 - Update this file whenever DSL 2.0 changes the visual language, token naming, component architecture, or important component behavior.
 - Keep a short changelog at the bottom of the file or in a separate `CHANGELOG.md`.
+- On each calendar day with meaningful DSL work, publish the verified reusable updates by the end of the day. If no reusable change is ready, record that outcome privately; do not manufacture a release or call unfinished work complete.
 - Keep the public/internal download page synchronized with this file during active DSL work. When the reference changes, upload the updated `DESIGN.md` package to the site once per calendar day, not more often unless the user explicitly asks.
 
 Update triggers:
@@ -115,6 +116,17 @@ Suggested workflow:
 6. Reference the commit or pull request in Jira if the change affects product teams.
 
 The file does not need to describe every component instance. It should capture stable rules, source links, naming decisions, and enough fallback values for AI tools that cannot inspect Figma directly.
+
+## Developer continuity and review examples
+
+- Retain familiar DSL 0.6 component roles, naming and behavior where their meaning matches the new system. Document explicit mappings and exceptions; equal numeric values alone do not establish compatibility.
+- Preserve stable component identities and variable aliases. Do not rebuild or rename published APIs simply to reorganize the library.
+- Organize foundations, component families, meaningful states and whole-screen examples clearly. Separate current reusable assets, proposals and historical sources.
+- Keep generation, jurisdiction and account context independent. Preserve confirmed source differences until a deliberate unification decision.
+- Use readable headings, a short explanation and whole-screen examples at a useful viewing size. Reserve small text for secondary provenance.
+- Review questions must address a real unresolved decision. Compare visibly meaningful alternatives in the same task and context; do not ask for preferences between effectively identical screens.
+- For feature design and alternatives, discuss the source system first, attempt independent GPT ImageGen, Claude Design and Stitch candidates, show actual labelled whole-screen results together, share feedback and iterate. Record provider limits or unavailability; never fabricate a missing candidate.
+- Generated images are exploration evidence. A selected direction still requires native components, styles, variables and personal whole-screen verification before it becomes an implementation example.
 
 ## Source Registry
 
