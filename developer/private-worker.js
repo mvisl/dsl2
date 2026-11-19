@@ -7,7 +7,7 @@ const attachmentPath=path=>/^\/data\/attachments\/[a-f0-9]{32}\.(png|jpg|webp|gi
 const writableJSON=path=>['/api/decisions','/api/screens','/api/inbox','/api/calibration'].includes(path)||/^\/api\/inbox\/([-\w]{1,100})(?:\/(archive|response))?$/.test(path);
 const depositContexts=['current28','historical11'];
 // Mirror of github/editor-selectors.js (this classic worker cannot import it); a test keeps them equal.
-const walletProfiles=['collapsed','cfd','portfolioEntry'],editorNativeSelectors=['historicalMore','accountBenefits','depositSeven','optionsSheet','outcomeScreen','marketsList','metatrader','reports','internalTransfer','historicalWallet','instrumentSearch','about','onboarding','calendar','news','notificationSettings','welcomeBonus','productInbox','personalDetails','settingsProfile','depositTier','accountHistory','depositWarning','paymentOverlay','recurringDraft','withdrawalDraft','depositExtended','depositDraft','markets','notifications','currentPayments','fcilPayments','fcilWallet','wallet','nativeTrades','f1Trades'],editorSelectors=['screen','workingCopy','profile',...editorNativeSelectors,'depositContext'];
+const walletProfiles=['collapsed','cfd','portfolioEntry'],editorNativeSelectors=['historicalMore','accountBenefits','depositSeven','optionsSheet','outcomeScreen','marketsList','metatrader','reports','internalTransfer','historicalWallet','instrumentSearch','about','onboarding','calendar','news','notificationSettings','welcomeBonus','productInbox','personalDetails','settingsProfile','depositTier','accountHistory','depositWarning','paymentOverlay','recurringDraft','withdrawalDraft','depositExtended','depositDraft','markets','notifications','currentPayments','fcilPayments','fcilWallet','wallet','nativeTrades','f1Trades','originalActive'],editorSelectors=['screen','workingCopy','profile',...editorNativeSelectors,'depositContext'];
 /** Exact editor selectors (one source: record, local copy with its exact parent, or one native selector) or null. */
 function exactEditorSelectors(params,{drop=[],allowEmpty=false}={}){
  for(const name of params.keys())if(!editorSelectors.includes(name)&&!drop.includes(name))return null;
@@ -15,10 +15,11 @@ function exactEditorSelectors(params,{drop=[],allowEmpty=false}={}){
  if(!query.size)return allowEmpty?query:null;
  const natives=editorNativeSelectors.filter(name=>query.has(name));if(natives.length>1)return null;const native=natives[0],record=query.has('screen'),copy=query.has('workingCopy');
  if(!native&&!record&&!copy)return null;
+ if(query.has('originalActive')&&(!['F1','F2'].includes(query.get('originalActive'))||query.has('profile')))return null;
  if(query.has('fcilWallet')&&!walletProfiles.includes(query.get('fcilWallet')))return null;
  if(query.has('depositContext')&&(native!=='fcilWallet'||!depositContexts.includes(query.get('depositContext'))))return null;
  if(query.has('profile')&&!record)return null;
- if(native&&record&&!copy&&!['fcilWallet','optionsSheet'].includes(native))return null;
+ if(native&&record&&!copy&&!['fcilWallet','optionsSheet','originalActive'].includes(native))return null;
  return query;
 }
 const fallback=(message,status=503)=>new Response(message,{status,headers:{'Cache-Control':'no-store','Content-Type':'text/plain; charset=utf-8','X-Content-Type-Options':'nosniff'}});
