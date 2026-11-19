@@ -178,3 +178,16 @@ footer {
   .checks { gap: 8px; }
   figcaption { flex-direction: column; gap: 4px; }
 }
+
+@media (min-width: 851px) and (min-height: 680px) {
+  .example-layout {
+    --screen-height: calc(100dvh - 148px);
+  }
+  .example-stage {
+    width: min(100%, calc(16px + 2 * var(--screen-height) * 375 / 812));
+    justify-self: center;
+  }
+  body:has(#examples:not([hidden])) footer {
+    display: none;
+  }
+}
