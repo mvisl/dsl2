@@ -1,0 +1,50 @@
+[
+  {
+    "file": "google-sans-medium.ttf",
+    "bytes": 2017688,
+    "sha256": "4d6fb537efc4fd169ff6779cff64b3be9fe375dc8451a03bbcc171ad72f20029",
+    "names": {
+      "1": [
+        "Google Sans Medium"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ]
+    }
+  },
+  {
+    "file": "roboto-medium.ttf",
+    "bytes": 123904,
+    "sha256": "4d984240cefb093a74300bcae4b5dbd49f700e0af501eaaa079c56aa64142d2f",
+    "names": {
+      "1": [
+        "Roboto Medium"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ]
+    }
+  },
+  {
+    "file": "roboto-regular.ttf",
+    "bytes": 123720,
+    "sha256": "dece7c71bbe61710787f0839c722c65e87355dd2eb4a823e6b5488121ff81e4b",
+    "names": {
+      "1": [
+        "Roboto"
+      ],
+      "2": [
+        "Regular"
+      ],
+      "14": [
+        "https://openfontlicense.org"
+      ]
+    }
+  }
+]
