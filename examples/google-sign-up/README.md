@@ -1,31 +1,30 @@
 # Registration button comparison
 
-Owner-authorized update 19 November2026: corrected registration reference replaces
-start-screen study. Original upper form/background and risk/footer are displayed
-as clipped source image at375px; risk figures are historical source copy, not
-updated claims. User explicitly requested upper source image publication.
-Google/PayPal/Apple are independent clickable visual controls; no authentication,
-account creation, credentials or OAuth client IDs. No private Figma URL published.
+Published visual study requested by owner,19November2026. Source upper form and
+historical risk/footer are clipped source images at375px. Noauthentication,
+credentials,clientIDs,accountcreation or financialactions. No privateFigmaURL.
 
-Default button height44px. Toggle40px remains available. LayoutAuto uses available
-browser height (viewport minus96px): three full rows at868px available, two rows
-at812px, and a compact single row otherwise. Manual layout selectors expose all
-three arrangements for comparison. At44px compact controls are44x44 and Google
-uses remaining231px. Gaps12px, full width343px. All providers keep accessible names.
+Default44px; optional40px. Auto chooses three full rows when viewport height
+minus96px is at least868px, otherwise one compact row. Manual selectors expose
+both arrangements. The earlier two-row bare-provider-label layout is removed.
+Fullwidth343px,gap12px;compact icon controls44x44 atdefaultheight.
 
-Apple temporarily uses the source logo crop and labelApple, as owner explicitly
-requested; it is a visual review label, not an approved production Apple CTA.
-Compact hides provider captions and retainsApple/PayPal accessible labels. Noauth.
-Google44 is this page's HTML adaptation. Official downloaded Google assets also
-include iOS188x44 and Android/Web180x40;40is not a universal branding maximum.
-Reference creation form and footer are source-image regions, not live forms.
+Google: Sign up with Google. GeneratedRobotoMedium14/20 at40px; GoogleSansMedium
+14/20 per branding guide for the44px HTML adaptation. This is not an actualSDK
+button. The official asset archive separately includes iOS188x44 and Android/Web
+180x40. No universal40px maximum is inferred from webSDK presets.
+Apple: Sign up with Apple, systemfont19px at44px and17px at40px; genuine official
+logo-only endpoint artwork including its built-in padding, no source crop.
+PayPal: Continue with PayPal;RobotoMedium18px (font selection is permitted by
+PayPal's designer guide). Source-reference monogram remains in its source crop.
+Compact mode hides Apple/PayPal visible text and retains full accessible names.
 
 Sources:
 https://developers.google.com/identity/branding-guidelines
-https://developers.google.com/identity/gsi/web/reference/js-reference#logo_alignment
+https://developers.google.com/identity/gsi/web/reference/js-reference#theme
+https://developer.apple.com/design/human-interface-guidelines/sign-in-with-apple
 https://developer.apple.com/documentation/signinwithapple/incorporating-sign-in-with-apple-into-other-platforms
+https://developer.paypal.com/log-in/designer-guide
 
-Fonts are unmodified GoogleFonts files with OFL notices and metadata in fonts/.
-Google guide prose says GoogleSans, liveHTMLgenerator Roboto: routes separate.
-
-Run: python3 -m http.server 8918 --directory examples/google-sign-up
+Fonts remain unmodified GoogleFonts files with OFL/provenance in fonts/.
+Run: python3 -m http.server 8922 --directory examples/google-sign-up
