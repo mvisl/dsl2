@@ -1,5 +1,8 @@
 # Registration button comparison
 
+Archived visual study of Google, Apple, and PayPal sign-up buttons. The public URL is retained for reference. Authentication is disabled.
+
+
 Published visual study requested by owner,19November2026. Source upper form and
 historical risk/footer are clipped source images at375px. Noauthentication,
 credentials,clientIDs,accountcreation or financialactions. No privateFigmaURL.
