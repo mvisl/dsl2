@@ -1,6 +1,17 @@
 # Changelog
 
-## 1.2.41 - 2026-11-16
+## 1.2.42 - 2026-11-19
+
+- Keep the bottom safe area and Home Indicator on the same surface as the tab bar.
+- Distinguish Original/Current, F1 and F2 from actual consumer modes, independently of product and account context.
+- Preserve the complete status-bar and header background when replacing a legacy header with a genuine styled component.
+- Use clipping only for a justified viewport or outer shape; preserve visible icon strokes and selected navigation halos.
+- Verify the intended standalone screen in presentation and after reload, including footer and Home indicator.
+- Keep native, local, published and fresh saved-record verification distinct.
+
+## 1.2.41
+
+Preserve compatible component roles while organizing meaningful states and readable whole-screen examples.
 
 - Retain familiar DSL 0.6 roles through explicit semantic mappings and documented exceptions.
 - Preserve stable component identities, variable aliases and confirmed context differences.

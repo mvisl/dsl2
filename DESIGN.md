@@ -1,7 +1,7 @@
 ---
 design_reference_id: mobile-app-design
-version: 1.2.41
-last_updated: 2026-11-16
+version: 1.2.42
+last_updated: 2026-11-19
 status: draft-for-ai-prototyping
 canonical_url: https://mvisl.github.io/dsl2/DESIGN.md
 changelog_url: https://mvisl.github.io/dsl2/CHANGELOG.md
@@ -61,9 +61,9 @@ Do not silently continue with an outdated file.
 
 ## Status
 
-Version: 1.2.41 draft for AI prototyping
+Version: 1.2.42 draft for AI prototyping
 
-Last updated: 2026-11-16
+Last updated: 2026-11-19
 
 Primary scope:
 
@@ -127,6 +127,15 @@ The file does not need to describe every component instance. It should capture s
 - Review questions must address a real unresolved decision. Compare visibly meaningful alternatives in the same task and context; do not ask for preferences between effectively identical screens.
 - For feature design and alternatives, discuss the source system first, attempt independent GPT ImageGen, Claude Design and Stitch candidates, show actual labelled whole-screen results together, share feedback and iterate. Record provider limits or unavailability; never fabricate a missing candidate.
 - Generated images are exploration evidence. A selected direction still requires native components, styles, variables and personal whole-screen verification before it becomes an implementation example.
+
+## Source generation, top surfaces and visible overflow
+
+- Distinguish Original/Current, Facelift 1 and Facelift 2 using the actual consumer's explicit and inherited collection modes. A historical label, nearby screen or similar accent color does not establish its generation. Keep product, account and jurisdiction context independent; an unknown value stays unknown.
+- Keep the bottom safe area and Home Indicator on the same supported surface as their tab bar. Do not leave a body-colored strip or gradient below fixed navigation. Check the entire bottom region in the actual presentation, not only the tab-bar component frame.
+- When replacing a legacy header with a genuine styled header, inspect the status bar and header as one top surface. A transparent header can expose an incorrect ancestor background. Bind the supported navigation background to the appropriate containing surface and verify both generations; do not repaint nested text or icons to conceal the mismatch.
+- Enable clipping only where the pattern needs a viewport, crop or shared outer shape. Hit areas and navigation carriers may intentionally contain icons, strokes or selected halos that extend beyond their nominal bounds. Inspect the visible footprint, repair the owning master and check a refreshed consumer before claiming the repair propagated.
+- Verify a whole screen in its actual presentation. Opening a nested source may launch an organizer instead of that screen; a canvas screenshot or successful Present command does not establish a standalone screen result. Check the intended start frame, all screen edges, footer and Home indicator after reload.
+- Keep native assembly, local runtime, published runtime and saved-record reopening as separate delivery states. Verify the actual published result and a fresh reopen before reporting cross-surface synchronization; a local test or package manifest alone is insufficient.
 
 ## Source Registry
 
