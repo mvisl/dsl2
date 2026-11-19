@@ -1,13 +1,13 @@
 :root {
-  color-scheme: light;
-  background: #f5f3ef;
-  color: #242522;
+  color-scheme: dark;
+  background: #1b1c1e;
+  color: #e9e9ea;
   font: 15px/1.5 system-ui, sans-serif;
-  --muted: #575951;
-  --line: #d7d4cb;
-  --accent: #853d2c;
-  --selection: #eae2d7;
-  --focus: #285d82;
+  --muted: #b5b6ba;
+  --line: #36373a;
+  --accent: #ded4ca;
+  --selection: #2c2d30;
+  --focus: #98b1dd;
 }
 
 * { box-sizing: border-box; }
@@ -46,7 +46,7 @@ header [role="tab"][aria-selected="true"] {
   border-bottom-color: var(--accent);
   font-weight: 650;
 }
-[role="tab"]:hover { color: #20201d; }
+[role="tab"]:hover { color: #fff; }
 
 main {
   width: min(100% - 48px, 1160px);
@@ -73,7 +73,7 @@ main {
 }
 .example-picker button + button { border-top: 1px solid var(--line); }
 .example-picker [aria-selected="true"] {
-  color: #27241f;
+  color: #efeff0;
   background: var(--selection);
   font-weight: 650;
 }
@@ -101,17 +101,19 @@ figcaption {
   font-size: 13px;
   font-weight: 650;
 }
-figcaption a { font-weight: 500; }
+figcaption a { color: var(--muted); font-size: 12px; font-weight: 500; }
+figcaption a:hover { color: var(--accent); }
 figure img {
   display: block;
   width: 100%;
   height: auto;
   border-radius: 6px;
+  box-shadow: 0 0 0 1px #3a3b3e;
 }
 .example-explanation { grid-area: 2 / 3; }
 h1, h2, h3, p { margin-block: 0 12px; }
 h1, h2, h3 { line-height: 1.2; }
-h1 { font-size: 22px; letter-spacing: -.025em; }
+h1 { font-size: 21px; font-weight: 650; letter-spacing: -.02em; }
 h2 { font-size: 30px; letter-spacing: -.025em; }
 h3 { font-size: 16px; }
 p { color: var(--muted); }
@@ -149,7 +151,7 @@ pre {
   padding: 16px;
   border: 1px solid var(--line);
   border-radius: 6px;
-  background: #eeece6;
+  background: #212225;
   font: 12px/1.65 ui-monospace, monospace;
   tab-size: 2;
 }
@@ -157,14 +159,15 @@ pre {
 .checks > div { border-top: 1px solid var(--line); padding-top: 12px; }
 .button, [data-copy] {
   display: inline-block;
-  color: #fff;
-  background: var(--accent);
-  border: 1px solid var(--accent);
+  color: #efeff0;
+  background: var(--selection);
+  border: 1px solid #56575b;
   padding: 6px 12px;
   border-radius: 4px;
   text-decoration: none;
 }
 [data-copy] { background: transparent; color: var(--accent); font-size: 13px; }
+.button:hover, [data-copy]:hover { background: #36373a; }
 @media (min-width: 851px) and (min-height: 680px) {
   .example-layout { --screen-height: calc(100dvh - 130px); }
   .example-stage {
