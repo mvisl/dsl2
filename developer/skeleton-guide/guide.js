@@ -3,9 +3,81 @@ function selectPanel(id,update=true){if(!panels.includes(id))id='examples';for(c
 for(const b of document.querySelectorAll('[data-panel]')){b.addEventListener('click',()=>selectPanel(b.dataset.panel));b.addEventListener('keydown',ev=>{const index=panels.indexOf(b.dataset.panel);const next=ev.key==='ArrowRight'?(index+1)%4:ev.key==='ArrowLeft'?(index+3)%4:ev.key==='Home'?0:ev.key==='End'?3:-1;if(next>=0){ev.preventDefault();selectPanel(panels[next]);document.querySelector('[data-panel="'+panels[next]+'"]').focus();}});}
 addEventListener('hashchange',()=>selectPanel(location.hash.slice(1),false));selectPanel(location.hash.slice(1),false);
 const file='https://www.figma.com/design/yVOJvM7lnhT1wCY3FHrD0C/?node-id=';
-const examples={focus:{name:'In Focus',design:'15871-100788',loading:'16136-95520',title:'Карточка с объяснением и торговыми действиями',copy:'Сохраняем строку инструмента, область тизера и две нижние кнопки. Меняем только их содержимое. Скелетон не раскрывается и не запускает торговлю.'},trending:{name:'Trending',design:'16417-70533',loading:'16417-70558',title:'Компактная строка инструмента',copy:'Сохраняем три колонки и место под дополнительный сигнал. Не переносим сюда высокую карточку Hot: заглушка должна повторять плотность самого списка.'},hot:{name:'Hot',design:'16425-72713',loading:'16425-72738',title:'Карточка с графиком и событиями',copy:'Оставляем места для котировки, второй строки, графика и нижних бейджей. В этом примере — 12 px внутри карточки и 4 px между первыми строками. Высота остаётся 134 px.'}};
-function show(kind){const e=examples[kind];for(const b of document.querySelectorAll('[data-kind]'))b.setAttribute('aria-selected',String(b.dataset.kind===kind));for(const [id,suffix] of [['design',''],['loading','-loading']]){const img=document.getElementById(id);img.src=`assets/${kind}${suffix}.png`;img.alt=`${e.name}: ${id==='design'?'дизайн':'скелетон'}`;}document.getElementById('source-design').href=file+e.design;document.getElementById('source-loading').href=file+e.loading;document.getElementById('example-title').textContent=e.title;document.getElementById('example-copy').textContent=e.copy;}
-for(const b of document.querySelectorAll('[data-kind]'))b.addEventListener('click',()=>show(b.dataset.kind));show('focus');
+const examples = {
+  focus: {
+    name: 'In Focus', design: '15871-100788', loading: '16136-95520',
+    title: 'Строка, тизер и кнопки',
+    copy: 'Сохраните место под котировку, объяснение и две торговые кнопки. Пока данные загружаются, тизер не раскрывается, кнопки недоступны.'
+  },
+  trending: {
+    name: 'Trending', design: '16417-70533', loading: '16417-70558',
+    title: 'Три колонки и вторая строка',
+    copy: 'Оставьте название, цену и изменение в тех же колонках. Под названием сохраните место для тикера или сигнала.'
+  },
+  hot: {
+    name: 'Hot', design: '16425-72713', loading: '16425-72738',
+    title: 'График и бейджи',
+    copy: 'Оставьте места под котировку, вторую строку, график и нижние бейджи. Размеры ниже относятся к этому макету Hot.',
+    measurements: [['Высота карточки', '134 px'], ['Внутренний отступ', '12 px'], ['Между первыми строками', '4 px']]
+  }
+};
+
+const picker = document.querySelector('.example-picker');
+const exampleTabs = [...picker.querySelectorAll('[data-kind]')];
+
+function show(kind) {
+  const example = examples[kind];
+  for (const tab of exampleTabs) {
+    const selected = tab.dataset.kind === kind;
+    tab.setAttribute('aria-selected', String(selected));
+    tab.tabIndex = selected ? 0 : -1;
+  }
+  document.getElementById('example').setAttribute('aria-labelledby', 'list-' + kind);
+  for (const [id, suffix, label] of [['design', '', 'дизайн'], ['loading', '-loading', 'скелетон']]) {
+    const img = document.getElementById(id);
+    img.src = 'assets/' + kind + suffix + '.png';
+    img.alt = example.name + ' — ' + label;
+    const link = document.getElementById('source-' + id);
+    link.href = file + example[id];
+    link.setAttribute('aria-label', 'Figma: ' + example.name + ', ' + label);
+  }
+  document.getElementById('example-title').textContent = example.title;
+  document.getElementById('example-copy').textContent = example.copy;
+  const measurements = document.getElementById('example-measurements');
+  measurements.replaceChildren();
+  measurements.hidden = !example.measurements;
+  for (const [label, value] of example.measurements ?? []) {
+    const term = document.createElement('dt');
+    const detail = document.createElement('dd');
+    term.textContent = label;
+    detail.textContent = value;
+    measurements.append(term, detail);
+  }
+}
+
+function orientPicker() {
+  picker.setAttribute('aria-orientation', matchMedia('(max-width: 540px)').matches ? 'horizontal' : 'vertical');
+}
+const compactPicker = matchMedia('(max-width: 540px)');
+compactPicker.addEventListener('change', orientPicker);
+orientPicker();
+for (const [index, tab] of exampleTabs.entries()) {
+  tab.addEventListener('click', () => show(tab.dataset.kind));
+  tab.addEventListener('keydown', event => {
+    const previous = compactPicker.matches ? 'ArrowLeft' : 'ArrowUp';
+    const next = compactPicker.matches ? 'ArrowRight' : 'ArrowDown';
+    const count = exampleTabs.length;
+    const target = event.key === previous ? (index + count - 1) % count
+      : event.key === next ? (index + 1) % count
+      : event.key === 'Home' ? 0
+      : event.key === 'End' ? count - 1 : -1;
+    if (target < 0) return;
+    event.preventDefault();
+    show(exampleTabs[target].dataset.kind);
+    exampleTabs[target].focus();
+  });
+}
+show('focus');
 const tsx=`// Пример для In Focus. Подключите компоненты своего проекта.
 function FocusCard({ instrument, loading }) {
   return (
