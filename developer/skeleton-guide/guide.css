@@ -22,7 +22,7 @@ header {
   justify-content: center;
   padding: 20px 16px 24px;
 }
-header nav, .example-picker {
+header nav {
   display: flex;
   gap: 4px;
   padding: 4px;
@@ -54,25 +54,48 @@ main {
 }
 .example-layout {
   display: grid;
-  grid-template-columns: 108px minmax(0, 1fr) minmax(190px, 240px);
+  grid-template-columns: minmax(160px, 1fr) minmax(0, 3.2fr) minmax(160px, 1fr);
+  grid-template-rows: auto 1fr;
   align-items: start;
-  gap: 24px;
+  column-gap: 24px;
+  row-gap: 8px;
 }
-.example-picker { flex-direction: column; }
-.example-picker button { text-align: left; }
-.pair {
+.example-picker {
+  grid-column: 1;
+  grid-row: 2;
+  display: grid;
+}
+.example-picker button {
+  width: 100%;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 0;
+  text-align: left;
+  font-size: 15px;
+}
+.example-picker button + button { border-top: 1px solid var(--line); }
+.example-picker button[aria-selected="true"] { box-shadow: none; }
+.example-stage {
+  grid-column: 2;
+  grid-row: 1 / span 2;
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  grid-template-rows: subgrid;
+  column-gap: 16px;
 }
-figure { margin: 0; min-width: 0; }
+figure {
+  grid-row: span 2;
+  display: grid;
+  grid-template-rows: subgrid;
+  margin: 0;
+  min-width: 0;
+}
 figcaption {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: 6px;
   flex-wrap: wrap;
-  margin-bottom: 8px;
   font-size: 13px;
   font-weight: 600;
 }
@@ -85,8 +108,8 @@ figure img {
   border-radius: 8px;
 }
 .example-explanation {
-  padding-top: 2px;
-  border-top: 1px solid var(--line);
+  grid-column: 3;
+  grid-row: 2;
 }
 h1, h2, h3, p { margin-block: 0 12px; }
 h1, h2 { line-height: 1.15; letter-spacing: -.025em; }
@@ -139,16 +162,19 @@ footer {
 }
 
 @media (max-width: 850px) {
-  .example-layout { grid-template-columns: 104px minmax(0, 1fr); gap: 16px; }
-  .example-explanation { grid-column: 2; padding-top: 12px; }
+  .example-layout { grid-template-columns: 136px minmax(0, 1fr); column-gap: 16px; }
+  .example-explanation { grid-column: 2; grid-row: 3; margin-top: 12px; }
 }
 @media (max-width: 540px) {
   main { width: calc(100% - 24px); }
   header { padding: 12px 8px 16px; }
   header nav button { padding-inline: 8px; }
-  .example-layout { display: grid; grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .example-picker { flex-direction: row; width: fit-content; }
-  .example-explanation { grid-column: 1; }
-  .pair, .checks { gap: 8px; }
+  .example-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto; gap: 8px; }
+  .example-picker { grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .example-picker button { padding-inline: 8px; text-align: center; }
+  .example-picker button + button { border-top: 0; border-left: 1px solid var(--line); }
+  .example-stage { grid-column: 1; grid-row: 2 / span 2; column-gap: 8px; }
+  .example-explanation { grid-column: 1; grid-row: 4; }
+  .checks { gap: 8px; }
   figcaption { flex-direction: column; gap: 4px; }
 }
