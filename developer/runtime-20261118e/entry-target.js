@@ -9,6 +9,11 @@ export function sourceEntryTarget(value,scope){
   const base=new URL(scope),url=new URL(value,base),root=base.pathname+'private/';
   if(url.origin!==base.origin||url.username||url.password||url.hash)return null;
   const comparison=scopedTradeReferenceURL(url.href,new URL('private/',base).href,{dropMount:true});if(comparison){const referencePath=comparison.slice(new URL('private/',base).href.length);return{referencePath,editorPath:'editor/?f1Trades='+new URL(comparison).searchParams.get('state'),returnPath:'private/'+referencePath}};
+  if(['skeleton-guide/','skeleton-guide/index.html'].some(path=>url.pathname===root+path)){
+   url.searchParams.delete('_mount');
+   if(url.search)return null;
+   return{review:true,reviewPath:'skeleton-guide/',returnPath:'private/skeleton-guide/'};
+  }
   if(['signals/','signals/index.html'].some(path=>url.pathname===root+path)){
    const query=new URLSearchParams();
    for(const[key,value]of url.searchParams){if(key!=='node-id'||query.has(key)||!/^\d+:\d+$/.test(value))return null;query.set(key,value)}

@@ -1,4 +1,4 @@
-import{sourceEntryTarget}from'./entry-target.js';
+import{sourceEntryTarget}from'./entry-target.js?v=skeleton-guide1';
 import{mountScopedEditorLinks,watchOwnedPrivateWindow,scopedTradeReferenceURL,PROTOTYPE_SELECTORS}from'./scoped-editor-links.js?v=editor-selectors1';
 import{DEPOSIT_CONTEXTS,EDITOR_NATIVE_SELECTORS,exactEditorSelectors}from'./editor-selectors.js';
 export{EDITOR_NATIVE_SELECTORS};
@@ -11,7 +11,7 @@ export const FCIL_WALLET_EDITOR_PROFILES=Object.freeze({'fcil-wallet-collapsed-n
 export const LEGACY_VIEW_KEY='dsl2-github:workspace-view',DEVELOPER_VIEW_KEY='dsl2-github:workspace-view:developer:v2';
 export function mountWorkspaceViews({mount,editorFrame,questionsFrame,inboxFrame,window:win=globalThis.window,storage=globalThis.localStorage,tabStorage=globalThis.sessionStorage,surface='lab',initialEditorPath='editor/',initialQuestionsPath='index.html',initialInboxPath='inbox/index.html',initialMode,initialPrototypePath,initialReferencePath,preferInitial=false,onMode=()=>{},onError=()=>{},onInboxLocation=()=>{},onComposeHandled=()=>{}}={}){
  if(typeof mount?.entryURL!=='function'||!editorFrame||!questionsFrame)throw Error('Private mount and workspace views required');
- if(!['index.html','index.html?reviewMode=calibration','index.html?reviewMode=calibration&calibrationQA=1'].includes(initialQuestionsPath)&&!/^signals\/(?:\?node-id=\d+%3A\d+)?$/.test(initialQuestionsPath))throw Error('Exact review entry required');
+ if(!['skeleton-guide/','index.html','index.html?reviewMode=calibration','index.html?reviewMode=calibration&calibrationQA=1'].includes(initialQuestionsPath)&&!/^signals\/(?:\?node-id=\d+%3A\d+)?$/.test(initialQuestionsPath))throw Error('Exact review entry required');
  if(!['lab','developer'].includes(surface))throw Error('Unknown workspace surface');const developer=surface==='developer';if(developer&&!inboxFrame)throw Error('Developer Inbox frame required');
  const base=new URL(mount.baseURL),key=developer?DEVELOPER_VIEW_KEY:LEGACY_VIEW_KEY,children=new Set(),childWatchers=new Map(),modes=developer?['constructor','inbox']:inboxFrame?['constructor','questions','inbox']:['constructor','questions'];let mode='constructor',editorPath=initialEditorPath,inboxPath=initialInboxPath,reviewPath=initialQuestionsPath,started=new Set(),disposed=false,pendingCompose=null,pendingRequest=null;
  const modeFor=value=>developer&&value==='questions'?'inbox':value;

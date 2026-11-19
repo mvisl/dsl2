@@ -6,7 +6,7 @@ import{readSealedAsset}from'./sealed-asset.js';
 import{loadSelectedRuntime,prepareDeferredSelectedRuntime,createDeferredSelectedSource}from'./selected-runtime.js';
 import{loadFullNativeRuntime}from'./full-native-runtime.js';
 import{createOtherRecipeValidator}from'./other-recipe-validator.js?v=save-diagnostics2';
-import{sourceEntryTarget,prototypeEntryPath}from'./entry-target.js?v=editor-selectors1';
+import{sourceEntryTarget,prototypeEntryPath}from'./entry-target.js?v=skeleton-guide1';
 import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js?v=save-diagnostics2';
 import{createSourceSession}from'./source-session.js?v=verified-group1';
@@ -17,7 +17,7 @@ import{createScreenWriter}from'./screen-writer.js?v=save-diagnostics2';
 import{createDecisionWriter}from'./decision-writer.js';
 import{createRecordAPI}from'./record-api.js?v=save-diagnostics2';
 import{mountPrivateRuntime}from'./private-mount.js?v=editor-selectors1';
-import{mountWorkspaceViews}from'./workspace-views.js?v=editor-selectors1';
+import{mountWorkspaceViews}from'./workspace-views.js?v=skeleton-guide1';
 import{workspaceSurface,configureModeControls,consumedEntryURL,selectWorkspaceModeControl}from'./workspace-surface.js?v=lab-entry1';
 function workspaceDesignCapabilities(config){return{schemaVersion:1,supported:{applicationScreens:config.readableApplicationScreens,componentStackFamilies:['active-trade-v2','draft-input','empty-state','closed-trade','pending-trade'].filter(kind=>Array.isArray(config.readableComponentFamilies)&&config.readableComponentFamilies.includes(kind))},readable:{applicationScreens:config.readableApplicationScreens,componentStackFamilies:Array.isArray(config.readableComponentFamilies)?[...new Set(config.readableComponentFamilies.filter(name=>typeof name==='string'&&/^[-a-z0-9]{1,64}$/.test(name)))].slice(0,32):[]}};}
 export function startWorkspaceHost({document:doc=globalThis.document,window:win=globalThis.window,bridgeOrigin,workerURL,scope,surface:requestedSurface,fetcher=globalThis.fetch}={}){
