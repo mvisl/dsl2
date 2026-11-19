@@ -7,22 +7,23 @@ updated claims. User explicitly requested upper source image publication.
 Google/PayPal/Apple are independent clickable visual controls; no authentication,
 account creation, credentials or OAuth client IDs. No private Figma URL published.
 
-Google: official generated HTML default40px; optional44px custom interpretation,
-not explicit Google approval. Both group G+text centrally via documented option.
-Apple: image from official Apple generator, center aligned, white, radius4,
-width166pt, height40/44pt, scale2, typecontinue,en_US. Its native typography is
-preserved; not forcibly changed to Google14px. PayPal artwork uses source-image
-crop; caption14px. Allcontrols width343/full or165.5/half, gap12, height40/44.
-Reference creation form is image-only, not a working registration form.
+Default button height44px. Toggle40px remains available. LayoutAuto uses available
+browser height (viewport minus96px): three full rows at868px available, two rows
+at812px, and a compact single row otherwise. Manual layout selectors expose all
+three arrangements for comparison. At44px compact controls are44x44 and Google
+uses remaining231px. Gaps12px, full width343px. All providers keep accessible names.
+
+Apple temporarily uses the source logo crop and labelApple, as owner explicitly
+requested; it is a visual review label, not an approved production Apple CTA.
+Compact hides provider captions and retainsApple/PayPal accessible labels. Noauth.
+Google44 is this page's HTML adaptation. Official downloaded Google assets also
+include iOS188x44 and Android/Web180x40;40is not a universal branding maximum.
+Reference creation form and footer are source-image regions, not live forms.
 
 Sources:
 https://developers.google.com/identity/branding-guidelines
 https://developers.google.com/identity/gsi/web/reference/js-reference#logo_alignment
 https://developer.apple.com/documentation/signinwithapple/incorporating-sign-in-with-apple-into-other-platforms
-
-Apple officially supports height30..64; unlike Google44 is an explicit allowed
-range. Caption is Continue with Apple because generator documents continue and
-sign-in, not sign-up. Never substitute a fake Apple logo or force its font14px.
 
 Fonts are unmodified GoogleFonts files with OFL notices and metadata in fonts/.
 Google guide prose says GoogleSans, liveHTMLgenerator Roboto: routes separate.
