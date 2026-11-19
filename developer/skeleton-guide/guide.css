@@ -150,4 +150,5 @@ footer {
   .example-picker { flex-direction: row; width: fit-content; }
   .example-explanation { grid-column: 1; }
   .pair, .checks { gap: 8px; }
+  figcaption { flex-direction: column; gap: 4px; }
 }
