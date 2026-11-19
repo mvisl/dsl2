@@ -6,31 +6,34 @@ const file='https://www.figma.com/design/yVOJvM7lnhT1wCY3FHrD0C/?node-id=';
 const examples={focus:{name:'In Focus',design:'15871-100788',loading:'16136-95520',title:'Карточка с объяснением и торговыми действиями',copy:'Сохраняем строку инструмента, область тизера и две нижние кнопки. Меняем только их содержимое. Скелетон не раскрывается и не запускает торговлю.'},trending:{name:'Trending',design:'16417-70533',loading:'16417-70558',title:'Компактная строка инструмента',copy:'Сохраняем три колонки и место под дополнительный сигнал. Не переносим сюда высокую карточку Hot: заглушка должна повторять плотность самого списка.'},hot:{name:'Hot',design:'16425-72713',loading:'16425-72738',title:'Карточка с графиком и событиями',copy:'Оставляем места для котировки, второй строки, графика и нижних бейджей. В этом примере — 12 px внутри карточки и 4 px между первыми строками. Высота остаётся 134 px.'}};
 function show(kind){const e=examples[kind];for(const b of document.querySelectorAll('[data-kind]'))b.setAttribute('aria-selected',String(b.dataset.kind===kind));for(const [id,suffix] of [['design',''],['loading','-loading']]){const img=document.getElementById(id);img.src=`assets/${kind}${suffix}.png`;img.alt=`${e.name}: ${id==='design'?'дизайн':'скелетон'}`;}document.getElementById('source-design').href=file+e.design;document.getElementById('source-loading').href=file+e.loading;document.getElementById('example-title').textContent=e.title;document.getElementById('example-copy').textContent=e.copy;}
 for(const b of document.querySelectorAll('[data-kind]'))b.addEventListener('click',()=>show(b.dataset.kind));show('focus');
-const tsx=`// InstrumentCardLayout — существующая разметка вашей карточки.
-// Skeleton — декоративная заглушка; размеры слотов задаёт layout.
-function InstrumentCard({ instrument, loading, kind }) {
+const tsx=`// Пример для In Focus. Подключите компоненты своего проекта.
+function FocusCard({ instrument, loading }) {
   return (
     <InstrumentCardLayout
-      kind={kind}
+      kind="focus"
       name={loading ? <Skeleton width="65px" /> : instrument.name}
       price={loading ? <Skeleton width="65px" /> : instrument.price}
       change={loading ? <Skeleton width="65px" /> : instrument.change}
-      details={loading ? <Skeleton width="100%" /> : <Details data={instrument} />}
+      details={loading ? <Skeleton /> : <Details data={instrument} />}
       actions={loading ? <ActionPlaceholders /> : <TradeActions data={instrument} />}
     />
   );
 }
 
-function InstrumentList({ loading, items, kind }) {
-  // Число заглушек заполняет видимую область, без сотен строк.
-  const rows = loading ? Array.from({ length: kind === 'hot' ? 4 : 8 }) : items;
+function FocusList({ loading, items, visibleRowCount }) {
+  // visibleRowCount задаёт контейнер по высоте списка и карточек.
   return (
-    <section aria-busy={loading} aria-label="Instruments">
+    <section aria-busy={loading} aria-label="In Focus">
       <p className="sr-only" role="status">{loading ? 'Loading instruments' : ''}</p>
-      <div aria-hidden={loading || undefined} inert={loading ? true : undefined}>
-        {rows.map((item, i) => <InstrumentCard key={item?.id ?? i}
-          instrument={item} loading={loading} kind={kind} />)}
-      </div>
+      {loading ? (
+        <div aria-hidden="true" inert>
+          {Array.from({ length: visibleRowCount }, (_, index) =>
+            <FocusCard key={index} loading />
+          )}
+        </div>
+      ) : (
+        items.map(instrument => <FocusCard key={instrument.id} instrument={instrument} />)
+      )}
     </section>
   );
 }
