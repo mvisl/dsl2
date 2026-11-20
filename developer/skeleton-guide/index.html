@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="ru"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
 <title>Скелетоны Markets — памятка разработчику</title>
 <link rel="stylesheet" href="guide.css">
 <body><header><nav role="tablist" aria-label="Раздел памятки"><button id="tab-examples" role="tab" aria-selected="true" aria-controls="examples" data-panel="examples">Примеры</button><button id="tab-recipe" role="tab" aria-selected="false" aria-controls="recipe" data-panel="recipe">Как сделать</button><button id="tab-code" role="tab" aria-selected="false" aria-controls="code" data-panel="code">Код</button><button id="tab-question" role="tab" aria-selected="false" aria-controls="question" data-panel="question">Вопросы</button></nav></header><main><section id="examples" role="tabpanel" aria-labelledby="tab-examples"><div class="example-layout"><div class="example-picker" role="tablist" aria-label="Пример списка"><button role="tab" aria-selected="true" id="list-focus" aria-controls="example" data-kind="focus">In Focus</button><button role="tab" aria-selected="false" id="list-trending" aria-controls="example" data-kind="trending">Trending</button><button role="tab" aria-selected="false" id="list-hot" aria-controls="example" data-kind="hot">Hot</button></div><div class="example-stage" id="example" role="tabpanel" aria-labelledby="list-focus"><figure><figcaption>Дизайн <a id="source-design" target="_blank" rel="noreferrer">Figma ↗</a></figcaption><img id="design" src="assets/focus.png" width="375" height="812" alt="Готовый экран In Focus"></figure><figure><figcaption>Скелетон <a id="source-loading" target="_blank" rel="noreferrer">Figma ↗</a></figcaption><img id="loading" src="assets/focus-loading.png" width="375" height="812" alt="Загрузка списка In Focus"></figure></div><aside class="example-explanation"><h1 id="example-title">Скелетоны Markets</h1><p id="example-copy"></p><dl id="example-measurements" hidden></dl><p class="source-note">Котировки из макетов</p></aside></div></section>
@@ -8,8 +9,13 @@
 <section id="code" role="tabpanel" aria-labelledby="tab-code" hidden><h2>Одна разметка для загрузки и данных</h2><p>Пример ниже показывает принцип на React. Названия компонентов и токенов условные: подключите реальные компоненты и переменные вашего проекта. Разметка <code>InstrumentCardLayout</code> общая для обоих состояний.</p><div class="code-head"><h3>React / TSX</h3><button data-copy="tsx">Копировать</button></div><pre><code id="tsx"></code></pre><div class="code-head"><h3>CSS / доступность</h3><button data-copy="css">Копировать</button></div><pre><code id="css"></code></pre>
 <div class="checks"><div><h3>Размеры</h3><p>Внешний размер слота задаёт карточка. Размер полоски внутри может быть короче текста. Не используйте случайную ширину при каждом рендере.</p></div><div><h3>Поведение</h3><p>Заблокируйте торговые действия во время загрузки. Скелетон не должен получать клавиатурный фокус или озвучиваться как набор кнопок.</p></div><div><h3>Состояния</h3><p>Загрузка, пустой результат и ошибка — разные состояния. После пустого ответа покажите empty state, после ошибки — восстановление, а не вечный скелетон.</p></div><div><h3>Анимация</h3><p>Для первого внедрения достаточно статичных блоков. Если добавляете пульсацию, поддержите prefers-reduced-motion и анимируйте только заглушки.</p></div></div></section>
 <section id="question" role="tabpanel" aria-labelledby="tab-question" hidden><h2>Вопросы по реализации</h2>
-<p>Укажите список, платформу и ограничение. Например: «Hot, React Native, высота строки зависит от контента».</p>
-<p><a class="button" href="../workspace-preview.html#compose=%7B%22version%22%3A1%2C%22origin%22%3A%22builder%22%2C%22tool%22%3A%22Editor%22%2C%22screenId%22%3A%22pd7045-skeleton-guide%22%7D">Задать вопрос в Inbox ↗</a></p>
-<p class="small">Для входа в Inbox нужен GitHub.</p>
+<form id="question-form" method="post">
+<label for="question-body">Вопрос</label>
+<textarea id="question-body" name="body" rows="5" maxlength="3500" required></textarea>
+<label for="question-context">Список и стек <span>· необязательно</span></label>
+<input id="question-context" name="context" maxlength="300" placeholder="Hot, React Native">
+<button type="submit" class="button">Отправить вопрос</button>
+<p id="question-status" role="status" aria-live="polite"></p>
+</form>
 </section>
-</main><script type="module" src="guide.js"></script></body></html>
+</main><script type="module" src="guide.js"></script><script type="module" src="questions.js"></script></body></html>

@@ -191,3 +191,12 @@ pre {
   .example-explanation { grid-column: 1; grid-row: 4; }
   .checks { grid-template-columns: 1fr; gap: 8px; }
 }
+
+#question-form{display:grid;gap:10px;max-width:560px}
+#question-form label{font-weight:600}
+#question-form label span,#question-status{color:#b6b7ba;font-weight:400}
+#question-form textarea,#question-form input{box-sizing:border-box;width:100%;padding:10px 12px;background:#232427;color:inherit;border:1px solid #52545a;border-radius:6px;font:inherit}
+#question-form textarea{resize:vertical}
+#question-form button{justify-self:start;margin-top:8px;min-height:44px}
+#question-status{margin:0;overflow-wrap:anywhere}
+#question-status:empty{display:none}
