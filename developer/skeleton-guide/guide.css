@@ -1,5 +1,7 @@
 :root {
   color-scheme: dark;
+  scrollbar-gutter: stable both-edges;
+  overflow-y: scroll;
   background: #1b1c1e;
   color: #e9e9ea;
   font: 15px/1.5 system-ui, sans-serif;
@@ -176,23 +178,21 @@ pre {
   }
 }
 @media (max-width: 850px) {
-  .example-layout { grid-template-columns: 136px minmax(0, 1fr); column-gap: 16px; }
-  .example-explanation { grid-column: 2; grid-row: 3; margin-top: 12px; }
-}
-@media (max-width: 540px) {
-  main { width: calc(100% - 24px); }
-  header { padding-bottom: 16px; }
-  header [role="tab"] { padding-inline: 9px; }
   .example-layout { grid-template-columns: minmax(0, 1fr); grid-template-rows: auto auto auto auto; gap: 8px; }
   .example-picker { grid-row: 1; grid-template-columns: repeat(3, minmax(0, 1fr)); }
   .example-picker button { text-align: center; padding-inline: 6px; }
   .example-picker button + button { border-top: 0; border-left: 1px solid var(--line); }
   .example-stage { grid-column: 1; grid-row: 2 / span 2; column-gap: 8px; }
   .example-explanation { grid-column: 1; grid-row: 4; }
+}
+@media (max-width: 540px) {
+  main { width: calc(100% - 24px); }
+  header { padding-bottom: 16px; }
+  header [role="tab"] { padding-inline: 9px; }
   .checks { grid-template-columns: 1fr; gap: 8px; }
 }
 
-#question-form{display:grid;gap:10px;max-width:560px}
+#question-form{display:grid;gap:10px}
 #question-form label{font-weight:600}
 #question-form label span,#question-status{color:#b6b7ba;font-weight:400}
 #question-form textarea,#question-form input{box-sizing:border-box;width:100%;padding:10px 12px;background:#232427;color:inherit;border:1px solid #52545a;border-radius:6px;font:inherit}

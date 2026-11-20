@@ -55,10 +55,10 @@ function show(kind) {
   }
 }
 
+const compactPicker = matchMedia('(max-width: 850px)');
 function orientPicker() {
-  picker.setAttribute('aria-orientation', matchMedia('(max-width: 540px)').matches ? 'horizontal' : 'vertical');
+  picker.setAttribute('aria-orientation', compactPicker.matches ? 'horizontal' : 'vertical');
 }
-const compactPicker = matchMedia('(max-width: 540px)');
 compactPicker.addEventListener('change', orientPicker);
 orientPicker();
 for (const [index, tab] of exampleTabs.entries()) {
