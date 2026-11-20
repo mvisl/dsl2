@@ -142,8 +142,7 @@ p { color: var(--muted); }
 .source-note { margin-top: 16px; }
 .example-explanation .source-note, .small { font-size: 12px; }
 
-section:not(#examples) { max-width: 700px; margin-inline: auto; padding: 16px 0; }
-section#question { max-width: var(--pair-width); }
+section:not(#examples) { max-width: var(--pair-width); margin-inline: auto; padding: 16px 0; }
 .steps { padding-left: 23px; }
 .steps li { padding-left: 5px; margin-bottom: 18px; }
 .steps h3, .checks h3 { margin-bottom: 5px; }
