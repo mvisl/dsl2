@@ -36,7 +36,7 @@ export function createSourceSession({transport,getToken,verifiedFiles=new Map(),
   // Validate the entire group before evicting anything, retaining atomic failure.
   const pinnedBytes=[...verifiedPaths].reduce((n,p)=>n+cache.get(p).bytes.length,0);
   const promoted=[...group].filter(([p])=>cache.has(p)&&!verifiedPaths.has(p)).reduce((n,[,b])=>n+b.length,0);
-  if(pinnedBytes+promoted+added>maxCacheBytes)throw Error('Verified source group exceeds session bounds');
+  if(pinnedBytes+promoted+added>maxCacheBytes)throw Error(`Verified source group exceeds session bounds: pinned=${pinnedBytes}, promoted=${promoted}, added=${added}, limit=${maxCacheBytes}`);
   const evictions=[];let after=bytes+added;
   for(const[path,file]of cache){if(after<=maxCacheBytes)break;if(!verifiedPaths.has(path)&&!group.has(path)){evictions.push(path);after-=file.bytes.length}}
   if(after>maxCacheBytes)throw Error('Verified source group exceeds session bounds');

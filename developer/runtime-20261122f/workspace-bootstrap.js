@@ -10,7 +10,7 @@ import{sourceEntryTarget,prototypeEntryPath}from'./entry-target.js?v=editor-sele
 import{consumePrototypeCopy,shouldResumePrototypeCopy}from'./prototype-copy-continuation.js';
 import{createGitHubSession}from'./auth-session.js?v=memory-reuse1';
 import{createRepositoryTransport}from'./repository-transport.js?v=save-diagnostics2';
-import{createSourceSession}from'./source-session.js?v=verified-group1';
+import{createSourceSession}from'./source-session.js?v=verified-group2';
 import{createDeferredSource}from'./deferred-source.js';
 import{verifySealedBytes,readSealedTarGzip}from'./sealed-tar.js?v=lab-members1';
 import{createRecordReader}from'./record-reader.js';
