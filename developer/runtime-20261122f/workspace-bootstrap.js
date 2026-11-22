@@ -75,7 +75,7 @@ export function startWorkspaceHost({document:doc=globalThis.document,window:win=
      source.admitVerifiedSources(result);admitted=true;doc.documentElement.dataset.fullNativeState='verified';delete doc.documentElement.dataset.fullNativeError;return result;
     }catch(error){if(full&&!admitted){for(const b of full.files.values())b.fill(0);full.files.clear()}doc.documentElement.dataset.fullNativeState='failed';doc.documentElement.dataset.fullNativeError=String(error.message).slice(0,240);throw error}
    }});
-   source=createSourceSession({transport:deferred,getToken:()=>session.getToken(),verifiedFiles:files,selectedMembers:lazySelected?selected.manifest.members:null,reviewMembers:reviews.manifest.members,maxCacheBytes:384000000});
+   source=createSourceSession({transport:deferred,getToken:()=>session.getToken(),verifiedFiles:files,selectedMembers:lazySelected?selected.manifest.members:null,reviewMembers:reviews.manifest.members,maxCacheBytes:448000000});
    {const close=deferred.closeDeferred;deferred.closeDeferred=()=>{close();selectedSource?.closeSelected();reviewSource.closeSelected()}}
    const reader=createRecordReader({transport:source}),decisionWriter=createDecisionWriter({reader,transport:source,canWrite:()=>Boolean(session.identity()?.canWrite&&config.canWrite),questionIds:new Set(queue.items.map(q=>q.id))});
    let authorities;
