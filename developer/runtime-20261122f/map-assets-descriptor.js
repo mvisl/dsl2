@@ -1,0 +1,13 @@
+import {verifySealedBytes,readSealedTarGzip} from './sealed-tar.js';
+/** Authenticate small manifest eagerly; download its fixed immutable archive on demand. */
+export async function prepareMapAssetGroup({spec,expectedSourceRevision,loadAsset,occupied=new Set(),signal,crypto=globalThis.crypto}={}){
+ const sha=/^[a-f0-9]{64}$/,coord=(v,alias)=>v&&Object.keys(v).sort().join('|')==='alias|bytes|sha256'&&v.alias===alias&&Number.isSafeInteger(v.bytes)&&v.bytes>0&&v.bytes<=8000000&&sha.test(v.sha256||'');
+ if(!/^[a-f0-9]{40}$/.test(expectedSourceRevision||'')||!spec||Object.keys(spec).sort().join('|')!=='archive|manifest|sourceRevision'||spec.sourceRevision!==expectedSourceRevision||!coord(spec.manifest,'map-assets-manifest')||!coord(spec.archive,'map-assets-archive')||typeof loadAsset!=='function'||!(occupied instanceof Set))throw Error('Exact authenticated map asset descriptor required');
+ const raw=await loadAsset(spec.manifest,signal);await verifySealedBytes(raw,spec.manifest,{crypto});const manifest=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(raw));
+ if(Object.keys(manifest).sort().join('|')!=='archive|expandedTarBytes|members|schemaVersion|sourceRevision'||manifest.schemaVersion!==1||manifest.sourceRevision!==expectedSourceRevision||manifest.archive?.bytes!==spec.archive.bytes||manifest.archive?.sha256!==spec.archive.sha256||!Number.isSafeInteger(manifest.expandedTarBytes)||manifest.expandedTarBytes<1024||manifest.expandedTarBytes>16000000||!manifest.members||typeof manifest.members!=='object'||Array.isArray(manifest.members))throw Error('Map asset manifest mismatch');
+ const entries=Object.entries(manifest.members),valid=p=>/^(?:[-\w.]+\/)*assets\/[-\w.]+$/.test(p)&&!p.startsWith('calibration-protected/')&&!p.split('/').some(s=>s==='.'||s==='..');
+ if(!entries.length||entries.length>512||entries.some(([p,s])=>!valid(p)||occupied.has(p)||Object.keys(s||{}).sort().join('|')!=='bytes|sha256'||!Number.isSafeInteger(s.bytes)||s.bytes<0||s.bytes>8000000||!sha.test(s.sha256||''))||entries.reduce((n,[,s])=>n+s.bytes,0)>16000000)throw Error('Map asset membership invalid');
+ // Snapshot all coordinates and member seals before any later await: callers cannot redirect it.
+ const members=Object.freeze(Object.fromEntries(entries.map(([p,s])=>[p,Object.freeze({bytes:s.bytes,sha256:s.sha256})]))),archive={...spec.archive},expanded=manifest.expandedTarBytes;
+ return {members,async load({signal:loadSignal}={}){const bytes=await loadAsset(archive,loadSignal);return readSealedTarGzip(bytes,{seal:archive,members,maxExpandedBytes:expanded,maxMembers:512,crypto})}};
+}
